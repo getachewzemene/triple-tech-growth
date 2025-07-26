@@ -31,7 +31,7 @@ const Header = () => {
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className={`flex items-center space-x-3 text-2xl font-bold transition-colors duration-300 ${
-          isScrolled ? 'text-foreground' : 'text-white'
+          isScrolled ? 'text-white' : 'text-white'
         }`}>
           <img src={logo} alt="Triple Technologies Logo" className="h-8 w-8" />
           <span>Triple Technologies</span>

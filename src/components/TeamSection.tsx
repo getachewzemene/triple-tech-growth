@@ -25,15 +25,15 @@ const TeamSection = () => {
   const teamMembers = [
     {
       title: 'CEO',
-      description: 'Visionary leader driving strategic growth and innovation initiatives across all business verticals.'
+      description: 'Tsegaselassie Kindye'
     },
     {
       title: 'CTO',
-      description: 'Technical architect ensuring cutting-edge solutions and maintaining highest standards of code quality.'
+      description: 'Getachew Zemene'
     },
     {
       title: 'CMO',
-      description: 'Marketing strategist building brand presence and driving customer engagement through digital channels.'
+      description: 'Dagim Wondale'
     }
   ];
 

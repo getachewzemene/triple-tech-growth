@@ -1,4 +1,13 @@
-import { Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import {
+  FaFacebookF,
+  FaLinkedinIn,
+  FaTwitter,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+  FaTelegramPlane,
+  FaInstagram,
+} from "react-icons/fa";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,12 +45,12 @@ const ContactSection = () => {
             <div className="space-y-4">
               <h3 className="text-2xl font-bold">Triple Technologies</h3>
               <div className="flex items-center space-x-2">
-                <Phone className="w-5 h-5" />
-                <span>+1 (555) 123-4567</span>
+                <FaPhoneAlt className="w-5 h-5" />
+                <span>+251 997 466 952</span>
               </div>
               <div className="flex items-center space-x-2">
-                <MapPin className="w-5 h-5" />
-                <span>123 Tech Street, Innovation City, IC 12345</span>
+                <FaMapMarkerAlt className="w-5 h-5" />
+                <span>Megenagna, Shola Trafic Light, Fenasi Bldg 4<sup>th</sup> floor</span>
               </div>
             </div>
 
@@ -49,10 +58,13 @@ const ContactSection = () => {
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">Follow Us</h4>
               <div className="flex space-x-4">
-                <Facebook className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
-                <Twitter className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
-                <Linkedin className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
-                <Instagram className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
+                <FaFacebookF className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
+                <FaTwitter className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
+                <FaLinkedinIn className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
+                <FaInstagram className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
+                <FaTelegramPlane className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
+                <FaEnvelope className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
+
               </div>
             </div>
 
