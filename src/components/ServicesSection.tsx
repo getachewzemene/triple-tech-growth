@@ -55,7 +55,7 @@ const ServicesSection = () => {
             <div
               key={service.title}
               className={`service-card ${
-                isVisible ? 'animate-fade-in' : 'opacity-0'
+                isVisible ? 'animate-scale-in' : 'opacity-0'
               }`}
               style={{
                 animationDelay: `${index * 0.2}s`,
