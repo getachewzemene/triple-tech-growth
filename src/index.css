@@ -11,7 +11,7 @@ All colors MUST be HSL.
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 96%;
+    --card: 210 14% 97%; /* #F4F6F8 */
     --card-foreground: 222.2 84% 4.9%;
 
     --popover: 0 0% 100%;
@@ -37,9 +37,9 @@ All colors MUST be HSL.
     --ring: 222.2 84% 4.9%;
 
     /* Custom Triple Technologies Colors */
-    --light-blue: 195 100% 85%;
+    --light-blue: 210 100% 20%;
     --light-blue-foreground: 0 0% 100%;
-    --yellow: 45 100% 51%;
+    --yellow: 48 100% 50%; /* #ffd700 */
     --yellow-foreground: 222.2 84% 4.9%;
     --light-gray: 0 0% 96%;
     --light-gray-foreground: 222.2 84% 4.9%;
@@ -65,9 +65,9 @@ All colors MUST be HSL.
 
   .dark {
     --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --foreground: 48 100% 50%; /* #ffd700 for headers in dark */
 
-    --card: 222.2 84% 4.9%;
+    --card: 210 14% 97%; /* #F4F6F8 */
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -139,6 +139,7 @@ All colors MUST be HSL.
 
   .section-title {
     @apply text-3xl font-bold text-center mb-8;
+    color: #000; /* #ffd700 for header text */
   }
 
   .section-title::after {
@@ -151,15 +152,19 @@ All colors MUST be HSL.
   }
 
   .service-card {
-    @apply bg-card text-card-foreground p-6 rounded-lg shadow-md transition-all duration-500 transform hover:scale-110;
+    @apply p-6 rounded-lg shadow-md transition-all duration-500 transform hover:scale-110;
+    background: hsl(var(--card)); /* #F4F6F8 */
+    color: hsl(var(--card-foreground));
   }
 
   .service-card:hover {
-    @apply bg-[hsl(var(--light-blue))] text-[hsl(var(--light-blue-foreground))] shadow-xl;
+    background: hsl(var(--light-blue));
+    color: #fff; /* Hover text color should be white */
+    @apply shadow-xl;
   }
 
   .service-card:hover .card-icon {
-    @apply text-[hsl(var(--yellow))];
+    color: hsl(var(--yellow)); /* #ffd700 for hover icon */
   }
 }
 
