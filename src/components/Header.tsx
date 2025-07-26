@@ -26,7 +26,9 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold text-foreground">
+        <div className={`text-2xl font-bold transition-colors duration-300 ${
+          isScrolled ? 'text-foreground' : 'text-white'
+        }`}>
           Triple Technologies
         </div>
         
@@ -43,7 +45,11 @@ const Header = () => {
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className="text-foreground hover:text-yellow transition-colors duration-200 font-medium"
+              className={`transition-colors duration-300 font-medium ${
+                isScrolled 
+                  ? 'text-foreground hover:text-yellow' 
+                  : 'text-white hover:text-yellow'
+              }`}
             >
               {item.name}
             </button>
