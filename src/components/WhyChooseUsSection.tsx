@@ -41,8 +41,8 @@ const WhyChooseUsSection = () => {
   ];
 
   return (
-    <section id="why-choose-us" ref={sectionRef} className="py-20 bg-background">
-      <div className="container mx-auto px-4">
+    <section id="why-choose-us" ref={sectionRef} className="py-10 bg-background">
+      <div className="container mx-auto px-8">
         <h2 className="section-title">Why Choose Us</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
@@ -57,7 +57,7 @@ const WhyChooseUsSection = () => {
                 animationFillMode: 'forwards'
               }}
             >
-              <benefit.icon className="card-icon w-12 h-12 mb-4 text-primary transition-colors duration-300 text-blue-600" />
+              <benefit.icon className="card-icon w-12 h-12 mb-4 transition-colors duration-300 text-blue-600" />
               <h3 className="text-xl font-semibold mb-3">{benefit.title}</h3>
               <p className="card-description">{benefit.description}</p>
             </div>

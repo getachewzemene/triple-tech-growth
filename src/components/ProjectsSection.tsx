@@ -46,8 +46,8 @@ const ProjectsSection = () => {
   ];
 
   return (
-    <section id="projects" ref={sectionRef} className="py-20 bg-muted/30">
-      <div className="container mx-auto px-4">
+    <section id="projects" ref={sectionRef} className="py-10 bg-muted/30">
+      <div className="container mx-auto px-8">
         <h2 className="section-title">Our Projects</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
@@ -62,7 +62,7 @@ const ProjectsSection = () => {
                 animationFillMode: 'forwards'
               }}
             >
-              <project.icon className="card-icon w-12 h-12 mb-4 text-primary transition-colors duration-300 text-blue-600" />
+              <project.icon className="card-icon w-12 h-12 mb-4 transition-colors duration-300 text-blue-600" />
               <h3 className="text-xl font-semibold mb-3">{project.title}</h3>
               <p className="card-description">{project.description}</p>
             </div>

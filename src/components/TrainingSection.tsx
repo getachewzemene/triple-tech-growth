@@ -65,7 +65,7 @@ const TrainingSection = () => {
               }}
               onClick={() => navigate('/training')}
             >
-              <program.icon className="card-icon w-12 h-12 mb-4 text-primary transition-colors duration-300 text-blue-600" />
+              <program.icon className="card-icon w-12 h-12 mb-4 transition-colors duration-300 text-blue-600" />
               <h3 className="text-xl font-semibold mb-3">{program.title}</h3>
               <p className="card-description">{program.description}</p>
             </div>

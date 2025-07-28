@@ -47,7 +47,7 @@ const ServicesSection = () => {
 
   return (
     <section id="services" ref={sectionRef} className="py-20 bg-background">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-8">
         <h2 className="section-title">Our Services</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">

@@ -38,9 +38,9 @@ const ContactSection = () => {
   return (
     <section id="contact" className="bg-light-blue text-light-blue-foreground">
       {/* Contact Footer */}
-      <div className="py-16">
+      <div className="py-10">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-2">
             {/* Company Info */}
             <div className="space-y-4">
               <h3 className="text-2xl font-bold">Triple Technologies</h3>
@@ -52,7 +52,14 @@ const ContactSection = () => {
                 <FaMapMarkerAlt className="w-5 h-5" />
                 <span>Megenagna, Shola Trafic Light, Fenasi Bldg 4<sup>th</sup> floor</span>
               </div>
-            </div>
+              <div className="flex items-center space-x-2">
+                <FaEnvelope className="w-5 h-5" />
+                <span>
+                  <a href="mailto:info@tripletech.com">info@tripletech.com</a>
+                </span>
+                </div>
+          
+              </div>
 
             {/* Social Media */}
             <div className="space-y-4">
@@ -112,16 +119,16 @@ const ContactSection = () => {
       </div>
 
       {/* Google Map */}
-      <div className="h-64 bg-gray-300">
+      <div className="h-64 md:h-96 relative">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.2175051722905!2d-73.98656368459394!3d40.74844097932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1635959883234!5m2!1sen!2sus"
-          width="100%"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d213.25016210377703!2d38.794672956140744!3d9.02006823267653!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85005f5bf7d9%3A0xdb4918396ab3f0d5!2sTriple%20Technologies!5e1!3m2!1sen!2set!4v1752069101685!5m2!1sen!2set"
+          width="80%"
           height="100%"
           style={{ border: 0 }}
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="Company Location"
+          title="Triple Technologies Location"
         />
       </div>
 
