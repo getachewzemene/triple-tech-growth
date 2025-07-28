@@ -1,6 +1,8 @@
 # Welcome to Triple Technologies
 ## Project info
 
+Triple Technologies is a one-stop tech solutions provider offering software development, IT training, digital marketing, maintenance, and networking services—driven by innovation, speed, and expert support.
+
 **URL**: 
 
 Follow these steps:
