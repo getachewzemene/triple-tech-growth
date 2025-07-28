@@ -77,7 +77,7 @@ const ContactSection = () => {
 
             {/* Contact Form */}
             <div>
-              <h4 className="text-xl font-semibold mb-4">Get In Touch</h4>
+              <h4 className="text-xl font-semibold mb-4">Get in touch</h4>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <Input
                   type="text"

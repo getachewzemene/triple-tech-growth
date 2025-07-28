@@ -41,7 +41,7 @@ const WhyChooseUsSection = () => {
   ];
 
   return (
-    <section id="why-choose-us" ref={sectionRef} className="py-10 bg-background">
+    <section id="why-choose-us" ref={sectionRef} className="py-10 bg-muted/30">
       <div className="container mx-auto px-8">
         <h2 className="section-title">Why Choose Us</h2>
         
