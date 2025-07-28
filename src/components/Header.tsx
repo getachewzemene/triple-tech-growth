@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,11 +36,27 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (id === 'training') {
+      navigate('/training');
+      setIsMobileMenuOpen(false);
+      return;
     }
-    setIsMobileMenuOpen(false); // Close mobile menu after navigation
+    
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -69,13 +88,13 @@ const Header = () => {
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               className={`relative transition-all duration-300 font-medium ${
-                activeSection === item.id
+                (activeSection === item.id && location.pathname === '/') || (item.id === 'training' && location.pathname === '/training')
                   ? 'text-yellow after:w-full'
                   : isScrolled 
                     ? 'text-white hover:text-yellow' 
                     : 'text-white hover:text-yellow'
               } after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full ${
-                activeSection === item.id ? 'after:w-full' : 'after:w-0'
+                (activeSection === item.id && location.pathname === '/') || (item.id === 'training' && location.pathname === '/training') ? 'after:w-full' : 'after:w-0'
               }`}
             >
               {item.name}
@@ -110,7 +129,7 @@ const Header = () => {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`transition-colors duration-300 font-medium text-left py-2 ${
-                    activeSection === item.id
+                    (activeSection === item.id && location.pathname === '/') || (item.id === 'training' && location.pathname === '/training')
                       ? 'text-yellow border-l-2 border-yellow pl-4'
                       : 'text-foreground hover:text-yellow'
                   }`}
