@@ -138,33 +138,68 @@ All colors MUST be HSL.
   }
 
   .section-title {
-    @apply text-3xl font-bold text-center mb-8;
-    color: #000; /* #ffd700 for header text */
+    @apply text-3xl font-bold text-center mb-8 relative;
+    color: #000;
   }
 
   .section-title::after {
     content: '';
-    display: block;
-    width: 60px;
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
     height: 4px;
     background: hsl(var(--yellow));
-    margin: 8px auto 0;
+    border-radius: 2px;
   }
 
   .service-card {
-    @apply p-6 rounded-lg shadow-md transition-all duration-500 transform hover:scale-110;
-    background: hsl(var(--card)); /* #F4F6F8 */
+    @apply p-8 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105;
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card-foreground)/0.02) 100%);
     color: hsl(var(--card-foreground));
+    border: 1px solid hsl(var(--border));
+    text-align: center;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary)/0.1), transparent);
+    transition: left 0.6s ease;
+  }
+
+  .service-card:hover::before {
+    left: 100%;
   }
 
   .service-card:hover {
-    background: hsl(var(--light-blue));
-    color: #fff; /* Hover text color should be white */
-    @apply shadow-xl;
+    background: linear-gradient(135deg, hsl(var(--light-blue)) 0%, hsl(var(--light-blue)/0.9) 100%);
+    color: #fff;
+    @apply shadow-2xl;
+    border-color: hsl(var(--yellow)/0.3);
+    transform: translateY(-8px) scale(1.05);
   }
 
   .service-card:hover .card-icon {
-    color: hsl(var(--yellow)); /* #ffd700 for hover icon */
+    color: hsl(var(--yellow));
+    transform: scale(1.1);
+  }
+
+  .service-card:hover h3,
+  .service-card:hover p {
+    color: #fff;
+  }
+
+  .card-icon {
+    @apply mx-auto transition-all duration-300;
   }
 }
 
