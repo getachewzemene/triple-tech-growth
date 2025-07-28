@@ -5,13 +5,30 @@ import logo from '../assets/logo.png';
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+      
+      // Detect active section
+      const sections = ['hero', 'services', 'projects', 'why-choose-us', 'training', 'team', 'contact'];
+      const scrollPosition = window.scrollY + 100;
+      
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -52,10 +69,14 @@ const Header = () => {
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               className={`relative transition-all duration-300 font-medium ${
-                isScrolled 
-                  ? 'text-white hover:text-yellow' 
-                  : 'text-white hover:text-yellow'
-              } after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full`}
+                activeSection === item.id
+                  ? 'text-yellow after:w-full'
+                  : isScrolled 
+                    ? 'text-white hover:text-yellow' 
+                    : 'text-white hover:text-yellow'
+              } after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full ${
+                activeSection === item.id ? 'after:w-full' : 'after:w-0'
+              }`}
             >
               {item.name}
             </button>
@@ -88,7 +109,11 @@ const Header = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-foreground hover:text-yellow transition-colors duration-300 font-medium text-left py-2"
+                  className={`transition-colors duration-300 font-medium text-left py-2 ${
+                    activeSection === item.id
+                      ? 'text-yellow border-l-2 border-yellow pl-4'
+                      : 'text-foreground hover:text-yellow'
+                  }`}
                 >
                   {item.name}
                 </button>
