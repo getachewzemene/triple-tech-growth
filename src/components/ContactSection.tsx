@@ -119,7 +119,7 @@ const ContactSection = () => {
       </div>
 
       {/* Google Map */}
-      <div className="h-64 md:h-96 relative">
+      <div className="h-64 md:h-96 relative border-none">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d213.25016210377703!2d38.794672956140744!3d9.02006823267653!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85005f5bf7d9%3A0xdb4918396ab3f0d5!2sTriple%20Technologies!5e1!3m2!1sen!2set!4v1752069101685!5m2!1sen!2set"
           width="80%"
