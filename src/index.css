@@ -148,7 +148,7 @@ All colors MUST be HSL.
     bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 50%;
+    width: 10%;
     height: 4px;
     background: hsl(var(--yellow));
     border-radius: 2px;
@@ -192,6 +192,18 @@ All colors MUST be HSL.
     color: hsl(var(--yellow));
     transform: scale(1.1);
   }
+.card-description {
+  color: #000;
+  opacity: 0.7;
+  transition: color 0.3s ease, opacity 0.3s ease;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  &:hover {
+    color: #fff;
+    opacity: 1;
+  }
+}
 
   .service-card:hover h3,
   .service-card:hover p {

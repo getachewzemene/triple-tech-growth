@@ -76,7 +76,7 @@ const Training = () => {
   const [selectedTopic, setSelectedTopic] = useState(null);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background mt-6">
       <Header />
       <div className="px-4 py-16 md:px-8 lg:px-16">
         <motion.h2
@@ -105,7 +105,7 @@ const Training = () => {
                   </div>
                   <h3 className="text-xl font-semibold text-center flex-1">{course.title}</h3>
                 </div>
-                <p className="text-muted-foreground group-hover:text-primary-foreground/90 transition-colors duration-300 text-center">
+                <p className="card-description group-hover:text-primary-foreground/90 transition-colors duration-300 text-center">
                   {course.description}
                 </p>
               </motion.div>

@@ -62,7 +62,7 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-light-blue shadow-lg' : 'bg-transparent'
+      isScrolled || location.pathname === '/training' ? 'bg-light-blue shadow-lg' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -106,7 +106,7 @@ const Header = () => {
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className={`md:hidden transition-colors duration-300 ${
-            isScrolled ? 'text-foreground' : 'text-white'
+            isScrolled ? 'text-white' : 'text-white'
           }`}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -131,7 +131,7 @@ const Header = () => {
                   className={`transition-colors duration-300 font-medium text-left py-2 ${
                     (activeSection === item.id && location.pathname === '/') || (item.id === 'training' && location.pathname === '/training')
                       ? 'text-yellow border-l-2 border-yellow pl-4'
-                      : 'text-foreground hover:text-yellow'
+                      : 'text-white hover:text-yellow'
                   }`}
                 >
                   {item.name}

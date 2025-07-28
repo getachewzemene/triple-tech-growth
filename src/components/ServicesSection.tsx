@@ -62,9 +62,9 @@ const ServicesSection = () => {
                 animationFillMode: 'forwards'
               }}
             >
-              <service.icon className="card-icon w-12 h-12 mb-4 text-primary transition-colors duration-300" />
+              <service.icon className="card-icon w-12 h-12 mb-4 transition-colors duration-300 text-blue-600" />
               <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
-              <p className="text-muted-foreground">{service.description}</p>
+              <p className="card-description">{service.description}</p>
             </div>
           ))}
         </div>

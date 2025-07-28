@@ -62,9 +62,9 @@ const ProjectsSection = () => {
                 animationFillMode: 'forwards'
               }}
             >
-              <project.icon className="card-icon w-12 h-12 mb-4 text-primary transition-colors duration-300" />
+              <project.icon className="card-icon w-12 h-12 mb-4 text-primary transition-colors duration-300 text-blue-600" />
               <h3 className="text-xl font-semibold mb-3">{project.title}</h3>
-              <p className="text-muted-foreground">{project.description}</p>
+              <p className="card-description">{project.description}</p>
             </div>
           ))}
         </div>
