@@ -25,15 +25,18 @@ const TeamSection = () => {
   const teamMembers = [
     {
       title: 'CEO',
-      description: 'Tsegaselassie Kindye'
+      name: 'Tsegaselassie Kindye',
+      description: 'Visionary leader with a passion for technology and innovation.'
     },
     {
       title: 'CTO',
-      description: 'Getachew Zemene'
+      name: 'Getachew Zemene',
+      description: 'Tech visionary with a focus on product development and innovation.'
     },
     {
       title: 'CMO',
-      description: 'Dagim Wondale'
+      name: 'Dagim Wondale',
+      description: 'Marketing guru with a knack for driving brand growth and engagement.'
     }
   ];
 
@@ -56,6 +59,7 @@ const TeamSection = () => {
             >
               <User className="card-icon w-12 h-12 mb-4 transition-colors duration-300 text-blue-600" />
               <h3 className="text-xl font-semibold mb-3">{member.title}</h3>
+              <h4 className="text-lg font-medium mb-2">{member.name}</h4>
               <p className="card-description">{member.description}</p>
             </div>
           ))}

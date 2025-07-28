@@ -97,10 +97,10 @@ const Training = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedCourse(course)}
-                className="w-80 p-6 bg-card rounded-2xl shadow-elegant cursor-pointer transition-all duration-300 hover:bg-primary hover:text-primary-foreground group"
+                className="w-80 p-6 service-card rounded-2xl shadow-elegant cursor-pointer transition-all duration-300 hover:bg-primary hover:text-primary-foreground group"
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="text-primary group-hover:text-yellow transition-colors duration-300">
+                  <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
                     {course.icon}
                   </div>
                   <h3 className="text-xl font-semibold text-center flex-1">{course.title}</h3>
@@ -122,7 +122,7 @@ const Training = () => {
                     className={`my-3 font-medium cursor-pointer p-3 rounded-lg transition-all duration-200 ${
                       selectedTopic?.title === item.title
                         ? 'text-primary border-l-2 border-yellow bg-primary/10'
-                        : 'text-foreground hover:bg-accent hover:text-accent-foreground'
+                        : 'text-foreground hover:bg-primary/10 hover:text-yellow-foreground hover:border-l-2 hover:border-yellow'
                     }`}
                     onClick={() => setSelectedTopic(item)}
                   >
@@ -130,7 +130,7 @@ const Training = () => {
                   </div>
                 ))}
                 <Button 
-                  className="mt-6 w-full"
+                  className="mx-12 mt-6 bg-primary text-primary-foreground hover:bg-yellow hover:text-primary-foreground"
                   onClick={() => {
                     setSelectedCourse(null);
                     setSelectedTopic(null);
