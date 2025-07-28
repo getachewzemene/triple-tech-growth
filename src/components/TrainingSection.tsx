@@ -1,9 +1,11 @@
 import { BookOpen, Users, Monitor, Award } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const TrainingSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -54,13 +56,14 @@ const TrainingSection = () => {
           {trainingPrograms.map((program, index) => (
             <div
               key={program.title}
-              className={`service-card ${
+              className={`service-card cursor-pointer ${
                 isVisible ? 'animate-scale-in' : 'opacity-0'
               }`}
               style={{
                 animationDelay: `${index * 0.2}s`,
                 animationFillMode: 'forwards'
               }}
+              onClick={() => navigate('/training')}
             >
               <program.icon className="card-icon w-12 h-12 mb-4 text-primary transition-colors duration-300" />
               <h3 className="text-xl font-semibold mb-3">{program.title}</h3>
