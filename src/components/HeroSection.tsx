@@ -7,19 +7,19 @@ const HeroSection = () => {
 
   const heroSlides = [
     {
-      background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%)',
+      background: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #67e8f9 100%)',
       title: 'Accelerating business growth with smart technologies',
       subtitle: 'Triple Technologies fuels business growth with smart software, training, and digital marketing.',
       cta: 'Contact Us'
     },
     {
-      background: 'linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)',
+      background: 'linear-gradient(135deg, #164e63 0%, #0891b2 50%, #06b6d4 100%)',
       title: 'Innovation at the heart of everything we do',
       subtitle: 'From web development to mobile apps, we create solutions that drive success.',
       cta: 'Our Services'
     },
     {
-      background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%)',
+      background: 'linear-gradient(135deg, #155e75 0%, #0e7490 50%, #0891b2 100%)',
       title: 'Expert training and consultation services',
       subtitle: 'Upskill your team with our comprehensive IT training programs and expert consultancy.',
       cta: 'Learn More'
