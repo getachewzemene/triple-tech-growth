@@ -42,7 +42,7 @@ const Footer = () => {
     <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white">
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-1 sm:grid-cols-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-start">
           {/* Company Info */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
@@ -137,7 +137,7 @@ const Footer = () => {
               </div>
             </div>
           </div>
-            <div>
+            <div className="space-y-3">
                 <h4 className="text-xl font-semibold mb-4">Get in touch</h4>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <Input

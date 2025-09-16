@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaVideo, FaChartLine, FaCode, FaMobileAlt, FaPaintBrush, FaRobot } from "react-icons/fa";
 import Header from "@/components/Header";
-import ContactSection from "@/components/ContactSection";
+
 import { Button } from "@/components/ui/button";
+import Footer from "./../components/Footer";
 
 const courses = [
   {
@@ -169,7 +170,7 @@ const Training = () => {
           </AnimatePresence>
         )}
       </div>
-      <ContactSection />
+      <Footer />
     </div>
   );
 };
