@@ -1,5 +1,9 @@
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, Github, Phone, MapPin, Mail } from 'lucide-react';
 import logo from '../assets/logo.png';
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -20,11 +24,25 @@ const Footer = () => {
     }
   };
 
+  // Contact form state moved here from ContactSection
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: wire real submission endpoint
+    console.log('Contact form submitted:', formData);
+    setFormData({ name: '', email: '', message: '' });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   return (
     <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white">
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-1 sm:grid-cols-2">
           {/* Company Info */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
@@ -119,15 +137,52 @@ const Footer = () => {
               </div>
             </div>
           </div>
+            <div>
+                <h4 className="text-xl font-semibold mb-4">Get in touch</h4>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <Input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
+                  />
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
+                  />
+                  <Textarea
+                    name="message"
+                    placeholder="Your Message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
+                    rows={4}
+                  />
+                  <Button
+                    type="submit"
+                    className="w-full bg-yellow text-yellow-foreground hover:bg-yellow/90"
+                  >
+                    Send Message
+                  </Button>
+                </form>
+              </div>
         </div>
       </div>
-
       {/* Bottom Bar */}
       <div className="border-t border-white/20">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
             <p className="text-gray-200 text-center md:text-left text-sm">
-              © {currentYear} Triple Technologies. All rights reserved.
+              &copy; {currentYear} Triple Technologies. All rights reserved.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-200 hover:text-yellow transition-colors duration-300 text-xs">
