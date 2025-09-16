@@ -163,7 +163,7 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="text-center space-y-4">
             <div className="flex justify-center">
-              <img src={logo} alt="Triple Technologies Logo" className="h-16 w-16" />
+              <Image src="/logo.png" alt="Triple Technologies Logo" width={64} height={64} />
             </div>
             <DialogTitle className="text-2xl font-bold text-light-blue">Reset Password</DialogTitle>
             <DialogDescription>
@@ -224,7 +224,7 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
       <DialogContent className={`sm:max-w-md ${activeTab === 'login' ? 'overflow-y-hidden' : 'overflow-y-auto'}`}>
         <DialogHeader className="text-center space-y-4">
           <div className="flex justify-center">
-            <img src={logo} alt="Triple Technologies Logo" className="h-16 w-16" />
+            <Image src="/logo.png" alt="Triple Technologies Logo" width={64} height={64} />
           </div>
           <DialogTitle className="text-2xl font-bold text-light-blue">Welcome</DialogTitle>
           <DialogDescription>

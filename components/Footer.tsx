@@ -1,6 +1,8 @@
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Github, Phone, MapPin, Mail } from 'lucide-react';
-import logo from '../assets/logo.png';
+'use client';
+
 import { useState } from 'react';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Github, Phone, MapPin, Mail } from 'lucide-react';
+import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -46,7 +48,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <img src={logo} alt="Triple Technologies Logo" className="h-8 w-8" />
+              <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} />
               <span className="text-xl font-bold">Triple Technologies</span>
             </div>
             <p className="text-gray-200 leading-relaxed text-sm">

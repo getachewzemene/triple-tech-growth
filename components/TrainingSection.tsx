@@ -1,11 +1,13 @@
+'use client';
+
 import { BookOpen, Users, Monitor, Award } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 const TrainingSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -63,7 +65,7 @@ const TrainingSection = () => {
                 animationDelay: `${index * 0.2}s`,
                 animationFillMode: 'forwards'
               }}
-              onClick={() => navigate('/training')}
+              onClick={() => router.push('/training')}
             >
               <program.icon className="card-icon w-12 h-12 mb-4 transition-colors duration-300 text-blue-600" />
               <h3 className="text-xl font-semibold mb-3">{program.title}</h3>

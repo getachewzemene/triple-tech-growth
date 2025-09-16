@@ -9,7 +9,7 @@ interface AuthContextType {
   loginAdmin: (username: string, password: string) => boolean;
   logout: () => void;
   user: { username: string; isAdmin?: boolean } | null;
-  registerUser: (userData: any) => void;
+  registerUser: (userData: Record<string, unknown>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = (email: string, password: string): boolean => {
     // Check if it's a registered user
     const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-    const foundUser = registeredUsers.find((u: any) => u.email === email && u.password === password);
+    const foundUser = registeredUsers.find((u: Record<string, unknown>) => u.email === email && u.password === password);
     
     if (foundUser) {
       const userData = { username: foundUser.fullName, isAdmin: false };
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return false;
   };
 
-  const registerUser = (userData: any) => {
+  const registerUser = (userData: Record<string, unknown>) => {
     const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
     registeredUsers.push({
       ...userData,

@@ -1,3 +1,5 @@
+'use client';
+
 import { Package, Dumbbell, Hotel, Building } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
