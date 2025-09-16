@@ -47,7 +47,7 @@ const courses = [
 
 const courseContents = {
   "Video Editing": [
-    { title: "Basics of Video Cutting", type: "video", src: "https://youtu.be/F1sKwFHM8q4" },
+    { title: "Basics of Video Cutting", type: "video", src: "https://www.youtube.com/embed/F1sKwFHM8q4" },
     { title: "Exporting Projects", type: "pdf", src: "/pdfs/exporting.pdf" },
   ],
   "Digital Marketing": [
@@ -123,7 +123,7 @@ const Training = () => {
                     className={`my-3 font-medium cursor-pointer p-3 rounded-lg transition-all duration-200 ${
                       selectedTopic?.title === item.title
                         ? 'text-primary border-l-2 border-yellow bg-primary/10'
-                        : 'text-foreground hover:bg-primary/10 hover:text-yellow-foreground hover:border-l-2 hover:border-yellow'
+                        : 'text-foreground hover:bg-primary/10 hover:text-yellow hover:border-l-2 hover:border-yellow'
                     }`}
                     onClick={() => setSelectedTopic(item)}
                   >

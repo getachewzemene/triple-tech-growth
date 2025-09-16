@@ -27,7 +27,7 @@ const Admin = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <img src={logo} alt="Triple Technologies Logo" className="h-8 w-8" />
-              <span className="text-xl font-bold text-light-blue">Triple Technologies Admin</span>
+              <span className="text-xl font-bold text-blue-500">Triple Technologies Admin</span>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">Welcome, {user?.username}</span>
