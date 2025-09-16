@@ -6,14 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Lock, User } from 'lucide-react';
+import { Lock, User, Home } from 'lucide-react';
 import logo from '../assets/logo.png';
 
-const Login = () => {
+const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { loginAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,11 +25,11 @@ const Login = () => {
       return;
     }
 
-    const success = login(username, password);
+    const success = loginAdmin(username, password);
     if (success) {
       navigate('/admin');
     } else {
-      setError('Invalid username or password');
+      setError('Invalid admin credentials');
     }
   };
 
@@ -40,9 +40,9 @@ const Login = () => {
           <div className="flex justify-center">
             <img src={logo} alt="Triple Technologies Logo" className="h-16 w-16" />
           </div>
-          <CardTitle className="text-2xl font-bold text-light-blue">Admin Login</CardTitle>
+          <CardTitle className="text-2xl font-bold text-light-blue">Admin Access</CardTitle>
           <CardDescription>
-            Enter your credentials to access the admin panel
+            Administrative access to Triple Technologies dashboard
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -60,7 +60,7 @@ const Login = () => {
                 <Input
                   id="username"
                   type="text"
-                  placeholder="Enter username"
+                  placeholder="Enter admin username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="pl-10"
@@ -75,7 +75,7 @@ const Login = () => {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter password"
+                  placeholder="Enter admin password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10"
@@ -83,20 +83,26 @@ const Login = () => {
               </div>
             </div>
             
-            <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90">
-              Sign In
-            </Button>
+            <div className="space-y-3">
+              <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90">
+                Access Admin Dashboard
+              </Button>
+              
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-full"
+                onClick={() => navigate('/')}
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Back to Website
+              </Button>
+            </div>
           </form>
-          
-          <div className="mt-6 text-center text-sm text-gray-600">
-            <p>Demo credentials:</p>
-            <p>Username: <span className="font-mono">admin</span></p>
-            <p>Password: <span className="font-mono">triple123</span></p>
-          </div>
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default Login;
+export default AdminLogin;

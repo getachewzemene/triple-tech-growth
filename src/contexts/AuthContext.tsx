@@ -2,7 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => boolean;
+  login: (email: string, password: string) => boolean;
+  loginAdmin: (username: string, password: string) => boolean;
   logout: () => void;
   user: { username: string; isAdmin?: boolean } | null;
   registerUser: (userData: any) => void;
@@ -30,21 +31,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = (username: string, password: string): boolean => {
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-      const userData = { username, isAdmin: true };
+  const login = (email: string, password: string): boolean => {
+    // Check if it's a registered user (email-based authentication)
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    const foundUser = registeredUsers.find((u: any) => u.email === email && u.password === password);
+    
+    if (foundUser) {
+      const userData = { username: foundUser.fullName, isAdmin: false };
       setIsAuthenticated(true);
       setUser(userData);
       localStorage.setItem('triple-auth', JSON.stringify({ user: userData }));
       return true;
     }
     
-    // Check if it's a registered user
-    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-    const foundUser = registeredUsers.find((u: any) => u.email === username && u.password === password);
-    
-    if (foundUser) {
-      const userData = { username: foundUser.fullName, isAdmin: false };
+    return false;
+  };
+
+  const loginAdmin = (username: string, password: string): boolean => {
+    // Admin authentication (username-based)
+    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+      const userData = { username, isAdmin: true };
       setIsAuthenticated(true);
       setUser(userData);
       localStorage.setItem('triple-auth', JSON.stringify({ user: userData }));
@@ -76,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, registerUser }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, loginAdmin, logout, user, registerUser }}>
       {children}
     </AuthContext.Provider>
   );

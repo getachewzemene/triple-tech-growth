@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Training from "./pages/Training";
 import Profile from "./pages/Profile";
-import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -25,11 +25,11 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/training" element={<Training />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route 
               path="/admin" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireAdmin={true}>
                   <Admin />
                 </ProtectedRoute>
               } 
