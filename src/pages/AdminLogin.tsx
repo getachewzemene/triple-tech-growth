@@ -6,12 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Lock, User } from 'lucide-react';
+import { Lock, User, Eye, EyeOff } from 'lucide-react';
 import logo from '../assets/logo.png';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { loginAdmin } = useAuth();
   const navigate = useNavigate();
@@ -36,16 +37,18 @@ const AdminLogin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="text-center space-y-4">
-          <div className="flex justify-center">
-            <img src={logo} alt="Triple Technologies Logo" className="h-16 w-16" />
+        {/* Top header with logo */}
+        <div className="flex items-center px-6 pt-6">
+          <div className="flex items-center space-x-4">
+            <img src={logo} alt="Triple Technologies Logo" className="h-12 w-12" />
+            <div>
+              <CardTitle className="text-xl font-bold text-light-blue">Admin Login</CardTitle>
+              <CardDescription className="text-sm">Enter your credentials to access the admin panel</CardDescription>
+            </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-light-blue">Admin Login</CardTitle>
-          <CardDescription>
-            Enter your credentials to access the admin panel
-          </CardDescription>
-        </CardHeader>
+        </div>
         <CardContent>
+  {/* ...existing CardContent... */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <Alert variant="destructive">
@@ -74,12 +77,20 @@ const AdminLogin = () => {
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 pr-10"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-2.5 p-1 text-gray-500 hover:text-gray-700"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             </div>
             
@@ -92,6 +103,10 @@ const AdminLogin = () => {
             <p>Demo credentials:</p>
             <p>Username: <span className="font-mono">admin</span></p>
             <p>Password: <span className="font-mono">triple123</span></p>
+          </div>
+          {/* Footer with Back button */}
+          <div className="mt-4 flex justify-center">
+            <Button variant="outline" onClick={() => navigate('/')}>Back to website</Button>
           </div>
         </CardContent>
       </Card>

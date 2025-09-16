@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Lock, User, Mail, Phone, MapPin } from 'lucide-react';
+import { Lock, User, Mail, Phone, MapPin, Eye, EyeOff } from 'lucide-react';
 import logo from '../assets/logo.png';
 
 interface UserAuthModalProps {
@@ -25,6 +25,7 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
     email: '',
     password: ''
   });
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   // Registration form state
   const [signupData, setSignupData] = useState({
@@ -35,6 +36,8 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
     phone: '',
     address: ''
   });
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showSignupConfirm, setShowSignupConfirm] = useState(false);
 
   // Forgot password state
   const [forgotEmail, setForgotEmail] = useState('');
@@ -80,8 +83,8 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
     }
 
     // Check if user already exists
-    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-    const existingUser = registeredUsers.find((u: any) => u.email === signupData.email);
+  const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+  const existingUser = registeredUsers.find((u: { email?: string }) => u.email === signupData.email);
     
     if (existingUser) {
       setError('An account with this email already exists');
@@ -215,7 +218,8 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      {/* When on the login tab we hide the vertical scrollbar; for signup/forgot we allow scrolling */}
+      <DialogContent className={`sm:max-w-md ${activeTab === 'login' ? 'overflow-y-hidden' : 'overflow-y-auto'}`}>
         <DialogHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <img src={logo} alt="Triple Technologies Logo" className="h-16 w-16" />
@@ -261,12 +265,20 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
                     id="login-password"
-                    type="password"
+                    type={showLoginPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={loginData.password}
                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                    className="pl-10"
+                    className="pl-10 pr-10"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    className="absolute right-3 top-2.5 p-1 text-gray-500 hover:text-gray-700"
+                    aria-label={showLoginPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
               
@@ -367,12 +379,20 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
                     id="signup-password"
-                    type="password"
+                    type={showSignupPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={signupData.password}
                     onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                    className="pl-10"
+                    className="pl-10 pr-10"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowSignupPassword(!showSignupPassword)}
+                    className="absolute right-3 top-2.5 p-1 text-gray-500 hover:text-gray-700"
+                    aria-label={showSignupPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showSignupPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
               
@@ -382,12 +402,20 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
                     id="signup-confirm-password"
-                    type="password"
+                    type={showSignupConfirm ? 'text' : 'password'}
                     placeholder="Confirm your password"
                     value={signupData.confirmPassword}
                     onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
-                    className="pl-10"
+                    className="pl-10 pr-10"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowSignupConfirm(!showSignupConfirm)}
+                    className="absolute right-3 top-2.5 p-1 text-gray-500 hover:text-gray-700"
+                    aria-label={showSignupConfirm ? 'Hide password' : 'Show password'}
+                  >
+                    {showSignupConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
               
