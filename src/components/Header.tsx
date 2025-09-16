@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
 import logo from '../assets/logo.png';
 
 const Header = () => {
@@ -9,6 +11,7 @@ const Header = () => {
   const [activeSection, setActiveSection] = useState('hero');
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,33 +77,57 @@ const Header = () => {
         </div>
         
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-8">
-          {[
-            { name: 'Home', id: 'hero' },
-            { name: 'Services', id: 'services' },
-            { name: 'Projects', id: 'projects' },
-            { name: 'Why Choose Us', id: 'why-choose-us' },
-            { name: 'Training', id: 'training' },
-            { name: 'Team', id: 'team' },
-            { name: 'Contact Us', id: 'contact' },
-          ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`relative transition-all duration-300 font-medium ${
-                (activeSection === item.id && location.pathname === '/') || (item.id === 'training' && location.pathname === '/training')
-                  ? 'text-yellow after:w-full'
-                  : isScrolled 
-                    ? 'text-white hover:text-yellow' 
-                    : 'text-white hover:text-yellow'
-              } after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full ${
-                (activeSection === item.id && location.pathname === '/') || (item.id === 'training' && location.pathname === '/training') ? 'after:w-full' : 'after:w-0'
-              }`}
+        <div className="hidden md:flex items-center space-x-8">
+          <nav className="flex space-x-8">
+            {[
+              { name: 'Home', id: 'hero' },
+              { name: 'Services', id: 'services' },
+              { name: 'Projects', id: 'projects' },
+              { name: 'Why Choose Us', id: 'why-choose-us' },
+              { name: 'Training', id: 'training' },
+              { name: 'Team', id: 'team' },
+              { name: 'Contact Us', id: 'contact' },
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`relative transition-all duration-300 font-medium ${
+                  (activeSection === item.id && location.pathname === '/') || (item.id === 'training' && location.pathname === '/training')
+                    ? 'text-yellow after:w-full'
+                    : isScrolled 
+                      ? 'text-white hover:text-yellow' 
+                      : 'text-white hover:text-yellow'
+                } after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full ${
+                  (activeSection === item.id && location.pathname === '/') || (item.id === 'training' && location.pathname === '/training') ? 'after:w-full' : 'after:w-0'
+                }`}
+              >
+                {item.name}
+              </button>
+            ))}
+          </nav>
+          
+          {/* Profile/Login Button */}
+          {user ? (
+            <Button
+              onClick={() => navigate('/profile')}
+              variant="outline"
+              size="sm"
+              className="bg-transparent border-white text-white hover:bg-white hover:text-primary"
             >
-              {item.name}
-            </button>
-          ))}
-        </nav>
+              <User className="w-4 h-4 mr-2" />
+              Profile
+            </Button>
+          ) : (
+            <Button
+              onClick={() => navigate('/login')}
+              variant="outline"
+              size="sm"
+              className="bg-transparent border-white text-white hover:bg-white hover:text-primary"
+            >
+              Login
+            </Button>
+          )}
+        </div>
 
         {/* Mobile Menu Button */}
         <button
@@ -137,6 +164,36 @@ const Header = () => {
                   {item.name}
                 </button>
               ))}
+              
+              {/* Mobile Profile/Login Button */}
+              <div className="pt-4 border-t border-white/20">
+                {user ? (
+                  <Button
+                    onClick={() => {
+                      navigate('/profile');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Profile
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      navigate('/login');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
+                  >
+                    Login
+                  </Button>
+                )}
+              </div>
             </nav>
           </div>
         )}

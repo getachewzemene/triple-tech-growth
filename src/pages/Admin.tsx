@@ -3,12 +3,71 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, Users, MessageSquare, BarChart3, Settings, Home } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { LogOut, Users, MessageSquare, BarChart3, Settings, Home, GraduationCap, CheckCircle, XCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
 
 const Admin = () => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
+  const [enrollments, setEnrollments] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    // Load enrollments and notifications
+    const loadData = () => {
+      const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+      const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+      setEnrollments(enrolledCourses);
+      setNotifications(adminNotifications);
+    };
+    
+    loadData();
+    // Refresh data every 5 seconds
+    const interval = setInterval(loadData, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleApprovePayment = (courseId, studentEmail) => {
+    // Update enrollment status
+    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+    const updatedCourses = enrolledCourses.map(course => 
+      course.courseId === courseId && course.email === studentEmail
+        ? { ...course, status: 'approved', approvedAt: new Date().toISOString() }
+        : course
+    );
+    localStorage.setItem('enrolledCourses', JSON.stringify(updatedCourses));
+    setEnrollments(updatedCourses);
+    
+    // Remove from notifications
+    const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+    const updatedNotifications = adminNotifications.filter(notif => 
+      !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
+    );
+    localStorage.setItem('adminNotifications', JSON.stringify(updatedNotifications));
+    setNotifications(updatedNotifications);
+  };
+
+  const handleRejectPayment = (courseId, studentEmail) => {
+    // Update enrollment status
+    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+    const updatedCourses = enrolledCourses.map(course => 
+      course.courseId === courseId && course.email === studentEmail
+        ? { ...course, status: 'pending_payment', rejectedAt: new Date().toISOString() }
+        : course
+    );
+    localStorage.setItem('enrolledCourses', JSON.stringify(updatedCourses));
+    setEnrollments(updatedCourses);
+    
+    // Remove from notifications
+    const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+    const updatedNotifications = adminNotifications.filter(notif => 
+      !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
+    );
+    localStorage.setItem('adminNotifications', JSON.stringify(updatedNotifications));
+    setNotifications(updatedNotifications);
+  };
 
   const handleLogout = () => {
     logout();
@@ -52,8 +111,16 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="enrollments">
+              Course Enrollments
+              {notifications.length > 0 && (
+                <Badge variant="destructive" className="ml-2 px-1 py-0 text-xs">
+                  {notifications.length}
+                </Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -85,12 +152,14 @@ const Admin = () => {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Course Enrollments</CardTitle>
+                  <GraduationCap className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">12.5%</div>
-                  <p className="text-xs text-muted-foreground">+3.2% from last month</p>
+                  <div className="text-2xl font-bold">{enrollments.length}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {notifications.length} pending approval
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -102,6 +171,17 @@ const Admin = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  {notifications.length > 0 && (
+                    <div className="flex items-center space-x-4">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      <div>
+                        <p className="text-sm font-medium">
+                          {notifications.length} payment proof(s) awaiting approval
+                        </p>
+                        <p className="text-xs text-gray-500">Check Course Enrollments tab</p>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex items-center space-x-4">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div>
@@ -124,6 +204,96 @@ const Admin = () => {
                     </div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="enrollments" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Course Enrollments</CardTitle>
+                <CardDescription>Manage student enrollments and payment approvals</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {enrollments.length === 0 ? (
+                  <p className="text-gray-600">No course enrollments yet.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {enrollments.map((enrollment, index) => (
+                      <div key={index} className="border rounded-lg p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="font-semibold text-lg">{enrollment.courseTitle}</h3>
+                            <p className="text-sm text-gray-600">
+                              Enrolled by: {enrollment.fullName} ({enrollment.email})
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Enrolled on: {new Date(enrollment.enrolledAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <Badge 
+                            variant={
+                              enrollment.status === 'approved' ? 'default' :
+                              enrollment.status === 'payment_submitted' ? 'secondary' :
+                              'destructive'
+                            }
+                          >
+                            {enrollment.status === 'approved' ? 'Approved' :
+                             enrollment.status === 'payment_submitted' ? 'Payment Under Review' :
+                             'Payment Required'}
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <strong>Phone:</strong> {enrollment.phone}
+                          </div>
+                          <div>
+                            <strong>Age:</strong> {enrollment.age}
+                          </div>
+                          <div className="col-span-2">
+                            <strong>Address:</strong> {enrollment.address}
+                          </div>
+                          {enrollment.paymentProof && (
+                            <div className="col-span-2">
+                              <strong>Payment Proof:</strong> {enrollment.paymentProof}
+                            </div>
+                          )}
+                        </div>
+
+                        {enrollment.status === 'payment_submitted' && (
+                          <div className="flex gap-2 pt-3 border-t">
+                            <Button 
+                              size="sm"
+                              onClick={() => handleApprovePayment(enrollment.courseId, enrollment.email)}
+                              className="bg-green-600 hover:bg-green-700"
+                            >
+                              <CheckCircle className="w-4 h-4 mr-2" />
+                              Approve Payment
+                            </Button>
+                            <Button 
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleRejectPayment(enrollment.courseId, enrollment.email)}
+                            >
+                              <XCircle className="w-4 h-4 mr-2" />
+                              Reject Payment
+                            </Button>
+                          </div>
+                        )}
+
+                        {enrollment.status === 'approved' && (
+                          <div className="pt-3 border-t">
+                            <div className="flex items-center text-green-600 text-sm">
+                              <CheckCircle className="w-4 h-4 mr-2" />
+                              <span>Payment approved on {new Date(enrollment.approvedAt).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
