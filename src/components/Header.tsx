@@ -3,12 +3,14 @@ import { Menu, X, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import UserAuthModal from '@/components/UserAuthModal';
 import logo from '../assets/logo.png';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -119,7 +121,7 @@ const Header = () => {
             </Button>
           ) : (
             <Button
-              onClick={() => navigate('/login')}
+              onClick={() => setIsAuthModalOpen(true)}
               variant="outline"
               size="sm"
               className="bg-transparent border-white text-white hover:bg-white hover:text-primary"
@@ -183,7 +185,7 @@ const Header = () => {
                 ) : (
                   <Button
                     onClick={() => {
-                      navigate('/login');
+                      setIsAuthModalOpen(true);
                       setIsMobileMenuOpen(false);
                     }}
                     variant="outline"
@@ -198,6 +200,12 @@ const Header = () => {
           </div>
         )}
       </div>
+      
+      {/* User Authentication Modal */}
+      <UserAuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
     </header>
   );
 };

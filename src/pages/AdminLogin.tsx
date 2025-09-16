@@ -9,11 +9,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Lock, User } from 'lucide-react';
 import logo from '../assets/logo.png';
 
-const Login = () => {
+const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { loginAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,11 +25,11 @@ const Login = () => {
       return;
     }
 
-    const success = login(username, password);
+    const success = loginAdmin(username, password);
     if (success) {
       navigate('/admin');
     } else {
-      setError('Invalid username or password');
+      setError('Invalid admin username or password');
     }
   };
 
@@ -99,4 +99,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;
