@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaVideo, FaChartLine, FaCode, FaMobileAlt, FaPaintBrush, FaRobot, FaClock, FaUser, FaDollarSign, FaStar } from "react-icons/fa";
 import Header from "@/components/Header";
-import ContactSection from "@/components/ContactSection";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
+import Footer from "./../components/Footer";
 
 const courses = [
   {
@@ -594,7 +595,7 @@ const Training = () => {
         </DialogContent>
       </Dialog>
 
-      <ContactSection />
+      <Footer />
     </div>
   );
 };
