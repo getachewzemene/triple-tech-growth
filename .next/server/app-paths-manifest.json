@@ -1,6 +1,1 @@
-{
-  "/page": "app/page.js",
-  "/training/page": "app/training/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/admin/users/page": "app/admin/users/page.js"
-}
+{}
