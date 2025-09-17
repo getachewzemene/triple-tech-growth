@@ -6,25 +6,30 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, MessageSquare, BarChart3, Settings, Home, GraduationCap, CheckCircle, XCircle } from 'lucide-react';
+import { LogOut, Users, MessageSquare, BarChart3, Settings, Home, GraduationCap, CheckCircle, XCircle, Plus, Video } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { safeLocalStorage } from '@/lib/hooks/useLocalStorage';
+import AddCourseModal from '@/components/admin/AddCourseModal';
 
 function AdminPageContent() {
   const { logout, user } = useAuth();
   const router = useRouter();
   const [enrollments, setEnrollments] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
 
   useEffect(() => {
     // Load enrollments and notifications
     const loadData = () => {
       const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
       const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
+      const savedCourses = safeLocalStorage.getItem('adminCourses', []);
       setEnrollments(enrolledCourses);
       setNotifications(adminNotifications);
+      setCourses(savedCourses);
     };
     
     loadData();
@@ -73,6 +78,14 @@ function AdminPageContent() {
     setNotifications(updatedNotifications);
   };
 
+  const handleCourseSaved = (course: any) => {
+    // Add the new course to local storage and state
+    const savedCourses = safeLocalStorage.getItem('adminCourses', []);
+    const updatedCourses = [course, ...savedCourses];
+    safeLocalStorage.setItem('adminCourses', updatedCourses);
+    setCourses(updatedCourses);
+  };
+
   const handleLogout = () => {
     logout();
     router.push('/');
@@ -115,10 +128,11 @@ function AdminPageContent() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="enrollments">
-              Course Enrollments
+              Enrollments
               {notifications.length > 0 && (
                 <Badge variant="destructive" className="ml-2 px-1 py-0 text-xs">
                   {notifications.length}
@@ -208,6 +222,130 @@ function AdminPageContent() {
                     </div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="courses" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold">Course Management</h2>
+                <p className="text-gray-600">Manage video courses and content</p>
+              </div>
+              <Button onClick={() => setIsAddCourseModalOpen(true)} className="flex items-center space-x-2">
+                <Plus className="h-4 w-4" />
+                <span>Add Course</span>
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Courses</CardTitle>
+                  <Video className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{courses.length}</div>
+                  <p className="text-xs text-muted-foreground">Active video courses</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Storage</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {courses.reduce((total, course) => total + (course.size || 0), 0) > 0 
+                      ? `${(courses.reduce((total, course) => total + (course.size || 0), 0) / (1024 * 1024 * 1024)).toFixed(1)} GB`
+                      : '0 GB'
+                    }
+                  </div>
+                  <p className="text-xs text-muted-foreground">Video storage used</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Duration</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {courses.reduce((total, course) => total + (course.duration || 0), 0) > 0 
+                      ? `${Math.floor(courses.reduce((total, course) => total + (course.duration || 0), 0) / 60)} min`
+                      : '0 min'
+                    }
+                  </div>
+                  <p className="text-xs text-muted-foreground">Total video content</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Course Library</CardTitle>
+                <CardDescription>Manage your video course content</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {courses.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Video className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No courses yet</h3>
+                    <p className="text-gray-600 mb-4">Get started by adding your first video course</p>
+                    <Button onClick={() => setIsAddCourseModalOpen(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Your First Course
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {courses.map((course, index) => (
+                      <div key={course.id || index} className="border rounded-lg p-4 space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-lg">{course.title}</h3>
+                            <p className="text-sm text-gray-600 mt-1">{course.detail}</p>
+                            <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                              <span>Instructor: {course.instructor}</span>
+                              {course.duration && <span>Duration: {Math.floor(course.duration / 60)}m {course.duration % 60}s</span>}
+                              {course.size && <span>Size: {(course.size / (1024 * 1024)).toFixed(1)} MB</span>}
+                            </div>
+                            <div className="flex items-center space-x-2 mt-2">
+                              <Badge 
+                                variant={
+                                  course.transcodeStatus === 'completed' ? 'default' :
+                                  course.transcodeStatus === 'processing' ? 'secondary' :
+                                  course.transcodeStatus === 'failed' ? 'destructive' :
+                                  'outline'
+                                }
+                              >
+                                {course.transcodeStatus === 'completed' ? 'Ready' :
+                                 course.transcodeStatus === 'processing' ? 'Processing' :
+                                 course.transcodeStatus === 'failed' ? 'Failed' :
+                                 'Pending'}
+                              </Badge>
+                              {course.isProtected && (
+                                <Badge variant="outline">
+                                  🔒 Protected
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Button variant="outline" size="sm">
+                              Edit
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              View
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -370,6 +508,13 @@ function AdminPageContent() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Add Course Modal */}
+      <AddCourseModal
+        isOpen={isAddCourseModalOpen}
+        onClose={() => setIsAddCourseModalOpen(false)}
+        onCourseSaved={handleCourseSaved}
+      />
     </div>
   );
 }
