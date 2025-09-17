@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useRouter } from "next/navigation";
+import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 
 export default function ProfilePage() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -18,7 +19,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     // Load enrolled courses from localStorage
-    const courses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+    const courses = safeLocalStorage.getItem('enrolledCourses', []);
     setEnrolledCourses(courses);
   }, []);
 
