@@ -39,10 +39,13 @@ npm run dev
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Next.js 15** - React framework for production
+- **TypeScript** - Type-safe JavaScript
+- **React 19** - Latest React features
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Modern UI components
+- **Radix UI** - Accessible component primitives
+- **Framer Motion** - Animation library
+- **React Query** - Data fetching and caching
 
 

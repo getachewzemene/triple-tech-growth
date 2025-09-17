@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/app/providers/AuthProvider";
 import Footer from "@/components/Footer";
+import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 
 const courses = [
   {
@@ -199,7 +200,7 @@ export default function TrainingPage() {
     }
     
     // Store enrollment data
-    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+    const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
     const newEnrollment = {
       courseId: selectedCourse.id,
       courseTitle: selectedCourse.title,
@@ -208,7 +209,7 @@ export default function TrainingPage() {
       status: 'pending_payment'
     };
     enrolledCourses.push(newEnrollment);
-    localStorage.setItem('enrolledCourses', JSON.stringify(enrolledCourses));
+    safeLocalStorage.setItem('enrolledCourses', enrolledCourses);
     
     setShowSignupModal(false);
     setShowPaymentModal(true);
@@ -218,16 +219,16 @@ export default function TrainingPage() {
     e.preventDefault();
     if (paymentProof) {
       // In a real app, this would upload to a server
-      const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
-      const updatedCourses = enrolledCourses.map(course => 
+      const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+      const updatedCourses = enrolledCourses.map((course: any) => 
         course.courseId === selectedCourse.id 
           ? { ...course, status: 'payment_submitted', paymentProof: paymentProof.name }
           : course
       );
-      localStorage.setItem('enrolledCourses', JSON.stringify(updatedCourses));
+      safeLocalStorage.setItem('enrolledCourses', updatedCourses);
       
       // Simulate admin notification
-      const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+      const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
       adminNotifications.push({
         id: Date.now(),
         type: 'payment_proof',
@@ -236,7 +237,7 @@ export default function TrainingPage() {
         timestamp: new Date().toISOString(),
         paymentProof: paymentProof.name
       });
-      localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
+      safeLocalStorage.setItem('adminNotifications', adminNotifications);
       
       setShowPaymentModal(false);
       setPaymentProof(null);
@@ -244,9 +245,9 @@ export default function TrainingPage() {
     }
   };
 
-  const checkEnrollmentStatus = (courseId) => {
-    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
-    return enrolledCourses.find(course => course.courseId === courseId);
+  const checkEnrollmentStatus = (courseId: number) => {
+    const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+    return enrolledCourses.find((course: any) => course.courseId === courseId);
   };
 
   return (

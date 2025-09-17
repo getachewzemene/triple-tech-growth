@@ -1,25 +1,90 @@
+import type { Metadata, Viewport } from 'next';
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./providers/AuthProvider";
 
-export const metadata = {
-  title: "Triple Technologies | Software Dev't, Digital Marketing",
-  description: "Triple Technologies offers professional software development, IT training, CCTV installation, and social media management services in Ethiopia.",
-  keywords: "Triple Technologies,Software, mobile app, software development Ethiopia, IT training, CCTV installation, digital marketing services Ethiopia",
-  robots: "index, follow",
-  author: "Getachew Zemene",
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tripletechnologies.com';
+
+export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Triple Technologies | Software Development, Digital Marketing & IT Training",
+    template: "%s | Triple Technologies"
+  },
+  description: "Triple Technologies offers professional software development, IT training, CCTV installation, and social media management services in Ethiopia. Expert solutions for your digital transformation.",
+  keywords: [
+    "Triple Technologies",
+    "Software development Ethiopia",
+    "Mobile app development",
+    "IT training",
+    "CCTV installation",
+    "Digital marketing services",
+    "Web development",
+    "Social media management",
+    "Tech solutions Ethiopia"
+  ],
+  authors: [{ name: "Getachew Zemene" }],
+  creator: "Getachew Zemene",
+  publisher: "Triple Technologies",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
-    title: "Triple Technologies | Software Dev't, Digital Marketing",
-    description: "Triple Technologies offers professional software development, IT training, CCTV installation, and social media management services in Ethiopia.",
     type: "website",
+    locale: "en_US",
+    url: baseUrl,
+    title: "Triple Technologies | Software Development, Digital Marketing & IT Training",
+    description: "Triple Technologies offers professional software development, IT training, CCTV installation, and social media management services in Ethiopia.",
+    siteName: "Triple Technologies",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Triple Technologies - Your Tech Solutions Partner",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    title: "Triple Technologies | Software Development & Digital Marketing",
+    description: "Professional tech solutions in Ethiopia. Software development, IT training, CCTV installation, and digital marketing services.",
     site: "@GetachewZemene",
+    creator: "@GetachewZemene",
+    images: ["/og-image.jpg"],
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/manifest.json",
+  category: "technology",
+  classification: "Business",
+  alternates: {
+    canonical: baseUrl,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#2563eb" },
+    { media: "(prefers-color-scheme: dark)", color: "#1d4ed8" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -28,8 +93,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body className="min-h-screen bg-background font-sans antialiased">
         <AuthProvider>
           <TooltipProvider>
             {children}

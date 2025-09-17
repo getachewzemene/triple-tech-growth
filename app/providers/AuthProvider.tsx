@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -28,24 +29,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Check if user is already logged in (from localStorage)
-    const storedAuth = localStorage.getItem('triple-auth');
+    const storedAuth = safeLocalStorage.getItem('triple-auth', null);
     if (storedAuth) {
-      const authData = JSON.parse(storedAuth);
       setIsAuthenticated(true);
-      setUser(authData.user);
+      setUser(storedAuth.user);
     }
   }, []);
 
   const login = (email: string, password: string): boolean => {
     // Check if it's a registered user
-    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    const registeredUsers = safeLocalStorage.getItem('registeredUsers', []);
     const foundUser = registeredUsers.find((u: Record<string, unknown>) => u.email === email && u.password === password);
     
     if (foundUser) {
       const userData = { username: foundUser.fullName, isAdmin: false };
       setIsAuthenticated(true);
       setUser(userData);
-      localStorage.setItem('triple-auth', JSON.stringify({ user: userData }));
+      safeLocalStorage.setItem('triple-auth', { user: userData });
       return true;
     }
     
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const userData = { username, isAdmin: true };
       setIsAuthenticated(true);
       setUser(userData);
-      localStorage.setItem('triple-auth', JSON.stringify({ user: userData }));
+      safeLocalStorage.setItem('triple-auth', { user: userData });
       return true;
     }
     
@@ -65,24 +65,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const registerUser = (userData: Record<string, unknown>) => {
-    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    const registeredUsers = safeLocalStorage.getItem('registeredUsers', []);
     registeredUsers.push({
       ...userData,
       registeredAt: new Date().toISOString()
     });
-    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+    safeLocalStorage.setItem('registeredUsers', registeredUsers);
     
     // Auto-login the user
     const userAuthData = { username: userData.fullName, isAdmin: false };
     setIsAuthenticated(true);
     setUser(userAuthData);
-    localStorage.setItem('triple-auth', JSON.stringify({ user: userAuthData }));
+    safeLocalStorage.setItem('triple-auth', { user: userAuthData });
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
-    localStorage.removeItem('triple-auth');
+    safeLocalStorage.removeItem('triple-auth');
   };
 
   return (

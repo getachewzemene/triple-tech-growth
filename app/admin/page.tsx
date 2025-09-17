@@ -10,6 +10,7 @@ import { LogOut, Users, MessageSquare, BarChart3, Settings, Home, GraduationCap,
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { safeLocalStorage } from '@/lib/hooks/useLocalStorage';
 
 function AdminPageContent() {
   const { logout, user } = useAuth();
@@ -20,8 +21,8 @@ function AdminPageContent() {
   useEffect(() => {
     // Load enrollments and notifications
     const loadData = () => {
-      const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
-      const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+      const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+      const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
       setEnrollments(enrolledCourses);
       setNotifications(adminNotifications);
     };
@@ -32,43 +33,43 @@ function AdminPageContent() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleApprovePayment = (courseId, studentEmail) => {
+  const handleApprovePayment = (courseId: number, studentEmail: string) => {
     // Update enrollment status
-    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
-    const updatedCourses = enrolledCourses.map(course => 
+    const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+    const updatedCourses = enrolledCourses.map((course: any) => 
       course.courseId === courseId && course.email === studentEmail
         ? { ...course, status: 'approved', approvedAt: new Date().toISOString() }
         : course
     );
-    localStorage.setItem('enrolledCourses', JSON.stringify(updatedCourses));
+    safeLocalStorage.setItem('enrolledCourses', updatedCourses);
     setEnrollments(updatedCourses);
     
     // Remove from notifications
-    const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
-    const updatedNotifications = adminNotifications.filter(notif => 
+    const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
+    const updatedNotifications = adminNotifications.filter((notif: any) => 
       !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
     );
-    localStorage.setItem('adminNotifications', JSON.stringify(updatedNotifications));
+    safeLocalStorage.setItem('adminNotifications', updatedNotifications);
     setNotifications(updatedNotifications);
   };
 
-  const handleRejectPayment = (courseId, studentEmail) => {
+  const handleRejectPayment = (courseId: number, studentEmail: string) => {
     // Update enrollment status
-    const enrolledCourses = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
-    const updatedCourses = enrolledCourses.map(course => 
+    const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+    const updatedCourses = enrolledCourses.map((course: any) => 
       course.courseId === courseId && course.email === studentEmail
         ? { ...course, status: 'pending_payment', rejectedAt: new Date().toISOString() }
         : course
     );
-    localStorage.setItem('enrolledCourses', JSON.stringify(updatedCourses));
+    safeLocalStorage.setItem('enrolledCourses', updatedCourses);
     setEnrollments(updatedCourses);
     
     // Remove from notifications
-    const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
-    const updatedNotifications = adminNotifications.filter(notif => 
+    const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
+    const updatedNotifications = adminNotifications.filter((notif: any) => 
       !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
     );
-    localStorage.setItem('adminNotifications', JSON.stringify(updatedNotifications));
+    safeLocalStorage.setItem('adminNotifications', updatedNotifications);
     setNotifications(updatedNotifications);
   };
 
