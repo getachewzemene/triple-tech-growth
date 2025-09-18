@@ -10,12 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  STUDENT
+  ADMIN
+}
+
+enum EnrollmentStatus {
+  PENDING
+  ACTIVE
+  REJECTED
+}
+
+enum PaymentProofStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ContentType {
+  VIDEO
+  PDF
+}
+
 model Course {
   id              String   @id @default(cuid())
+  slug            String   @unique
   title           String
-  detail          String
-  instructor      String
-  s3Key           String   // S3 object key for the video file
+  description     String
+  priceCents      Int
+  thumbnailKey    String?
+  isPublished     Boolean  @default(false)
+  // Legacy fields for backward compatibility
+  detail          String?
+  instructor      String?
+  s3Key           String?  // S3 object key for the video file
   videoUrl        String?  // Optional CDN URL for the video
   duration        Int?     // Duration in seconds
   size            Int?     // File size in bytes
@@ -27,7 +55,9 @@ model Course {
   createdBy       String   // User ID who created the course
   
   // Relations for enrollment tracking
+  lessons         Lesson[]
   enrollments     Enrollment[]
+  paymentProofs   PaymentProof[]
   playbackSessions PlaybackSession[]
   
   @@map("courses")
@@ -37,9 +67,11 @@ model Enrollment {
   id        String   @id @default(cuid())
   userId    String
   courseId  String
-  status    String   @default("pending") // pending, approved, rejected
-  enrolledAt DateTime @default(now())
+  status    EnrollmentStatus @default(PENDING) // pending, active, rejected
+  createdAt DateTime @default(now())
+  approvedAt DateTime?
   
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   
   @@unique([userId, courseId])
@@ -66,9 +98,54 @@ model User {
   id          String   @id @default(cuid())
   email       String   @unique
   name        String?
+  role        UserRole @default(STUDENT)
   isAdmin     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
+  enrollments Enrollment[]
+  paymentProofs PaymentProof[]
+  
   @@map("users")
+}
+
+model Lesson {
+  id          String      @id @default(cuid())
+  courseId    String
+  title       String
+  contentType ContentType
+  s3Key       String
+  order       Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@map("lessons")
+}
+
+model PaymentProof {
+  id         String            @id @default(cuid())
+  userId     String
+  courseId   String
+  s3Key      String
+  status     PaymentProofStatus @default(PENDING)
+  comment    String?
+  uploadedAt DateTime          @default(now())
+  reviewedAt DateTime?
+  
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@map("payment_proofs")
+}
+
+model AdminNotification {
+  id        String   @id @default(cuid())
+  type      String
+  payload   String   // JSON string
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  @@map("admin_notifications")
 }

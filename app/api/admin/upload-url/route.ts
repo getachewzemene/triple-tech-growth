@@ -4,9 +4,10 @@ import { authOptions } from '@/lib/auth';
 import { getPresignedPutUrl, generateVideoS3Key, isValidVideoType, isValidFileSize } from '@/lib/s3';
 
 /**
- * Admin-only API route to generate presigned S3 upload URLs
+ * Admin-only API route to generate presigned S3 upload URLs for course media
  * Security: Validates admin privileges, file type, and size before generating URL
  * Returns short-lived (5min) presigned PUT URL for direct S3 upload
+ * Supports video files (MP4, WebM, MOV, AVI) and images for course content
  */
 export async function POST(request: NextRequest) {
   try {
