@@ -1,6 +1,7 @@
-# TripleAcademy Secure Video Platform
+# Welcome to Triple Technologies
+## Project info
 
-A production-ready, secure video course platform built with Next.js, featuring DRM-like protection, forensic watermarking, and defense-in-depth security measures.
+Triple Technologies is a one-stop tech solutions provider offering software development, IT training, digital marketing, maintenance, and networking services—driven by innovation, speed, and expert support.
 
 ## ⚠️ Important Security Notice
 
@@ -76,13 +77,6 @@ npm run dev
 
 Visit `http://localhost:3000` to access the application.
 
-### 4. Admin Access
-
-Default admin credentials (change in production):
-- Username: `admin` 
-- Password: `triple123`
-
-Access admin panel at: `http://localhost:3000/admin/login`
 
 ## 🔒 Security Configuration
 
