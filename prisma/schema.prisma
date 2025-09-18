@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id              String   @id @default(cuid())
+  title           String
+  detail          String
+  instructor      String
+  s3Key           String   // S3 object key for the video file
+  videoUrl        String?  // Optional CDN URL for the video
+  duration        Int?     // Duration in seconds
+  size            Int?     // File size in bytes
+  isProtected     Boolean  @default(true) // Whether DRM/encryption is enabled
+  drmEnabled      Boolean  @default(false) // Whether DRM is specifically enabled
+  transcodeStatus String   @default("pending") // pending, processing, completed, failed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String   // User ID who created the course
+  
+  // Relations for enrollment tracking
+  enrollments     Enrollment[]
+  playbackSessions PlaybackSession[]
+  
+  @@map("courses")
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  status    String   @default("pending") // pending, approved, rejected
+  enrolledAt DateTime @default(now())
+  
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, courseId])
+  @@map("enrollments")
+}
+
+model PlaybackSession {
+  id          String   @id @default(cuid())
+  userId      String
+  courseId    String
+  sessionId   String   @unique
+  userAgent   String?
+  ipAddress   String?
+  startedAt   DateTime @default(now())
+  lastActiveAt DateTime @default(now())
+  isActive    Boolean  @default(true)
+  
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@map("playback_sessions")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  isAdmin     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("users")
+}
