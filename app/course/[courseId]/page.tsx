@@ -22,6 +22,7 @@ import {
   ArrowLeft,
   Download
 } from 'lucide-react';
+import { FaUser } from 'react-icons/fa';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ContentDisplay from '@/components/course/ContentDisplay';
 
@@ -71,6 +72,20 @@ export default function CoursePage() {
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [contentLoading, setContentLoading] = useState(false);
+
+  // Course data with instructor information (should match training page data)
+  const courseInstructors = {
+    "Video Editing": "Sarah Johnson - 10+ years industry experience",
+    "Digital Marketing": "Mike Chen - Digital Marketing Expert", 
+    "Web Development": "Alex Thompson - Senior Full-Stack Developer",
+    "Mobile App Development": "Emma Wilson - Mobile App Specialist",
+    "Graphic Design": "David Kim - Creative Director",
+    "AI Automation": "Dr. James Wilson - AI Research Scientist",
+  };
+
+  const getInstructorInfo = (courseTitle: string) => {
+    return courseInstructors[courseTitle] || "Expert Instructor";
+  };
 
   useEffect(() => {
     if (!user) {
@@ -265,6 +280,10 @@ export default function CoursePage() {
               <div>
                 <h1 className="text-2xl font-bold text-foreground">{courseFolder.title}</h1>
                 <p className="text-muted-foreground">{courseFolder.description}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <FaUser className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">{getInstructorInfo(courseFolder.title)}</span>
+                </div>
               </div>
             </div>
             <div className="text-right">
@@ -272,6 +291,9 @@ export default function CoursePage() {
               <div className="flex items-center space-x-2">
                 <Progress value={calculateProgress()} className="w-32" />
                 <span className="text-sm font-medium">{Math.round(calculateProgress())}%</span>
+              </div>
+              <div className="mt-2 text-sm text-muted-foreground">
+                Instructor: {getInstructorInfo(courseFolder.title)}
               </div>
             </div>
           </div>

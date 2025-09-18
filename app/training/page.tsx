@@ -17,6 +17,7 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
+import UserAuthModal from "@/components/UserAuthModal";
 
 // Featured bonus courses as specified in the requirements
 const featuredBonusCourses = [
@@ -240,6 +241,7 @@ export default function TrainingPage() {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [courseFolders, setCourseFolders] = useState([]);
   const [enrollmentData, setEnrollmentData] = useState({
     fullName: '',
@@ -639,10 +641,13 @@ export default function TrainingPage() {
                                   </Button>
                                   <Button 
                                     size="sm"
-                                    onClick={() => router.push('/courses')}
-                                    className="w-full bg-yellow-600 hover:bg-yellow-700"
+                                    onClick={() => {
+                                      setSelectedCourse(course);
+                                      setShowAuthModal(true);
+                                    }}
+                                    className="w-full bg-blue-600 hover:bg-blue-700"
                                   >
-                                    Get Started
+                                    Enroll
                                   </Button>
                                 </div>
                               )}
@@ -772,10 +777,13 @@ export default function TrainingPage() {
                                   </Button>
                                   <Button 
                                     size="sm"
-                                    onClick={() => router.push('/courses')}
+                                    onClick={() => {
+                                      setSelectedCourse(course);
+                                      setShowAuthModal(true);
+                                    }}
                                     className="w-full bg-blue-600 hover:bg-blue-700"
                                   >
-                                    Get Started
+                                    Enroll
                                   </Button>
                                 </div>
                               )}
@@ -1053,6 +1061,12 @@ export default function TrainingPage() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* User Authentication Modal */}
+      <UserAuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+      />
 
       <Footer />
     </div>
