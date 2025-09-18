@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaVideo, FaChartLine, FaCode, FaMobileAlt, FaPaintBrush, FaRobot, FaClock, FaUser, FaDollarSign, FaStar } from "react-icons/fa";
 import Header from "@/components/Header";
@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/app/providers/AuthProvider";
+import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 
@@ -165,6 +166,7 @@ export default function TrainingPage() {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [courseFolders, setCourseFolders] = useState([]);
   const [enrollmentData, setEnrollmentData] = useState({
     fullName: '',
     email: '',
@@ -174,6 +176,20 @@ export default function TrainingPage() {
   });
   const [paymentProof, setPaymentProof] = useState(null);
   const { user, registerUser } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Load course folders from admin system
+    const loadCourseFolders = () => {
+      const folders = safeLocalStorage.getItem('adminCourseFolders', []);
+      setCourseFolders(folders);
+    };
+    
+    loadCourseFolders();
+    // Refresh every 5 seconds to show new folders
+    const interval = setInterval(loadCourseFolders, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleEnrollment = (course) => {
     // Check if user is already enrolled
@@ -202,11 +218,12 @@ export default function TrainingPage() {
     // Store enrollment data
     const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
     const newEnrollment = {
-      courseId: selectedCourse.id,
+      courseId: selectedCourse.isFolder ? selectedCourse.id : selectedCourse.id,
       courseTitle: selectedCourse.title,
       ...enrollmentData,
       enrolledAt: new Date().toISOString(),
-      status: 'pending_payment'
+      status: 'pending_payment',
+      isFolder: selectedCourse.isFolder || false
     };
     enrolledCourses.push(newEnrollment);
     safeLocalStorage.setItem('enrolledCourses', enrolledCourses);
@@ -260,7 +277,7 @@ export default function TrainingPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          courseId: selectedCourse.id.toString(),
+          courseId: selectedCourse.isFolder ? selectedCourse.id : selectedCourse.id.toString(),
           s3Key: s3Key,
           comment: 'Payment proof submitted from training page',
         }),
@@ -276,7 +293,7 @@ export default function TrainingPage() {
       // Update local storage for demo purposes
       const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
       const updatedCourses = enrolledCourses.map((course: any) => 
-        course.courseId === selectedCourse.id 
+        course.courseId === (selectedCourse.isFolder ? selectedCourse.id : selectedCourse.id)
           ? { ...course, status: 'pending', paymentProofId: result.paymentProofId }
           : course
       );
@@ -298,6 +315,37 @@ export default function TrainingPage() {
     return enrolledCourses.find((course: any) => course.courseId === courseId);
   };
 
+  const checkFolderEnrollmentStatus = (folderId: string) => {
+    const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+    return enrolledCourses.find((course: any) => course.courseId.toString() === folderId);
+  };
+
+  const handleFolderEnrollment = (folder: any) => {
+    const enrollmentStatus = checkFolderEnrollmentStatus(folder.id);
+    
+    if (enrollmentStatus?.status === 'approved') {
+      // User is approved, go to course page
+      router.push(`/course/${folder.id}`);
+    } else if (enrollmentStatus) {
+      setShowPaymentModal(true);
+    } else {
+      // Set selected course to folder and open signup
+      setSelectedCourse({
+        id: folder.id,
+        title: folder.title,
+        description: folder.description,
+        price: `$${(folder.priceCents / 100).toFixed(2)}`,
+        instructor: folder.instructor,
+        isFolder: true
+      });
+      setShowSignupModal(true);
+    }
+  };
+
+  const formatFolderPrice = (priceCents: number) => {
+    return `$${(priceCents / 100).toFixed(2)}`;
+  };
+
   return (
     <div className="min-h-screen bg-background mt-6">
       <Header />
@@ -313,88 +361,203 @@ export default function TrainingPage() {
         </motion.h2>
          
         {!selectedCourse ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-            {courses.map((course) => {
-              const enrollmentStatus = checkEnrollmentStatus(course.id);
-              return (
-                <motion.div
-                  key={course.id}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="relative"
+          <div className="space-y-12">
+            {/* Course Folders Section */}
+            {courseFolders.length > 0 && (
+              <div>
+                <motion.h3
+                  className="text-2xl font-bold text-center mb-8 text-blue-600"
+                  initial={{ opacity: 0, y: -10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  viewport={{ once: true }}
                 >
-                  <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group">
-                    <CardHeader>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
-                          {course.icon}
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-xl">{course.title}</CardTitle>
-                          <CardDescription className="mt-1">{course.description}</CardDescription>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <FaClock className="w-4 h-4" />
-                        <span>{course.duration}</span>
-                        <FaDollarSign className="w-4 h-4 ml-2" />
-                        <span>{course.price}</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div>
-                          <Badge variant="secondary" className="mb-2">
-                            {course.level}
-                          </Badge>
-                          <p className="text-sm text-muted-foreground line-clamp-3">
-                            {course.detailedDescription}
-                          </p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => setSelectedCourse(course)}
-                            className="flex-1"
-                          >
-                            View Details
-                          </Button>
-                          <Button 
-                            size="sm"
-                            onClick={() => {
-                              setSelectedCourse(course);
-                              handleEnrollment(course);
-                            }}
-                            className="flex-1 bg-blue-600 hover:bg-blue-700"
-                            disabled={enrollmentStatus?.status === 'approved'}
-                          >
-                            {enrollmentStatus?.status === 'approved' ? 'Enrolled' : 
-                             enrollmentStatus?.status === 'payment_submitted' ? 'Pending' :
-                             'Enroll Now'}
-                          </Button>
-                        </div>
-                        {enrollmentStatus && (
-                          <div className="text-xs text-center">
-                            <Badge 
-                              variant={
-                                enrollmentStatus.status === 'approved' ? 'default' :
-                                enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
-                                'destructive'
-                              }
-                            >
-                              {enrollmentStatus.status === 'approved' ? 'Approved' :
-                               enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
-                               'Payment Required'}
-                            </Badge>
+                  Featured Course Collections
+                </motion.h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {courseFolders.map((folder, index) => {
+                    const enrollmentStatus = checkFolderEnrollmentStatus(folder.id);
+                    return (
+                      <motion.div
+                        key={folder.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1, duration: 0.5 }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="relative"
+                      >
+                        <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group border-l-4 border-l-blue-500">
+                          <CardHeader>
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
+                                <FaVideo size={24} />
+                              </div>
+                              <div className="flex-1">
+                                <CardTitle className="text-xl">{folder.title}</CardTitle>
+                                <CardDescription className="mt-1">{folder.description}</CardDescription>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <FaClock className="w-4 h-4" />
+                              <span>{folder.topicsCount || 0} topics</span>
+                              <FaDollarSign className="w-4 h-4 ml-2" />
+                              <span>{formatFolderPrice(folder.priceCents)}</span>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div>
+                                <Badge variant="secondary" className="mb-2">
+                                  Course Collection
+                                </Badge>
+                                <p className="text-sm text-muted-foreground line-clamp-3">
+                                  Comprehensive course collection with multiple topics covering various aspects of {folder.title.toLowerCase()}.
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                {enrollmentStatus?.status === 'approved' ? (
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => router.push(`/course/${folder.id}`)}
+                                    className="flex-1 bg-green-600 hover:bg-green-700"
+                                  >
+                                    Access Course
+                                  </Button>
+                                ) : (
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => handleFolderEnrollment(folder)}
+                                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                    disabled={enrollmentStatus?.status === 'payment_submitted'}
+                                  >
+                                    {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
+                                  </Button>
+                                )}
+                              </div>
+                              {enrollmentStatus && (
+                                <div className="text-xs text-center">
+                                  <Badge 
+                                    variant={
+                                      enrollmentStatus.status === 'approved' ? 'default' :
+                                      enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
+                                      'destructive'
+                                    }
+                                  >
+                                    {enrollmentStatus.status === 'approved' ? 'Approved' :
+                                     enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
+                                     'Payment Required'}
+                                  </Badge>
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Static Courses Section */}
+            <div>
+              {courseFolders.length > 0 && (
+                <motion.h3
+                  className="text-2xl font-bold text-center mb-8 text-gray-700"
+                  initial={{ opacity: 0, y: -10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  viewport={{ once: true }}
+                >
+                  Individual Courses
+                </motion.h3>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {courses.map((course) => {
+                  const enrollmentStatus = checkEnrollmentStatus(course.id);
+                  return (
+                    <motion.div
+                      key={course.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="relative"
+                    >
+                      <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group">
+                        <CardHeader>
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
+                              {course.icon}
+                            </div>
+                            <div className="flex-1">
+                              <CardTitle className="text-xl">{course.title}</CardTitle>
+                              <CardDescription className="mt-1">{course.description}</CardDescription>
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <FaClock className="w-4 h-4" />
+                            <span>{course.duration}</span>
+                            <FaDollarSign className="w-4 h-4 ml-2" />
+                            <span>{course.price}</span>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-3">
+                            <div>
+                              <Badge variant="secondary" className="mb-2">
+                                {course.level}
+                              </Badge>
+                              <p className="text-sm text-muted-foreground line-clamp-3">
+                                {course.detailedDescription}
+                              </p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => setSelectedCourse(course)}
+                                className="flex-1"
+                              >
+                                View Details
+                              </Button>
+                              <Button 
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedCourse(course);
+                                  handleEnrollment(course);
+                                }}
+                                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                disabled={enrollmentStatus?.status === 'approved'}
+                              >
+                                {enrollmentStatus?.status === 'approved' ? 'Enrolled' : 
+                                 enrollmentStatus?.status === 'payment_submitted' ? 'Pending' :
+                                 'Enroll Now'}
+                              </Button>
+                            </div>
+                            {enrollmentStatus && (
+                              <div className="text-xs text-center">
+                                <Badge 
+                                  variant={
+                                    enrollmentStatus.status === 'approved' ? 'default' :
+                                    enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
+                                    'destructive'
+                                  }
+                                >
+                                  {enrollmentStatus.status === 'approved' ? 'Approved' :
+                                   enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
+                                   'Payment Required'}
+                                </Badge>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         ) : (
           <AnimatePresence>

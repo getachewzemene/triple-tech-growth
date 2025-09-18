@@ -222,7 +222,7 @@ export default function ProfilePage() {
                               <Button 
                                 size="sm" 
                                 className="w-full bg-green-600 hover:bg-green-700"
-                                onClick={() => router.push('/training')}
+                                onClick={() => router.push(`/course/${course.courseId}`)}
                               >
                                 Access Course
                               </Button>
