@@ -49,6 +49,12 @@ const Header = () => {
       return;
     }
     
+    if (id === 'courses') {
+      router.push('/courses');
+      setIsMobileMenuOpen(false);
+      return;
+    }
+    
     if (pathname !== '/') {
       router.push('/');
       setTimeout(() => {
@@ -69,7 +75,7 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      isScrolled || pathname === '/training' ? 'bg-light-blue shadow-lg' : 'bg-transparent'
+      isScrolled || pathname === '/training' || pathname === '/courses' ? 'bg-light-blue shadow-lg' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -89,6 +95,7 @@ const Header = () => {
               { name: 'Projects', id: 'projects' },
               { name: 'Why Choose Us', id: 'why-choose-us' },
               { name: 'Training', id: 'training' },
+              ...(user ? [{ name: 'Courses', id: 'courses' }] : []),
               { name: 'Team', id: 'team' },
               { name: 'Contact Us', id: 'contact' },
             ].map((item) => (
@@ -96,13 +103,17 @@ const Header = () => {
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
                 className={`relative transition-all duration-300 font-medium ${
-                  (activeSection === item.id && pathname === '/') || (item.id === 'training' && pathname === '/training')
+                  (activeSection === item.id && pathname === '/') || 
+                  (item.id === 'training' && pathname === '/training') ||
+                  (item.id === 'courses' && pathname === '/courses')
                     ? 'text-yellow after:w-full'
                     : isScrolled 
                       ? 'text-white hover:text-yellow' 
                       : 'text-white hover:text-yellow'
                 } after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full ${
-                  (activeSection === item.id && pathname === '/') || (item.id === 'training' && pathname === '/training') ? 'after:w-full' : 'after:w-0'
+                  (activeSection === item.id && pathname === '/') || 
+                  (item.id === 'training' && pathname === '/training') ||
+                  (item.id === 'courses' && pathname === '/courses') ? 'after:w-full' : 'after:w-0'
                 }`}
               >
                 {item.name}
@@ -153,6 +164,7 @@ const Header = () => {
                 { name: 'Projects', id: 'projects' },
                 { name: 'Why Choose Us', id: 'why-choose-us' },
                 { name: 'Training', id: 'training' },
+                ...(user ? [{ name: 'Courses', id: 'courses' }] : []),
                 { name: 'Team', id: 'team' },
                 { name: 'Contact Us', id: 'contact' },
               ].map((item) => (
@@ -160,7 +172,9 @@ const Header = () => {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`transition-colors duration-300 font-medium text-left py-2 ${
-                    (activeSection === item.id && pathname === '/') || (item.id === 'training' && pathname === '/training')
+                    (activeSection === item.id && pathname === '/') || 
+                    (item.id === 'training' && pathname === '/training') ||
+                    (item.id === 'courses' && pathname === '/courses')
                       ? 'text-yellow border-l-2 border-yellow pl-4'
                       : 'text-white hover:text-yellow'
                   }`}
