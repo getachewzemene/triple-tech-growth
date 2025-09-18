@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaVideo, FaChartLine, FaCode, FaMobileAlt, FaPaintBrush, FaRobot, FaClock, FaUser, FaDollarSign, FaStar } from "react-icons/fa";
 import Header from "@/components/Header";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +17,73 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
+
+// Featured bonus courses as specified in the requirements
+const featuredBonusCourses = [
+  {
+    id: 6,
+    title: "AI Automation",
+    description: "Get started with artificial intelligence.",
+    icon: <FaRobot size={24} />,
+    detailedDescription: "Explore the world of artificial intelligence and automation. Learn machine learning basics, Python programming, AI tools integration, and how to automate business processes.",
+    duration: "8 weeks",
+    level: "Beginner to Intermediate",
+    price: "$499",
+    benefits: [
+      "Python programming for AI",
+      "Machine learning fundamentals",
+      "AI tool integration skills",
+      "Business automation projects",
+      "Future-ready career skills"
+    ],
+    instructor: "Dr. James Wilson - AI Research Scientist",
+    prerequisites: "Basic math and logic skills",
+    featured: true,
+    thumbnail: "/placeholder.svg"
+  },
+  {
+    id: 7,
+    title: "CapCut Video Editing with Mobile",
+    description: "Master mobile video editing with CapCut.",
+    icon: <FaMobileAlt size={24} />,
+    detailedDescription: "Learn professional mobile video editing using CapCut. Create stunning videos directly on your phone with advanced editing techniques, effects, and transitions specifically designed for mobile content creation.",
+    duration: "6 weeks", 
+    level: "Beginner to Intermediate",
+    price: "$199",
+    benefits: [
+      "Mobile-first video editing mastery",
+      "CapCut advanced features and effects",
+      "Social media content optimization",
+      "Transitions and animations",
+      "Mobile video monetization strategies"
+    ],
+    instructor: "Lisa Chang - Mobile Content Creator",
+    prerequisites: "Smartphone and CapCut app",
+    featured: true,
+    thumbnail: "/placeholder.svg"
+  },
+  {
+    id: 1,
+    title: "Video Editing",
+    description: "Master video editing techniques.",
+    icon: <FaVideo size={24} />,
+    detailedDescription: "Learn professional video editing with industry-standard tools like Adobe Premiere Pro, DaVinci Resolve, and Final Cut Pro. Master cutting, transitions, color correction, audio mixing, and visual effects.",
+    duration: "8 weeks",
+    level: "Beginner to Advanced",
+    price: "$299",
+    benefits: [
+      "Hands-on experience with professional editing software",
+      "Portfolio development with real projects",
+      "Certificate of completion",
+      "Job placement assistance",
+      "Lifetime access to course materials"
+    ],
+    instructor: "Sarah Johnson - 10+ years industry experience",
+    prerequisites: "Basic computer skills",
+    featured: true,
+    thumbnail: "/placeholder.svg"
+  }
+];
 
 const courses = [
   {
@@ -35,7 +103,8 @@ const courses = [
       "Lifetime access to course materials"
     ],
     instructor: "Sarah Johnson - 10+ years industry experience",
-    prerequisites: "Basic computer skills"
+    prerequisites: "Basic computer skills",
+    thumbnail: "/placeholder.svg"
   },
   {
     id: 2,
@@ -54,7 +123,8 @@ const courses = [
       "Industry networking opportunities"
     ],
     instructor: "Mike Chen - Digital Marketing Expert",
-    prerequisites: "None"
+    prerequisites: "None",
+    thumbnail: "/placeholder.svg"
   },
   {
     id: 3,
@@ -73,7 +143,8 @@ const courses = [
       "Career transition support"
     ],
     instructor: "Alex Thompson - Senior Full-Stack Developer",
-    prerequisites: "Basic computer literacy"
+    prerequisites: "Basic computer literacy",
+    thumbnail: "/placeholder.svg"
   },
   {
     id: 4,
@@ -92,7 +163,8 @@ const courses = [
       "Technical interview preparation"
     ],
     instructor: "Emily Rodriguez - Mobile App Architect",
-    prerequisites: "Basic programming knowledge"
+    prerequisites: "Basic programming knowledge",
+    thumbnail: "/placeholder.svg"
   },
   {
     id: 5,
@@ -111,7 +183,8 @@ const courses = [
       "Freelancing guidance"
     ],
     instructor: "David Kim - Creative Director",
-    prerequisites: "Design interest and creativity"
+    prerequisites: "Design interest and creativity",
+    thumbnail: "/placeholder.svg"
   },
   {
     id: 6,
@@ -130,7 +203,8 @@ const courses = [
       "Future-ready career skills"
     ],
     instructor: "Dr. James Wilson - AI Research Scientist",
-    prerequisites: "Basic math and logic skills"
+    prerequisites: "Basic math and logic skills",
+    thumbnail: "/placeholder.svg"
   },
 ];
 
@@ -347,9 +421,9 @@ export default function TrainingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background mt-6">
+    <div className="min-h-screen bg-background">
       <Header />
-      <div className="px-4 py-16 md:px-8 lg:px-16">
+      <div className="px-4 pt-24 pb-16 md:px-8 lg:px-16">
         <motion.h2
           className="section-title text-center"
           initial={{ opacity: 0, y: -20 }}
@@ -461,25 +535,163 @@ export default function TrainingPage() {
               </div>
             )}
 
-            {/* Static Courses Section */}
+            {/* Featured Bonus Courses Section */}
             <div>
-              {courseFolders.length > 0 && (
-                <motion.h3
-                  className="text-2xl font-bold text-center mb-8 text-gray-700"
-                  initial={{ opacity: 0, y: -10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4 }}
-                  viewport={{ once: true }}
-                >
-                  Individual Courses
-                </motion.h3>
-              )}
+              <motion.h3
+                className="text-2xl font-bold text-center mb-8 text-yellow-600"
+                initial={{ opacity: 0, y: -10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                viewport={{ once: true }}
+              >
+                Featured Bonus Courses
+              </motion.h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {courses.map((course) => {
-                  const enrollmentStatus = checkEnrollmentStatus(course.id);
+                {featuredBonusCourses.map((course, index) => {
+                  const enrollmentStatus = user ? checkEnrollmentStatus(course.id) : null;
                   return (
                     <motion.div
                       key={course.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1, duration: 0.5 }}
+                      viewport={{ once: true }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="relative"
+                    >
+                      <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group border-l-4 border-l-yellow-500">
+                        {course.featured && (
+                          <div className="absolute -top-2 -right-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            BONUS
+                          </div>
+                        )}
+                        <CardHeader>
+                          <div className="flex items-center gap-3 mb-3">
+                            {course.thumbnail && (
+                              <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                                <Image
+                                  src={course.thumbnail}
+                                  alt={course.title}
+                                  fill
+                                  className="object-cover"
+                                  sizes="64px"
+                                />
+                              </div>
+                            )}
+                            <div className="text-yellow-600 group-hover:text-blue-600 transition-colors duration-300">
+                              {course.icon}
+                            </div>
+                            <div className="flex-1">
+                              <CardTitle className="text-xl">{course.title}</CardTitle>
+                              <CardDescription className="mt-1">{course.description}</CardDescription>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <FaClock className="w-4 h-4" />
+                            <span>{course.duration}</span>
+                            <FaDollarSign className="w-4 h-4 ml-2" />
+                            <span>{course.price}</span>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-3">
+                            <div>
+                              <Badge variant="secondary" className="mb-2 bg-yellow-100 text-yellow-800">
+                                {course.level}
+                              </Badge>
+                              <p className="text-sm text-muted-foreground line-clamp-3">
+                                {course.detailedDescription}
+                              </p>
+                            </div>
+                            <div className="flex gap-2">
+                              {user ? (
+                                enrollmentStatus?.status === 'approved' ? (
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => router.push(`/course/${course.id}`)}
+                                    className="flex-1 bg-green-600 hover:bg-green-700"
+                                  >
+                                    Access Course
+                                  </Button>
+                                ) : (
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedCourse(course);
+                                      handleEnrollment(course);
+                                    }}
+                                    className="flex-1 bg-yellow-600 hover:bg-yellow-700"
+                                    disabled={enrollmentStatus?.status === 'payment_submitted'}
+                                  >
+                                    {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
+                                  </Button>
+                                )
+                              ) : (
+                                <div className="flex-1 space-y-2">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => setSelectedCourse(course)}
+                                    className="w-full"
+                                  >
+                                    View Details
+                                  </Button>
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => router.push('/courses')}
+                                    className="w-full bg-yellow-600 hover:bg-yellow-700"
+                                  >
+                                    Get Started
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                            {user && enrollmentStatus && (
+                              <div className="text-xs text-center">
+                                <Badge 
+                                  variant={
+                                    enrollmentStatus.status === 'approved' ? 'default' :
+                                    enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
+                                    'destructive'
+                                  }
+                                >
+                                  {enrollmentStatus.status === 'approved' ? 'Approved' :
+                                   enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
+                                   'Payment Required'}
+                                </Badge>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* All Courses Section */}
+            <div>
+              <motion.h3
+                className="text-2xl font-bold text-center mb-8 text-gray-700"
+                initial={{ opacity: 0, y: -10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                viewport={{ once: true }}
+              >
+                All Available Courses
+              </motion.h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {courses.map((course) => {
+                  const enrollmentStatus = user ? checkEnrollmentStatus(course.id) : null;
+                  return (
+                    <motion.div
+                      key={course.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1, duration: 0.5 }}
+                      viewport={{ once: true }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className="relative"
@@ -487,6 +699,17 @@ export default function TrainingPage() {
                       <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group">
                         <CardHeader>
                           <div className="flex items-center gap-3 mb-3">
+                            {course.thumbnail && (
+                              <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                                <Image
+                                  src={course.thumbnail}
+                                  alt={course.title}
+                                  fill
+                                  className="object-cover"
+                                  sizes="64px"
+                                />
+                              </div>
+                            )}
                             <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
                               {course.icon}
                             </div>
@@ -513,29 +736,51 @@ export default function TrainingPage() {
                               </p>
                             </div>
                             <div className="flex gap-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => setSelectedCourse(course)}
-                                className="flex-1"
-                              >
-                                View Details
-                              </Button>
-                              <Button 
-                                size="sm"
-                                onClick={() => {
-                                  setSelectedCourse(course);
-                                  handleEnrollment(course);
-                                }}
-                                className="flex-1 bg-blue-600 hover:bg-blue-700"
-                                disabled={enrollmentStatus?.status === 'approved'}
-                              >
-                                {enrollmentStatus?.status === 'approved' ? 'Enrolled' : 
-                                 enrollmentStatus?.status === 'payment_submitted' ? 'Pending' :
-                                 'Enroll Now'}
-                              </Button>
+                              {user ? (
+                                <>
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => setSelectedCourse(course)}
+                                    className="flex-1"
+                                  >
+                                    View Details
+                                  </Button>
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedCourse(course);
+                                      handleEnrollment(course);
+                                    }}
+                                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                    disabled={enrollmentStatus?.status === 'approved'}
+                                  >
+                                    {enrollmentStatus?.status === 'approved' ? 'Enrolled' : 
+                                     enrollmentStatus?.status === 'payment_submitted' ? 'Pending' :
+                                     'Enroll Now'}
+                                  </Button>
+                                </>
+                              ) : (
+                                <div className="flex-1 space-y-2">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => setSelectedCourse(course)}
+                                    className="w-full"
+                                  >
+                                    View Details
+                                  </Button>
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => router.push('/courses')}
+                                    className="w-full bg-blue-600 hover:bg-blue-700"
+                                  >
+                                    Get Started
+                                  </Button>
+                                </div>
+                              )}
                             </div>
-                            {enrollmentStatus && (
+                            {user && enrollmentStatus && (
                               <div className="text-xs text-center">
                                 <Badge 
                                   variant={
