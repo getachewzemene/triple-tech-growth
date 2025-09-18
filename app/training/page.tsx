@@ -215,33 +215,81 @@ export default function TrainingPage() {
     setShowPaymentModal(true);
   };
 
-  const handlePaymentUpload = (e) => {
+  const handlePaymentUpload = async (e: any) => {
     e.preventDefault();
-    if (paymentProof) {
-      // In a real app, this would upload to a server
+    if (!paymentProof || !selectedCourse) return;
+
+    try {
+      // Get presigned upload URL for the proof file
+      const uploadUrlResponse = await fetch('/api/upload-proof-url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          key: paymentProof.name,
+          contentType: paymentProof.type,
+          fileSize: paymentProof.size,
+        }),
+      });
+
+      if (!uploadUrlResponse.ok) {
+        const error = await uploadUrlResponse.json();
+        throw new Error(error.error || 'Failed to get upload URL');
+      }
+
+      const { uploadUrl, s3Key } = await uploadUrlResponse.json();
+
+      // Upload file directly to S3
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': paymentProof.type,
+        },
+        body: paymentProof,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload proof file');
+      }
+
+      // Submit payment proof to create enrollment
+      const proofResponse = await fetch('/api/enrollments/submit-proof', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          courseId: selectedCourse.id.toString(),
+          s3Key: s3Key,
+          comment: 'Payment proof submitted from training page',
+        }),
+      });
+
+      if (!proofResponse.ok) {
+        const error = await proofResponse.json();
+        throw new Error(error.error || 'Failed to submit proof');
+      }
+
+      const result = await proofResponse.json();
+      
+      // Update local storage for demo purposes
       const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
       const updatedCourses = enrolledCourses.map((course: any) => 
         course.courseId === selectedCourse.id 
-          ? { ...course, status: 'payment_submitted', paymentProof: paymentProof.name }
+          ? { ...course, status: 'pending', paymentProofId: result.paymentProofId }
           : course
       );
       safeLocalStorage.setItem('enrolledCourses', updatedCourses);
       
-      // Simulate admin notification
-      const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
-      adminNotifications.push({
-        id: Date.now(),
-        type: 'payment_proof',
-        studentName: enrollmentData.fullName,
-        courseTitle: selectedCourse.title,
-        timestamp: new Date().toISOString(),
-        paymentProof: paymentProof.name
-      });
-      safeLocalStorage.setItem('adminNotifications', adminNotifications);
-      
       setShowPaymentModal(false);
       setPaymentProof(null);
-      alert('Payment proof uploaded successfully! Waiting for admin approval.');
+      
+      alert(`Payment proof uploaded successfully! ${result.message}`);
+      
+    } catch (error: any) {
+      console.error('Error uploading payment proof:', error);
+      alert(`Error: ${error.message}`);
     }
   };
 
