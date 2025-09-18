@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, MessageSquare, BarChart3, Settings, Home, GraduationCap, CheckCircle, XCircle, Plus, Video } from 'lucide-react';
+import { LogOut, Users, MessageSquare, BarChart3, Settings, Home, GraduationCap, CheckCircle, XCircle, Plus, Video, FolderPlus, Folder, ChevronRight, ChevronDown, FileText } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { safeLocalStorage } from '@/lib/hooks/useLocalStorage';
 import AddCourseModal from '@/components/admin/AddCourseModal';
+import AddCourseFolderModal from '@/components/admin/AddCourseFolderModal';
+import AddTopicModal from '@/components/admin/AddTopicModal';
 
 function AdminPageContent() {
   const { logout, user } = useAuth();
@@ -19,7 +21,13 @@ function AdminPageContent() {
   const [enrollments, setEnrollments] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [courseFolders, setCourseFolders] = useState([]);
+  const [topics, setTopics] = useState([]);
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
+  const [isAddCourseFolderModalOpen, setIsAddCourseFolderModalOpen] = useState(false);
+  const [isAddTopicModalOpen, setIsAddTopicModalOpen] = useState(false);
+  const [selectedFolderForTopic, setSelectedFolderForTopic] = useState<any>(null);
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Load enrollments and notifications
@@ -27,9 +35,13 @@ function AdminPageContent() {
       const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
       const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
       const savedCourses = safeLocalStorage.getItem('adminCourses', []);
+      const savedCourseFolders = safeLocalStorage.getItem('adminCourseFolders', []);
+      const savedTopics = safeLocalStorage.getItem('adminTopics', []);
       setEnrollments(enrolledCourses);
       setNotifications(adminNotifications);
       setCourses(savedCourses);
+      setCourseFolders(savedCourseFolders);
+      setTopics(savedTopics);
     };
     
     loadData();
@@ -140,6 +152,50 @@ function AdminPageContent() {
     const updatedCourses = [course, ...savedCourses];
     safeLocalStorage.setItem('adminCourses', updatedCourses);
     setCourses(updatedCourses);
+  };
+
+  const handleCourseFolderSaved = (courseFolder: any) => {
+    // Add the new course folder to local storage and state
+    const savedCourseFolders = safeLocalStorage.getItem('adminCourseFolders', []);
+    const updatedCourseFolders = [courseFolder, ...savedCourseFolders];
+    safeLocalStorage.setItem('adminCourseFolders', updatedCourseFolders);
+    setCourseFolders(updatedCourseFolders);
+  };
+
+  const handleTopicSaved = (topic: any) => {
+    // Add the new topic to local storage and state
+    const savedTopics = safeLocalStorage.getItem('adminTopics', []);
+    const updatedTopics = [topic, ...savedTopics];
+    safeLocalStorage.setItem('adminTopics', updatedTopics);
+    setTopics(updatedTopics);
+
+    // Update the folder's topic count
+    const updatedCourseFolders = courseFolders.map(folder => 
+      folder.id === topic.courseFolderId 
+        ? { ...folder, topicsCount: (folder.topicsCount || 0) + 1 }
+        : folder
+    );
+    setCourseFolders(updatedCourseFolders);
+    safeLocalStorage.setItem('adminCourseFolders', updatedCourseFolders);
+  };
+
+  const toggleFolderExpansion = (folderId: string) => {
+    const newExpanded = new Set(expandedFolders);
+    if (newExpanded.has(folderId)) {
+      newExpanded.delete(folderId);
+    } else {
+      newExpanded.add(folderId);
+    }
+    setExpandedFolders(newExpanded);
+  };
+
+  const openAddTopicModal = (folder: any) => {
+    setSelectedFolderForTopic(folder);
+    setIsAddTopicModalOpen(true);
+  };
+
+  const getTopicsForFolder = (folderId: string) => {
+    return topics.filter(topic => topic.courseFolderId === folderId).sort((a, b) => a.order - b.order);
   };
 
   const handleLogout = () => {
@@ -286,23 +342,51 @@ function AdminPageContent() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold">Course Management</h2>
-                <p className="text-gray-600">Manage video courses and content</p>
+                <p className="text-gray-600">Manage course folders, topics, and individual courses</p>
               </div>
-              <Button onClick={() => setIsAddCourseModalOpen(true)} className="flex items-center space-x-2">
-                <Plus className="h-4 w-4" />
-                <span>Add Course</span>
-              </Button>
+              <div className="flex items-center space-x-2">
+                <Button onClick={() => setIsAddCourseFolderModalOpen(true)} className="flex items-center space-x-2">
+                  <FolderPlus className="h-4 w-4" />
+                  <span>Create Course Folder</span>
+                </Button>
+                <Button onClick={() => setIsAddCourseModalOpen(true)} variant="outline" className="flex items-center space-x-2">
+                  <Plus className="h-4 w-4" />
+                  <span>Add Individual Course</span>
+                </Button>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Courses</CardTitle>
+                  <CardTitle className="text-sm font-medium">Course Folders</CardTitle>
+                  <Folder className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{courseFolders.length}</div>
+                  <p className="text-xs text-muted-foreground">Main course categories</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Topics</CardTitle>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{topics.length}</div>
+                  <p className="text-xs text-muted-foreground">Topics in folders</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Individual Courses</CardTitle>
                   <Video className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{courses.length}</div>
-                  <p className="text-xs text-muted-foreground">Active video courses</p>
+                  <p className="text-xs text-muted-foreground">Standalone courses</p>
                 </CardContent>
               </Card>
 
@@ -313,28 +397,13 @@ function AdminPageContent() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {courses.reduce((total, course) => total + (course.size || 0), 0) > 0 
-                      ? `${(courses.reduce((total, course) => total + (course.size || 0), 0) / (1024 * 1024 * 1024)).toFixed(1)} GB`
-                      : '0 GB'
-                    }
+                    {(() => {
+                      const totalSize = courses.reduce((total, course) => total + (course.size || 0), 0) +
+                                       topics.reduce((total, topic) => total + (topic.videoSize || 0) + (topic.pdfSize || 0), 0);
+                      return totalSize > 0 ? `${(totalSize / (1024 * 1024 * 1024)).toFixed(1)} GB` : '0 GB';
+                    })()}
                   </div>
-                  <p className="text-xs text-muted-foreground">Video storage used</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Duration</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    {courses.reduce((total, course) => total + (course.duration || 0), 0) > 0 
-                      ? `${Math.floor(courses.reduce((total, course) => total + (course.duration || 0), 0) / 60)} min`
-                      : '0 min'
-                    }
-                  </div>
-                  <p className="text-xs text-muted-foreground">Total video content</p>
+                  <p className="text-xs text-muted-foreground">Total content storage</p>
                 </CardContent>
               </Card>
             </div>
@@ -342,33 +411,141 @@ function AdminPageContent() {
             <Card>
               <CardHeader>
                 <CardTitle>Course Library</CardTitle>
-                <CardDescription>Manage your video course content</CardDescription>
+                <CardDescription>Manage your course folders, topics, and individual courses</CardDescription>
               </CardHeader>
               <CardContent>
-                {courses.length === 0 ? (
+                {courseFolders.length === 0 && courses.length === 0 ? (
                   <div className="text-center py-12">
-                    <Video className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <Folder className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No courses yet</h3>
-                    <p className="text-gray-600 mb-4">Get started by adding your first video course</p>
-                    <Button onClick={() => setIsAddCourseModalOpen(true)}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Your First Course
-                    </Button>
+                    <p className="text-gray-600 mb-4">Get started by creating a course folder or adding an individual course</p>
+                    <div className="flex justify-center space-x-2">
+                      <Button onClick={() => setIsAddCourseFolderModalOpen(true)}>
+                        <FolderPlus className="h-4 w-4 mr-2" />
+                        Create Course Folder
+                      </Button>
+                      <Button onClick={() => setIsAddCourseModalOpen(true)} variant="outline">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Individual Course
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-4">
+                    {/* Course Folders */}
+                    {courseFolders.map((folder, index) => (
+                      <div key={folder.id || index} className="border rounded-lg p-4 space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => toggleFolderExpansion(folder.id)}
+                                className="p-0 h-auto"
+                              >
+                                {expandedFolders.has(folder.id) ? 
+                                  <ChevronDown className="h-4 w-4" /> : 
+                                  <ChevronRight className="h-4 w-4" />
+                                }
+                              </Button>
+                              <Folder className="h-5 w-5 text-blue-500" />
+                              <h3 className="font-semibold text-lg">{folder.title}</h3>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-1 ml-6">{folder.description}</p>
+                            <div className="flex items-center space-x-4 mt-2 ml-6 text-xs text-gray-500">
+                              <span>Instructor: {folder.instructor}</span>
+                              <span>Topics: {folder.topicsCount || 0}</span>
+                              <span>Price: ${(folder.priceCents / 100).toFixed(2)}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => openAddTopicModal(folder)}
+                            >
+                              <Plus className="h-4 w-4 mr-1" />
+                              Add Topic
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              Edit
+                            </Button>
+                          </div>
+                        </div>
+
+                        {/* Topics in folder */}
+                        {expandedFolders.has(folder.id) && (
+                          <div className="ml-8 space-y-2 border-l-2 border-gray-200 pl-4">
+                            {getTopicsForFolder(folder.id).map((topic, topicIndex) => (
+                              <div key={topic.id || topicIndex} className="border rounded-md p-3 bg-gray-50">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1">
+                                    <div className="flex items-center space-x-2">
+                                      <span className="text-sm font-medium text-gray-600">#{topic.order}</span>
+                                      <h4 className="font-medium">{topic.title}</h4>
+                                      <div className="flex items-center space-x-1">
+                                        {topic.videoS3Key && (
+                                          <Video className="h-4 w-4 text-blue-500" title="Has video content" />
+                                        )}
+                                        {topic.pdfS3Key && (
+                                          <FileText className="h-4 w-4 text-red-500" title="Has PDF content" />
+                                        )}
+                                      </div>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-1">{topic.description}</p>
+                                    <div className="flex items-center space-x-4 mt-1 text-xs text-gray-500">
+                                      {topic.videoDuration && <span>Duration: {Math.floor(topic.videoDuration / 60)}m {topic.videoDuration % 60}s</span>}
+                                      {topic.videoSize && <span>Video: {(topic.videoSize / (1024 * 1024)).toFixed(1)} MB</span>}
+                                      {topic.pdfSize && <span>PDF: {(topic.pdfSize / (1024 * 1024)).toFixed(1)} MB</span>}
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <Button variant="outline" size="sm">
+                                      Edit
+                                    </Button>
+                                    <Button variant="outline" size="sm">
+                                      View
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                            {getTopicsForFolder(folder.id).length === 0 && (
+                              <div className="text-center py-4 text-gray-500">
+                                <p className="text-sm">No topics yet.</p>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => openAddTopicModal(folder)}
+                                  className="mt-2"
+                                >
+                                  <Plus className="h-4 w-4 mr-1" />
+                                  Add First Topic
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+
+                    {/* Individual Courses */}
                     {courses.map((course, index) => (
                       <div key={course.id || index} className="border rounded-lg p-4 space-y-3">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="font-semibold text-lg">{course.title}</h3>
-                            <p className="text-sm text-gray-600 mt-1">{course.detail}</p>
-                            <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                            <div className="flex items-center space-x-2">
+                              <Video className="h-5 w-5 text-green-500" />
+                              <h3 className="font-semibold text-lg">{course.title}</h3>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-1 ml-7">{course.detail}</p>
+                            <div className="flex items-center space-x-4 mt-2 ml-7 text-xs text-gray-500">
                               <span>Instructor: {course.instructor}</span>
                               {course.duration && <span>Duration: {Math.floor(course.duration / 60)}m {course.duration % 60}s</span>}
                               {course.size && <span>Size: {(course.size / (1024 * 1024)).toFixed(1)} MB</span>}
                             </div>
-                            <div className="flex items-center space-x-2 mt-2">
+                            <div className="flex items-center space-x-2 mt-2 ml-7">
                               <Badge 
                                 variant={
                                   course.transcodeStatus === 'completed' ? 'default' :
@@ -565,12 +742,32 @@ function AdminPageContent() {
         </Tabs>
       </div>
 
-      {/* Add Course Modal */}
+      {/* Modals */}
       <AddCourseModal
         isOpen={isAddCourseModalOpen}
         onClose={() => setIsAddCourseModalOpen(false)}
         onCourseSaved={handleCourseSaved}
       />
+      
+      <AddCourseFolderModal
+        isOpen={isAddCourseFolderModalOpen}
+        onClose={() => setIsAddCourseFolderModalOpen(false)}
+        onCourseFolderSaved={handleCourseFolderSaved}
+      />
+
+      {selectedFolderForTopic && (
+        <AddTopicModal
+          isOpen={isAddTopicModalOpen}
+          onClose={() => {
+            setIsAddTopicModalOpen(false);
+            setSelectedFolderForTopic(null);
+          }}
+          courseFolderId={selectedFolderForTopic.id}
+          courseFolderTitle={selectedFolderForTopic.title}
+          existingTopics={getTopicsForFolder(selectedFolderForTopic.id)}
+          onTopicSaved={handleTopicSaved}
+        />
+      )}
     </div>
   );
 }
