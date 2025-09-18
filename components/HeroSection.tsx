@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const router = useRouter();
   const heroSlides = [
     {
       background: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #67e8f9 100%)',
@@ -50,17 +51,11 @@ const HeroSection = () => {
     }
   };
 
-  const scrollToTraining = () => {
-    const element = document.getElementById('training');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const handleCTAClick = () => {
     if (currentSlide === 0) scrollToContact();
     else if (currentSlide === 1) scrollToServices();
-    else scrollToTraining();
+    else router.push('/training');
   };
 
   const nextSlide = () => {
