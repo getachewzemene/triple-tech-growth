@@ -38,44 +38,100 @@ function AdminPageContent() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleApprovePayment = (courseId: number, studentEmail: string) => {
-    // Update enrollment status
-    const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
-    const updatedCourses = enrolledCourses.map((course: any) => 
-      course.courseId === courseId && course.email === studentEmail
-        ? { ...course, status: 'approved', approvedAt: new Date().toISOString() }
-        : course
-    );
-    safeLocalStorage.setItem('enrolledCourses', updatedCourses);
-    setEnrollments(updatedCourses);
-    
-    // Remove from notifications
-    const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
-    const updatedNotifications = adminNotifications.filter((notif: any) => 
-      !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
-    );
-    safeLocalStorage.setItem('adminNotifications', updatedNotifications);
-    setNotifications(updatedNotifications);
+  const handleApprovePayment = async (courseId: number, studentEmail: string) => {
+    try {
+      // Find the payment proof ID (in real app, this would come from the enrollment data)
+      const proofId = `proof_${courseId}_${studentEmail.replace('@', '_')}`;
+      
+      const response = await fetch(`/api/admin/proofs/${proofId}/approve`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          comment: 'Payment approved by admin',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to approve payment');
+      }
+
+      const result = await response.json();
+      
+      // Update local storage for demo purposes
+      const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+      const updatedCourses = enrolledCourses.map((course: any) => 
+        course.courseId === courseId && course.email === studentEmail
+          ? { ...course, status: 'approved', approvedAt: new Date().toISOString() }
+          : course
+      );
+      safeLocalStorage.setItem('enrolledCourses', updatedCourses);
+      setEnrollments(updatedCourses);
+      
+      // Remove from notifications
+      const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
+      const updatedNotifications = adminNotifications.filter((notif: any) => 
+        !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
+      );
+      safeLocalStorage.setItem('adminNotifications', updatedNotifications);
+      setNotifications(updatedNotifications);
+      
+      alert(`Payment approved successfully! ${result.message}`);
+      
+    } catch (error: any) {
+      console.error('Error approving payment:', error);
+      alert(`Error: ${error.message}`);
+    }
   };
 
-  const handleRejectPayment = (courseId: number, studentEmail: string) => {
-    // Update enrollment status
-    const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
-    const updatedCourses = enrolledCourses.map((course: any) => 
-      course.courseId === courseId && course.email === studentEmail
-        ? { ...course, status: 'pending_payment', rejectedAt: new Date().toISOString() }
-        : course
-    );
-    safeLocalStorage.setItem('enrolledCourses', updatedCourses);
-    setEnrollments(updatedCourses);
-    
-    // Remove from notifications
-    const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
-    const updatedNotifications = adminNotifications.filter((notif: any) => 
-      !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
-    );
-    safeLocalStorage.setItem('adminNotifications', updatedNotifications);
-    setNotifications(updatedNotifications);
+  const handleRejectPayment = async (courseId: number, studentEmail: string) => {
+    try {
+      // Find the payment proof ID (in real app, this would come from the enrollment data)
+      const proofId = `proof_${courseId}_${studentEmail.replace('@', '_')}`;
+      
+      const response = await fetch(`/api/admin/proofs/${proofId}/reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          comment: 'Payment proof requires resubmission with clearer documentation',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to reject payment');
+      }
+
+      const result = await response.json();
+      
+      // Update local storage for demo purposes
+      const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+      const updatedCourses = enrolledCourses.map((course: any) => 
+        course.courseId === courseId && course.email === studentEmail
+          ? { ...course, status: 'rejected', rejectedAt: new Date().toISOString() }
+          : course
+      );
+      safeLocalStorage.setItem('enrolledCourses', updatedCourses);
+      setEnrollments(updatedCourses);
+      
+      // Remove from notifications
+      const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
+      const updatedNotifications = adminNotifications.filter((notif: any) => 
+        !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
+      );
+      safeLocalStorage.setItem('adminNotifications', updatedNotifications);
+      setNotifications(updatedNotifications);
+      
+      alert(`Payment rejected. ${result.message}`);
+      
+    } catch (error: any) {
+      console.error('Error rejecting payment:', error);
+      alert(`Error: ${error.message}`);
+    }
   };
 
   const handleCourseSaved = (course: any) => {
