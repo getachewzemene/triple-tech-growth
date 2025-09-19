@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -464,65 +464,40 @@ export default function TrainingPage() {
                         whileTap={{ scale: 0.98 }}
                         className="relative"
                       >
-                        <div className={`group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 shadow-blue-500/25 hover:shadow-2xl cursor-pointer h-full`}>
-                          {/* Background gradient overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
-                          
-                          {/* Animated border gradient */}
-                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5">
-                            <div className="w-full h-full bg-white rounded-3xl"></div>
-                          </div>
-
-                          {/* Content */}
-                          <div className="relative p-6 h-full flex flex-col">
-                            {/* Stats badge */}
-                            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
-                              <div className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs font-semibold">
-                                {folder.topicsCount || 0} topics
+                        <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group border-l-4 border-l-blue-500">
+                          <CardHeader>
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
+                                <FaVideo size={24} />
+                              </div>
+                              <div className="flex-1">
+                                <CardTitle className="text-xl">{folder.title}</CardTitle>
+                                <CardDescription className="mt-1">{folder.description}</CardDescription>
                               </div>
                             </div>
-
-                            {/* Icon */}
-                            <div className="relative mb-6 flex justify-center">
-                              <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                                <FaVideo className="w-8 h-8 text-white" />
-                              </div>
-                              {/* Floating particles */}
-                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-                              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <FaClock className="w-4 h-4" />
+                              <span>{folder.topicsCount || 0} topics</span>
+                              <FaDollarSign className="w-4 h-4 ml-2" />
+                              <span>{formatFolderPrice(folder.priceCents)}</span>
                             </div>
-
-                            {/* Title and description */}
-                            <div className="text-center mb-6 flex-1">
-                              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
-                                {folder.title}
-                              </h3>
-                              <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300 mb-4">
-                                {folder.description}
-                              </p>
-                              <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
-                                <div className="flex items-center gap-1">
-                                  <FaClock className="w-4 h-4" />
-                                  <span>{folder.topicsCount || 0} topics</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <FaDollarSign className="w-4 h-4" />
-                                  <span>{formatFolderPrice(folder.priceCents)}</span>
-                                </div>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div>
+                                <Badge variant="secondary" className="mb-2">
+                                  Course Collection
+                                </Badge>
+                                <p className="text-sm text-muted-foreground line-clamp-3">
+                                  Comprehensive course collection with multiple topics covering various aspects of {folder.title.toLowerCase()}.
+                                </p>
                               </div>
-                              <Badge variant="secondary" className="mb-3 bg-gradient-to-r from-blue-50 to-indigo-50 text-gray-800 border-gray-300">
-                                Course Collection
-                              </Badge>
-                            </div>
-
-                            {/* Action buttons */}
-                            <div className="mt-auto">
-                              <div className="space-y-2">
+                              <div className="flex gap-2">
                                 {enrollmentStatus?.status === 'approved' ? (
                                   <Button 
                                     size="sm"
                                     onClick={() => router.push(`/course/${folder.id}`)}
-                                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    className="flex-1 bg-green-600 hover:bg-green-700"
                                   >
                                     Access Course
                                   </Button>
@@ -530,43 +505,31 @@ export default function TrainingPage() {
                                   <Button 
                                     size="sm"
                                     onClick={() => handleFolderEnrollment(folder)}
-                                    className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:opacity-90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    className="flex-1 bg-blue-600 hover:bg-blue-700"
                                     disabled={enrollmentStatus?.status === 'payment_submitted'}
                                   >
                                     {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
                                   </Button>
                                 )}
-                                {enrollmentStatus && (
-                                  <div className="text-xs text-center mt-2">
-                                    <Badge 
-                                      variant={
-                                        enrollmentStatus.status === 'approved' ? 'default' :
-                                        enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
-                                        'destructive'
-                                      }
-                                    >
-                                      {enrollmentStatus.status === 'approved' ? 'Approved' :
-                                       enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
-                                       'Payment Required'}
-                                    </Badge>
-                                  </div>
-                                )}
                               </div>
-
-                              {/* Progress indicator */}
-                              <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                                <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                                  <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
+                              {enrollmentStatus && (
+                                <div className="text-xs text-center">
+                                  <Badge 
+                                    variant={
+                                      enrollmentStatus.status === 'approved' ? 'default' :
+                                      enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
+                                      'destructive'
+                                    }
+                                  >
+                                    {enrollmentStatus.status === 'approved' ? 'Approved' :
+                                     enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
+                                     'Payment Required'}
+                                  </Badge>
                                 </div>
-                              </div>
+                              )}
                             </div>
-
-                            {/* Hover glow effect */}
-                            <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 opacity-20 blur-xl transform scale-110"></div>
-                            </div>
-                          </div>
-                        </div>
+                          </CardContent>
+                        </Card>
                       </motion.div>
                     );
                   })}
@@ -588,15 +551,6 @@ export default function TrainingPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {featuredBonusCourses.map((course, index) => {
                   const enrollmentStatus = user ? checkEnrollmentStatus(course.id) : null;
-                  const gradientColor = index % 3 === 0 ? 'from-yellow-500 to-orange-600' : 
-                                      index % 3 === 1 ? 'from-blue-500 to-indigo-600' : 
-                                      'from-purple-500 to-pink-600';
-                  const bgGradient = index % 3 === 0 ? 'from-yellow-50 to-orange-50' : 
-                                   index % 3 === 1 ? 'from-blue-50 to-indigo-50' : 
-                                   'from-purple-50 to-pink-50';
-                  const shadowColor = index % 3 === 0 ? 'shadow-yellow-500/25' : 
-                                    index % 3 === 1 ? 'shadow-blue-500/25' : 
-                                    'shadow-purple-500/25';
                   return (
                     <motion.div
                       key={course.id}
@@ -604,74 +558,68 @@ export default function TrainingPage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.5 }}
                       viewport={{ once: true }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <div className={`group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 ${shadowColor} hover:shadow-2xl cursor-pointer h-full`}>
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-yellow-200 shadow-yellow-500/25">
                         {/* Background gradient overlay */}
-                        <div className={`absolute inset-0 bg-gradient-to-br ${bgGradient} opacity-0 group-hover:opacity-60 transition-all duration-500`}></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
                         
-                        {/* Animated border gradient */}
-                        <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${gradientColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
-                          <div className="w-full h-full bg-white rounded-3xl"></div>
-                        </div>
-
                         {course.featured && (
-                          <div className={`absolute -top-2 -right-2 bg-gradient-to-r ${gradientColor} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10`}>
+                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
                             BONUS
                           </div>
                         )}
-
-                        {/* Content */}
-                        <div className="relative p-6 h-full flex flex-col">
-                          {/* Stats badge */}
-                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
-                            <div className={`px-3 py-1 rounded-full bg-gradient-to-r ${gradientColor} text-white text-xs font-semibold`}>
-                              {course.duration}
-                            </div>
-                          </div>
-
-                          {/* Icon */}
-                          <div className="relative mb-6 flex justify-center">
-                            <div className={`p-4 rounded-2xl bg-gradient-to-br ${gradientColor} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
-                              <div className="text-white text-2xl">{course.icon}</div>
-                            </div>
-                            {/* Floating particles */}
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
-                          </div>
-
-                          {/* Title and description */}
-                          <div className="text-center mb-6 flex-1">
-                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
-                              {course.title}
-                            </h3>
-                            <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300 mb-4">
-                              {course.description}
-                            </p>
-                            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
-                              <div className="flex items-center gap-1">
-                                <FaClock className="w-4 h-4" />
-                                <span>{course.duration}</span>
+                        <CardHeader className="relative z-10">
+                          <div className="flex items-center gap-3 mb-3">
+                            {course.thumbnail && (
+                              <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100 p-1">
+                                <Image
+                                  src={course.thumbnail}
+                                  alt={course.title}
+                                  fill
+                                  className="object-cover rounded-xl"
+                                  sizes="64px"
+                                />
                               </div>
-                              <div className="flex items-center gap-1">
-                                <FaDollarSign className="w-4 h-4" />
-                                <span>{course.price}</span>
+                            )}
+                            <div className="relative">
+                              <div className="p-3 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <div className="text-white text-xl">{course.icon}</div>
                               </div>
+                              {/* Floating particles */}
+                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
                             </div>
-                            <Badge variant="secondary" className={`mb-3 bg-gradient-to-r ${bgGradient} text-gray-800 border-gray-300`}>
-                              {course.level}
-                            </Badge>
+                            <div className="flex-1">
+                              <CardTitle className="text-xl font-bold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">{course.title}</CardTitle>
+                              <CardDescription className="mt-1 group-hover:text-gray-700 transition-colors duration-300">{course.description}</CardDescription>
+                            </div>
                           </div>
-
-                          {/* Action buttons */}
-                          <div className="mt-auto">
-                            <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <FaClock className="w-4 h-4" />
+                            <span>{course.duration}</span>
+                            <FaDollarSign className="w-4 h-4 ml-2" />
+                            <span>{course.price}</span>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="relative z-10">
+                          <div className="space-y-3">
+                            <div>
+                              <Badge variant="secondary" className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300">
+                                {course.level}
+                              </Badge>
+                              <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-gray-700 transition-colors duration-300">
+                                {course.detailedDescription}
+                              </p>
+                            </div>
+                            <div className="flex gap-2">
                               {user ? (
                                 enrollmentStatus?.status === 'approved' ? (
                                   <Button 
                                     size="sm"
                                     onClick={() => router.push(`/course/${course.id}`)}
-                                    className={`w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
+                                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                   >
                                     Access Course
                                   </Button>
@@ -682,14 +630,14 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       handleEnrollment(course);
                                     }}
-                                    className={`w-full bg-gradient-to-r ${gradientColor} hover:opacity-90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
+                                    className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                     disabled={enrollmentStatus?.status === 'payment_submitted'}
                                   >
                                     {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
                                   </Button>
                                 )
                               ) : (
-                                <div className="space-y-2">
+                                <div className="flex-1 space-y-2">
                                   <Button 
                                     variant="outline" 
                                     size="sm"
@@ -704,42 +652,31 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       setShowAuthModal(true);
                                     }}
-                                    className={`w-full bg-gradient-to-r ${gradientColor} hover:opacity-90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
+                                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                   >
                                     Enroll
                                   </Button>
                                 </div>
                               )}
-                              {user && enrollmentStatus && (
-                                <div className="text-xs text-center mt-2">
-                                  <Badge 
-                                    variant={
-                                      enrollmentStatus.status === 'approved' ? 'default' :
-                                      enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
-                                      'destructive'
-                                    }
-                                  >
-                                    {enrollmentStatus.status === 'approved' ? 'Approved' :
-                                     enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
-                                     'Payment Required'}
-                                  </Badge>
-                                </div>
-                              )}
                             </div>
-
-                          {/* Progress indicator */}
-                          <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                              <div className={`h-full bg-gradient-to-r ${gradientColor} transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out`}></div>
-                            </div>
+                            {user && enrollmentStatus && (
+                              <div className="text-xs text-center">
+                                <Badge 
+                                  variant={
+                                    enrollmentStatus.status === 'approved' ? 'default' :
+                                    enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
+                                    'destructive'
+                                  }
+                                >
+                                  {enrollmentStatus.status === 'approved' ? 'Approved' :
+                                   enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
+                                   'Payment Required'}
+                                </Badge>
+                              </div>
+                            )}
                           </div>
-                        </div>
-
-                        {/* Hover glow effect */}
-                        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                          <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${gradientColor} opacity-20 blur-xl transform scale-110`}></div>
-                        </div>
-                      </div>
+                        </CardContent>
+                      </Card>
                     </motion.div>
                   );
                 })}
@@ -758,122 +695,98 @@ export default function TrainingPage() {
                 All Available Courses
               </motion.h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {courses.map((course, index) => {
+                {courses.map((course) => {
                   const enrollmentStatus = user ? checkEnrollmentStatus(course.id) : null;
-                  const gradientColor = index % 4 === 0 ? 'from-blue-500 to-indigo-600' : 
-                                      index % 4 === 1 ? 'from-green-500 to-emerald-600' : 
-                                      index % 4 === 2 ? 'from-purple-500 to-pink-600' :
-                                      'from-orange-500 to-red-600';
-                  const bgGradient = index % 4 === 0 ? 'from-blue-50 to-indigo-50' : 
-                                   index % 4 === 1 ? 'from-green-50 to-emerald-50' : 
-                                   index % 4 === 2 ? 'from-purple-50 to-pink-50' :
-                                   'from-orange-50 to-red-50';
-                  const shadowColor = index % 4 === 0 ? 'shadow-blue-500/25' : 
-                                    index % 4 === 1 ? 'shadow-green-500/25' : 
-                                    index % 4 === 2 ? 'shadow-purple-500/25' :
-                                    'shadow-orange-500/25';
                   return (
                     <motion.div
                       key={course.id}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
+                      transition={{ delay: 0.1, duration: 0.5 }}
                       viewport={{ once: true }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <div className={`group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 ${shadowColor} hover:shadow-2xl cursor-pointer h-full`}>
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 shadow-blue-500/25">
                         {/* Background gradient overlay */}
-                        <div className={`absolute inset-0 bg-gradient-to-br ${bgGradient} opacity-0 group-hover:opacity-60 transition-all duration-500`}></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
                         
                         {/* Animated border gradient */}
-                        <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${gradientColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
+                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5">
                           <div className="w-full h-full bg-white rounded-3xl"></div>
                         </div>
 
-                        {/* Content */}
-                        <div className="relative p-6 h-full flex flex-col">
-                          {/* Stats badge */}
-                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
-                            <div className={`px-3 py-1 rounded-full bg-gradient-to-r ${gradientColor} text-white text-xs font-semibold`}>
-                              {course.duration}
-                            </div>
-                          </div>
-
-                          {/* Icon */}
-                          <div className="relative mb-6 flex justify-center">
-                            <div className={`p-4 rounded-2xl bg-gradient-to-br ${gradientColor} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
-                              <div className="text-white text-2xl">{course.icon}</div>
-                            </div>
-                            {/* Floating particles */}
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
-                          </div>
-
-                          {/* Title and description */}
-                          <div className="text-center mb-6 flex-1">
-                            <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
-                              {course.title}
-                            </h3>
-                            <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300 mb-4">
-                              {course.description}
-                            </p>
-                            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
-                              <div className="flex items-center gap-1">
-                                <FaClock className="w-4 h-4" />
-                                <span>{course.duration}</span>
+                        <CardHeader className="relative z-10">
+                          <div className="flex items-center gap-3 mb-3">
+                            {course.thumbnail && (
+                              <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                                <Image
+                                  src={course.thumbnail}
+                                  alt={course.title}
+                                  fill
+                                  className="object-cover"
+                                  sizes="64px"
+                                />
                               </div>
-                              <div className="flex items-center gap-1">
-                                <FaDollarSign className="w-4 h-4" />
-                                <span>{course.price}</span>
-                              </div>
+                            )}
+                            <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
+                              {course.icon}
                             </div>
-                            <Badge variant="secondary" className={`mb-3 bg-gradient-to-r ${bgGradient} text-gray-800 border-gray-300`}>
-                              {course.level}
-                            </Badge>
+                            <div className="flex-1">
+                              <CardTitle className="text-xl">{course.title}</CardTitle>
+                              <CardDescription className="mt-1">{course.description}</CardDescription>
+                            </div>
                           </div>
-
-                          {/* Action buttons */}
-                          <div className="mt-auto">
-                            <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <FaClock className="w-4 h-4" />
+                            <span>{course.duration}</span>
+                            <FaDollarSign className="w-4 h-4 ml-2" />
+                            <span>{course.price}</span>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-3">
+                            <div>
+                              <Badge variant="secondary" className="mb-2">
+                                {course.level}
+                              </Badge>
+                              <p className="text-sm text-muted-foreground line-clamp-3">
+                                {course.detailedDescription}
+                              </p>
+                            </div>
+                            <div className="flex gap-2">
                               {user ? (
-                                enrollmentStatus?.status === 'approved' ? (
-                                  <Button 
-                                    size="sm"
-                                    onClick={() => router.push(`/course/${course.id}`)}
-                                    className={`w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
-                                  >
-                                    Access Course
-                                  </Button>
-                                ) : (
-                                  <>
-                                    <Button 
-                                      variant="outline" 
-                                      size="sm"
-                                      onClick={() => setSelectedCourse(course)}
-                                      className="w-full border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
-                                    >
-                                      View Details
-                                    </Button>
-                                    <Button 
-                                      size="sm"
-                                      onClick={() => {
-                                        setSelectedCourse(course);
-                                        handleEnrollment(course);
-                                      }}
-                                      className={`w-full bg-gradient-to-r ${gradientColor} hover:opacity-90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
-                                      disabled={enrollmentStatus?.status === 'payment_submitted'}
-                                    >
-                                      {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
-                                    </Button>
-                                  </>
-                                )
-                              ) : (
-                                <div className="space-y-2">
+                                <>
                                   <Button 
                                     variant="outline" 
                                     size="sm"
                                     onClick={() => setSelectedCourse(course)}
-                                    className="w-full border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
+                                    className="flex-1"
+                                  >
+                                    View Details
+                                  </Button>
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedCourse(course);
+                                      handleEnrollment(course);
+                                    }}
+                                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                    disabled={enrollmentStatus?.status === 'approved'}
+                                  >
+                                    {enrollmentStatus?.status === 'approved' ? 'Enrolled' : 
+                                     enrollmentStatus?.status === 'payment_submitted' ? 'Pending' :
+                                     'Enroll Now'}
+                                  </Button>
+                                </>
+                              ) : (
+                                <div className="flex-1 space-y-2">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => setSelectedCourse(course)}
+                                    className="w-full"
                                   >
                                     View Details
                                   </Button>
@@ -883,42 +796,31 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       setShowAuthModal(true);
                                     }}
-                                    className={`w-full bg-gradient-to-r ${gradientColor} hover:opacity-90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
+                                    className="w-full bg-blue-600 hover:bg-blue-700"
                                   >
                                     Enroll
                                   </Button>
                                 </div>
                               )}
-                              {user && enrollmentStatus && (
-                                <div className="text-xs text-center mt-2">
-                                  <Badge 
-                                    variant={
-                                      enrollmentStatus.status === 'approved' ? 'default' :
-                                      enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
-                                      'destructive'
-                                    }
-                                  >
-                                    {enrollmentStatus.status === 'approved' ? 'Approved' :
-                                     enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
-                                     'Payment Required'}
-                                  </Badge>
-                                </div>
-                              )}
                             </div>
-
-                          {/* Progress indicator */}
-                          <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                              <div className={`h-full bg-gradient-to-r ${gradientColor} transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out`}></div>
-                            </div>
+                            {user && enrollmentStatus && (
+                              <div className="text-xs text-center">
+                                <Badge 
+                                  variant={
+                                    enrollmentStatus.status === 'approved' ? 'default' :
+                                    enrollmentStatus.status === 'payment_submitted' ? 'secondary' :
+                                    'destructive'
+                                  }
+                                >
+                                  {enrollmentStatus.status === 'approved' ? 'Approved' :
+                                   enrollmentStatus.status === 'payment_submitted' ? 'Payment Under Review' :
+                                   'Payment Required'}
+                                </Badge>
+                              </div>
+                            )}
                           </div>
-                        </div>
-
-                        {/* Hover glow effect */}
-                        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                          <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${gradientColor} opacity-20 blur-xl transform scale-110`}></div>
-                        </div>
-                      </div>
+                        </CardContent>
+                      </Card>
                     </motion.div>
                   );
                 })}
