@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaVideo, FaChartLine, FaCode, FaMobileAlt, FaPaintBrush, FaRobot, FaClock, FaUser, FaDollarSign, FaStar } from "react-icons/fa";
+import { FileText, Video } from "lucide-react";
 import Header from "@/components/Header";
 import Image from "next/image";
 
@@ -239,10 +240,13 @@ const courseContents = {
 export default function TrainingPage() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedCourseFolder, setSelectedCourseFolder] = useState(null);
+  const [selectedFolderTopic, setSelectedFolderTopic] = useState(null);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [courseFolders, setCourseFolders] = useState([]);
+  const [courseFolderTopics, setCourseFolderTopics] = useState([]);
   const [enrollmentData, setEnrollmentData] = useState({
     fullName: '',
     email: '',
@@ -260,10 +264,20 @@ export default function TrainingPage() {
       const folders = safeLocalStorage.getItem('adminCourseFolders', []);
       setCourseFolders(folders);
     };
+
+    // Load course folder topics
+    const loadCourseFolderTopics = () => {
+      const topics = safeLocalStorage.getItem('adminTopics', []);
+      setCourseFolderTopics(topics);
+    };
     
     loadCourseFolders();
-    // Refresh every 5 seconds to show new folders
-    const interval = setInterval(loadCourseFolders, 5000);
+    loadCourseFolderTopics();
+    // Refresh every 5 seconds to show new folders and topics
+    const interval = setInterval(() => {
+      loadCourseFolders();
+      loadCourseFolderTopics();
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -418,6 +432,18 @@ export default function TrainingPage() {
     }
   };
 
+  const handleFolderContentView = (folder: any) => {
+    // Allow non-signed users to view course folder content
+    setSelectedCourseFolder(folder);
+    setSelectedCourse(null);
+    setSelectedTopic(null);
+    setSelectedFolderTopic(null);
+  };
+
+  const getFolderTopics = (folderId: string) => {
+    return courseFolderTopics.filter(topic => topic.courseFolderId === folderId).sort((a, b) => a.order - b.order);
+  };
+
   const formatFolderPrice = (priceCents: number) => {
     return `$${(priceCents / 100).toFixed(2)}`;
   };
@@ -433,10 +459,12 @@ export default function TrainingPage() {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          {selectedCourse ? `${selectedCourse.title} Module` : "Training Modules"}
+          {selectedCourse ? `${selectedCourse.title} Module` : 
+           selectedCourseFolder ? `${selectedCourseFolder.title} - Course Content` : 
+           "Training Modules"}
         </motion.h2>
          
-        {!selectedCourse ? (
+        {!selectedCourse && !selectedCourseFolder ? (
           <div className="space-y-12">
             {/* Course Folders Section */}
             {courseFolders.length > 0 && (
@@ -508,14 +536,24 @@ export default function TrainingPage() {
                                     Access Course
                                   </Button>
                                 ) : (
-                                  <Button 
-                                    size="sm"
-                                    onClick={() => handleFolderEnrollment(folder)}
-                                    className="flex-1 bg-blue-600 hover:bg-blue-700"
-                                    disabled={enrollmentStatus?.status === 'payment_submitted'}
-                                  >
-                                    {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
-                                  </Button>
+                                  <>
+                                    <Button 
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => handleFolderContentView(folder)}
+                                      className="flex-1"
+                                    >
+                                      View Content
+                                    </Button>
+                                    <Button 
+                                      size="sm"
+                                      onClick={() => handleFolderEnrollment(folder)}
+                                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                      disabled={enrollmentStatus?.status === 'payment_submitted'}
+                                    >
+                                      {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
+                                    </Button>
+                                  </>
                                 )}
                               </div>
                               {enrollmentStatus && (
@@ -833,6 +871,160 @@ export default function TrainingPage() {
               </div>
             </div>
           </div>
+        ) : selectedCourseFolder ? (
+          <AnimatePresence>
+            <div className="flex flex-col lg:flex-row h-[75vh] mt-10 gap-6">
+              {/* Course Folder Content Section */}
+              <div className="w-full lg:w-[35%] bg-card p-6 overflow-y-auto rounded-2xl shadow-elegant">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-foreground">Course Topics</h3>
+                  <Badge variant="secondary">
+                    {getFolderTopics(selectedCourseFolder.id).length} topics
+                  </Badge>
+                </div>
+                
+                {getFolderTopics(selectedCourseFolder.id).length === 0 ? (
+                  <div className="text-center text-muted-foreground py-8">
+                    <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No topics available yet</p>
+                    <p className="text-sm">Topics will be added soon</p>
+                  </div>
+                ) : (
+                  <>
+                    {getFolderTopics(selectedCourseFolder.id).map((topic, index) => (
+                      <div
+                        key={topic.id}
+                        className={`my-3 font-medium cursor-pointer p-3 rounded-lg transition-all duration-200 ${
+                          selectedFolderTopic?.id === topic.id
+                            ? 'text-primary border-l-2 border-yellow bg-primary/10'
+                            : 'text-foreground hover:bg-primary/10 hover:text-yellow hover:border-l-2 hover:border-yellow'
+                        }`}
+                        onClick={() => setSelectedFolderTopic(topic)}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          {topic.videoS3Key && <Video className="h-4 w-4 text-blue-500" />}
+                          {topic.pdfS3Key && <FileText className="h-4 w-4 text-red-500" />}
+                          <span className="text-sm font-medium">{topic.title}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-2 ml-6">
+                          {topic.description}
+                        </p>
+                      </div>
+                    ))}
+                  </>
+                )}
+                
+                <Button 
+                  className="mx-12 mt-6 bg-primary text-primary-foreground hover:bg-yellow hover:text-primary-foreground"
+                  onClick={() => {
+                    setSelectedCourseFolder(null);
+                    setSelectedFolderTopic(null);
+                  }}
+                >
+                  Back to Courses
+                </Button>
+              </div>
+
+              {/* Course Folder Preview/Content Display */}
+              <div className="flex-1 bg-card rounded-2xl shadow-elegant overflow-hidden">
+                {selectedFolderTopic ? (
+                  <div className="h-full p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-semibold">{selectedFolderTopic.title}</h3>
+                      <Badge variant="outline">Preview Only</Badge>
+                    </div>
+                    <p className="text-muted-foreground mb-6">{selectedFolderTopic.description}</p>
+                    
+                    <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                      <div className="text-gray-400 mb-4">
+                        {selectedFolderTopic.videoS3Key && <Video className="h-16 w-16 mx-auto mb-4" />}
+                        {selectedFolderTopic.pdfS3Key && <FileText className="h-16 w-16 mx-auto mb-4" />}
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-600 mb-2">Content Preview</h4>
+                      <p className="text-gray-500 mb-4">
+                        This topic contains {selectedFolderTopic.videoS3Key ? 'video' : 'document'} content. 
+                        Enroll in the course to access the full content.
+                      </p>
+                      <Button 
+                        size="lg"
+                        onClick={() => handleFolderEnrollment(selectedCourseFolder)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        Enroll to Access - {formatFolderPrice(selectedCourseFolder.priceCents)}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-full p-6 overflow-y-auto">
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-4">
+                        <div className="text-blue-600 text-3xl">
+                          <FaVideo size={48} />
+                        </div>
+                        <div>
+                          <h2 className="text-3xl font-bold">{selectedCourseFolder.title}</h2>
+                          <p className="text-muted-foreground text-lg">{selectedCourseFolder.description}</p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <Card>
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-2">
+                              <FileText className="text-blue-600" />
+                              <div>
+                                <p className="text-sm text-muted-foreground">Topics</p>
+                                <p className="font-semibold">{getFolderTopics(selectedCourseFolder.id).length}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card>
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-2">
+                              <FaDollarSign className="text-green-600" />
+                              <div>
+                                <p className="text-sm text-muted-foreground">Price</p>
+                                <p className="font-semibold">{formatFolderPrice(selectedCourseFolder.priceCents)}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      <div>
+                        <h3 className="text-xl font-semibold mb-3">Course Overview</h3>
+                        <p className="text-muted-foreground">
+                          This comprehensive course collection covers various aspects of {selectedCourseFolder.title.toLowerCase()}. 
+                          Each topic is carefully designed to provide practical knowledge and hands-on experience.
+                        </p>
+                      </div>
+
+                      {selectedCourseFolder.instructor && (
+                        <Card>
+                          <CardContent className="p-4">
+                            <h4 className="font-semibold mb-2">Instructor</h4>
+                            <p className="text-sm text-muted-foreground">{selectedCourseFolder.instructor}</p>
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      <div className="pt-4 border-t">
+                        <Button 
+                          size="lg"
+                          onClick={() => handleFolderEnrollment(selectedCourseFolder)}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          Enroll Now - {formatFolderPrice(selectedCourseFolder.priceCents)}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </AnimatePresence>
         ) : (
           <AnimatePresence>
             <div className="flex flex-col lg:flex-row h-[75vh] mt-10 gap-6">
