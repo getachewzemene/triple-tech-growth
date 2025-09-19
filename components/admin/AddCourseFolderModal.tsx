@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,20 +10,68 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import { FolderPlus, Upload, X } from 'lucide-react';
+import { FolderPlus, Upload, X, AlertTriangle, CheckCircle2, Shield, DollarSign, User, FileText } from 'lucide-react';
 
-// Zod validation schema for course folder creation
+// Enhanced validation schema with security checks
 const courseFolderSchema = z.object({
-  title: z.string().min(1, 'Course folder name is required').max(200, 'Name too long'),
-  description: z.string().min(1, 'Description is required').max(2000, 'Description too long'),
-  instructorName: z.string().min(1, 'Instructor full name is required').max(100, 'Instructor name too long'),
-  instructorProfession: z.string().min(1, 'Instructor profession is required').max(150, 'Profession too long'),
-  instructorExperience: z.string().min(1, 'Instructor experience is required').max(1000, 'Experience too long'),
+  title: z.string()
+    .min(1, 'Course folder name is required')
+    .max(200, 'Name too long')
+    .regex(/^[a-zA-Z0-9\s&\-.,()]+$/, 'Name contains invalid characters'),
+  description: z.string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(2000, 'Description too long'),
+  instructorName: z.string()
+    .min(1, 'Instructor full name is required')
+    .max(100, 'Instructor name too long')
+    .regex(/^[a-zA-Z\s.]+$/, 'Name can only contain letters, spaces, and periods'),
+  instructorProfession: z.string()
+    .min(1, 'Instructor profession is required')
+    .max(150, 'Profession too long'),
+  instructorExperience: z.string()
+    .min(20, 'Experience description must be at least 20 characters')
+    .max(1000, 'Experience too long'),
   instructorProfileImage: z.string().optional(),
-  priceCents: z.number().min(0, 'Price must be positive'),
+  priceCents: z.number()
+    .min(0, 'Price must be positive')
+    .max(100000, 'Price cannot exceed $1,000'),
 });
 
 type CourseFolderFormData = z.infer<typeof courseFolderSchema>;
+
+// Security validation utilities
+const validateTitle = (title: string): { isValid: boolean; message: string } => {
+  if (!title) return { isValid: false, message: 'Course name is required' };
+  if (title.length < 1) return { isValid: false, message: 'Course name is too short' };
+  if (title.length > 200) return { isValid: false, message: 'Course name is too long' };
+  if (!/^[a-zA-Z0-9\s&\-.,()]+$/.test(title)) {
+    return { isValid: false, message: 'Course name contains invalid characters' };
+  }
+  return { isValid: true, message: 'Valid course name' };
+};
+
+const validatePrice = (price: number): { isValid: boolean; message: string } => {
+  if (price < 0) return { isValid: false, message: 'Price cannot be negative' };
+  if (price > 100000) return { isValid: false, message: 'Price cannot exceed $1,000' };
+  if (price % 1 !== 0) return { isValid: false, message: 'Price must be a whole number' };
+  return { isValid: true, message: 'Valid price' };
+};
+
+// Security indicator component for form validation
+const SecurityIndicator = ({ isValid, message }: { isValid: boolean; message: string }) => {
+  if (!message) return null;
+  
+  return (
+    <div className={`flex items-center gap-1 mt-1 text-xs ${isValid ? 'text-green-600' : 'text-red-500'}`}>
+      {isValid ? (
+        <CheckCircle2 className="h-3 w-3" />
+      ) : (
+        <AlertTriangle className="h-3 w-3" />
+      )}
+      <span>{message}</span>
+    </div>
+  );
+};
 
 interface CourseFolder {
   id: string;
@@ -50,6 +98,10 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
   const { toast } = useToast();
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
+  const [fieldValidations, setFieldValidations] = useState({
+    title: { isValid: true, message: '' },
+    price: { isValid: true, message: '' }
+  });
   
   const {
     register,
@@ -57,14 +109,39 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
     formState: { errors, isSubmitting },
     reset,
     watch,
+    setValue,
+    trigger
   } = useForm<CourseFolderFormData>({
     resolver: zodResolver(courseFolderSchema),
     defaultValues: {
-      priceCents: 0,
+      priceCents: 9900, // Default $99.00
     },
   });
 
-  const priceValue = watch('priceCents');
+  const watchedTitle = watch('title');
+  const watchedPrice = watch('priceCents');
+
+  // Real-time validation for title
+  React.useEffect(() => {
+    if (watchedTitle !== undefined) {
+      const validation = validateTitle(watchedTitle);
+      setFieldValidations(prev => ({
+        ...prev,
+        title: validation
+      }));
+    }
+  }, [watchedTitle]);
+
+  // Real-time validation for price
+  React.useEffect(() => {
+    if (watchedPrice !== undefined) {
+      const validation = validatePrice(watchedPrice);
+      setFieldValidations(prev => ({
+        ...prev,
+        price: validation
+      }));
+    }
+  }, [watchedPrice]);
 
   // Handle profile image file selection
   const handleProfileImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,15 +251,30 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
           {/* Course Folder Details */}
           <div className="space-y-4">
             <div>
-              <Label htmlFor="title">Course Folder Name *</Label>
-              <Input
-                id="title"
-                placeholder="e.g., Digital Marketing, Web Development, AI & Machine Learning"
-                {...register('title')}
-                className={errors.title ? 'border-red-500' : ''}
-              />
+              <Label htmlFor="title" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Course Folder Name *
+              </Label>
+              <div className="relative">
+                <Input
+                  id="title"
+                  placeholder="e.g., Digital Marketing, Web Development, AI & Machine Learning"
+                  {...register('title')}
+                  className={`${errors.title ? 'border-red-500 focus:border-red-500' : 
+                    fieldValidations.title.isValid && watchedTitle ? 'border-green-500 focus:border-green-500' : ''}`}
+                />
+              </div>
               {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
+                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                  <AlertTriangle className="h-3 w-3" />
+                  {errors.title.message}
+                </p>
+              )}
+              {watchedTitle && !errors.title && (
+                <SecurityIndicator 
+                  isValid={fieldValidations.title.isValid} 
+                  message={fieldValidations.title.message} 
+                />
               )}
             </div>
 
@@ -201,19 +293,29 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
             </div>
 
             {/* Instructor Information Section */}
-            <div className="space-y-4 border rounded-lg p-4 bg-gray-50">
-              <h3 className="text-lg font-semibold text-gray-800">Instructor Information</h3>
+            <div className="space-y-4 border rounded-lg p-4 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+              <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <User className="h-5 w-5 text-blue-600" />
+                Instructor Information
+                <Shield className="h-4 w-4 text-green-600 ml-auto" />
+              </h3>
               
               <div>
-                <Label htmlFor="instructorName">Instructor Full Name *</Label>
+                <Label htmlFor="instructorName" className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Instructor Full Name *
+                </Label>
                 <Input
                   id="instructorName"
                   placeholder="e.g., Dr. Sarah Johnson, Alex Thompson"
                   {...register('instructorName')}
-                  className={errors.instructorName ? 'border-red-500' : ''}
+                  className={errors.instructorName ? 'border-red-500 focus:border-red-500' : 'focus:border-blue-500'}
                 />
                 {errors.instructorName && (
-                  <p className="text-red-500 text-sm mt-1">{errors.instructorName.message}</p>
+                  <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3" />
+                    {errors.instructorName.message}
+                  </p>
                 )}
               </div>
 
@@ -294,27 +396,46 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
             </div>
 
             <div>
-              <Label htmlFor="priceCents">Course Price (USD) *</Label>
+              <Label htmlFor="priceCents" className="flex items-center gap-2">
+                <DollarSign className="h-4 w-4" />
+                Course Price (USD) *
+              </Label>
               <div className="flex items-center space-x-2">
-                <span className="text-gray-500">$</span>
+                <span className="text-gray-500 font-medium">$</span>
                 <Input
                   id="priceCents"
                   type="number"
                   min="0"
+                  max="1000"
                   step="0.01"
                   placeholder="99.00"
                   {...register('priceCents', { 
                     valueAsNumber: true,
                     setValueAs: (value) => Math.round(value * 100) // Convert to cents
                   })}
-                  className={errors.priceCents ? 'border-red-500' : ''}
+                  className={`${errors.priceCents ? 'border-red-500 focus:border-red-500' : 
+                    fieldValidations.price.isValid && watchedPrice ? 'border-green-500 focus:border-green-500' : ''}`}
                 />
-                <span className="text-sm text-gray-500">
-                  = {formatPrice(priceValue || 0)}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600 font-medium">
+                    = {formatPrice(watchedPrice || 0)}
+                  </span>
+                  {fieldValidations.price.isValid && watchedPrice && (
+                    <Shield className="h-4 w-4 text-green-600" />
+                  )}
+                </div>
               </div>
               {errors.priceCents && (
-                <p className="text-red-500 text-sm mt-1">{errors.priceCents.message}</p>
+                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                  <AlertTriangle className="h-3 w-3" />
+                  {errors.priceCents.message}
+                </p>
+              )}
+              {watchedPrice !== undefined && !errors.priceCents && (
+                <SecurityIndicator 
+                  isValid={fieldValidations.price.isValid} 
+                  message={fieldValidations.price.message} 
+                />
               )}
             </div>
           </div>
