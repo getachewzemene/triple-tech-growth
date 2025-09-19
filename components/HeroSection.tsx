@@ -74,51 +74,61 @@ const HeroSection = () => {
         style={{ background: heroSlides[currentSlide].background }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
-        {/* Animated circles for visual interest */}
-        <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-24 h-24 bg-white/10 rounded-full animate-pulse animation-delay-300"></div>
-        <div className="absolute top-1/2 left-10 w-16 h-16 bg-white/10 rounded-full animate-pulse animation-delay-600"></div>
+        {/* Enhanced animated particles */}
+        <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full animate-pulse blur-sm"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 bg-yellow/20 rounded-full animate-pulse animation-delay-300 blur-sm"></div>
+        <div className="absolute top-1/2 left-10 w-16 h-16 bg-white/10 rounded-full animate-pulse animation-delay-600 blur-sm"></div>
+        <div className="absolute top-1/3 right-1/4 w-20 h-20 bg-yellow/10 rounded-full animate-float"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-12 h-12 bg-white/10 rounded-full animate-float animation-delay-300"></div>
+        
+        {/* Gradient overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/20"></div>
       </div>
 
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-300"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 hover:scale-110"
       >
         <ChevronLeft size={24} className="text-white" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-300"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 hover:scale-110"
       >
         <ChevronRight size={24} className="text-white" />
       </button>
 
       {/* Content Overlay */}
-      <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
-          {heroSlides[currentSlide].title}
+      <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-4">
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in leading-tight">
+          <span className="bg-gradient-to-r from-white via-yellow to-white bg-clip-text text-transparent">
+            {heroSlides[currentSlide].title}
+          </span>
         </h1>
-        <p className="text-xl md:text-2xl mb-8 animate-slide-up opacity-0 animation-delay-300">
+        <p className="text-xl md:text-2xl mb-8 animate-slide-up opacity-0 animation-delay-300 max-w-3xl mx-auto leading-relaxed">
           {heroSlides[currentSlide].subtitle}
         </p>
         <Button
           onClick={handleCTAClick}
           size="lg"
-          className="bg-yellow text-yellow-foreground hover:bg-yellow/90 text-lg px-8 py-4 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-105 transition-all duration-300"
+          className="bg-yellow text-yellow-foreground hover:bg-yellow/90 text-lg px-10 py-4 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-105 transition-all duration-300 shadow-2xl border-2 border-yellow/30 hover:border-yellow"
         >
           {heroSlides[currentSlide].cta}
+          <div className="absolute inset-0 bg-yellow/20 rounded-lg blur-xl opacity-0 hover:opacity-100 transition-opacity duration-300 -z-10"></div>
         </Button>
       </div>
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-3">
+      {/* Enhanced Slide Indicators */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-4">
         {heroSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide ? 'bg-yellow scale-125' : 'bg-white/50 hover:bg-white/75'
+            className={`transition-all duration-300 ${
+              index === currentSlide 
+                ? 'w-8 h-3 bg-yellow rounded-full scale-125' 
+                : 'w-3 h-3 bg-white/50 hover:bg-white/75 rounded-full hover:scale-110'
             }`}
           />
         ))}
