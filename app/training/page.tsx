@@ -562,31 +562,38 @@ export default function TrainingPage() {
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group border-l-4 border-l-yellow-500">
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-yellow-200 shadow-yellow-500/25">
+                        {/* Background gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
+                        
                         {course.featured && (
-                          <div className="absolute -top-2 -right-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
                             BONUS
                           </div>
                         )}
-                        <CardHeader>
+                        <CardHeader className="relative z-10">
                           <div className="flex items-center gap-3 mb-3">
                             {course.thumbnail && (
-                              <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                              <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100 p-1">
                                 <Image
                                   src={course.thumbnail}
                                   alt={course.title}
                                   fill
-                                  className="object-cover"
+                                  className="object-cover rounded-xl"
                                   sizes="64px"
                                 />
                               </div>
                             )}
-                            <div className="text-yellow-600 group-hover:text-blue-600 transition-colors duration-300">
-                              {course.icon}
+                            <div className="relative">
+                              <div className="p-3 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <div className="text-white text-xl">{course.icon}</div>
+                              </div>
+                              {/* Floating particles */}
+                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
                             </div>
                             <div className="flex-1">
-                              <CardTitle className="text-xl">{course.title}</CardTitle>
-                              <CardDescription className="mt-1">{course.description}</CardDescription>
+                              <CardTitle className="text-xl font-bold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">{course.title}</CardTitle>
+                              <CardDescription className="mt-1 group-hover:text-gray-700 transition-colors duration-300">{course.description}</CardDescription>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -596,13 +603,13 @@ export default function TrainingPage() {
                             <span>{course.price}</span>
                           </div>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="relative z-10">
                           <div className="space-y-3">
                             <div>
-                              <Badge variant="secondary" className="mb-2 bg-yellow-100 text-yellow-800">
+                              <Badge variant="secondary" className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300">
                                 {course.level}
                               </Badge>
-                              <p className="text-sm text-muted-foreground line-clamp-3">
+                              <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-gray-700 transition-colors duration-300">
                                 {course.detailedDescription}
                               </p>
                             </div>
@@ -612,7 +619,7 @@ export default function TrainingPage() {
                                   <Button 
                                     size="sm"
                                     onClick={() => router.push(`/course/${course.id}`)}
-                                    className="flex-1 bg-green-600 hover:bg-green-700"
+                                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                   >
                                     Access Course
                                   </Button>
@@ -623,7 +630,7 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       handleEnrollment(course);
                                     }}
-                                    className="flex-1 bg-yellow-600 hover:bg-yellow-700"
+                                    className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                     disabled={enrollmentStatus?.status === 'payment_submitted'}
                                   >
                                     {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
@@ -635,7 +642,7 @@ export default function TrainingPage() {
                                     variant="outline" 
                                     size="sm"
                                     onClick={() => setSelectedCourse(course)}
-                                    className="w-full"
+                                    className="w-full border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 hover:text-yellow-700 transition-all duration-300"
                                   >
                                     View Details
                                   </Button>
@@ -645,7 +652,7 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       setShowAuthModal(true);
                                     }}
-                                    className="w-full bg-blue-600 hover:bg-blue-700"
+                                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                   >
                                     Enroll
                                   </Button>

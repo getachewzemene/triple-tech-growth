@@ -68,59 +68,77 @@ const HeroSection = () => {
 
   return (
     <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated Background */}
+      {/* Enhanced Animated Background */}
       <div 
         className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out"
         style={{ background: heroSlides[currentSlide].background }}
       >
-        <div className="absolute inset-0 bg-black/30"></div>
-        {/* Animated circles for visual interest */}
-        <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-24 h-24 bg-white/10 rounded-full animate-pulse animation-delay-300"></div>
-        <div className="absolute top-1/2 left-10 w-16 h-16 bg-white/10 rounded-full animate-pulse animation-delay-600"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/40"></div>
+        
+        {/* Enhanced animated elements */}
+        <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full animate-pulse backdrop-blur-sm border border-white/20"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 bg-white/10 rounded-full animate-pulse animation-delay-300 backdrop-blur-sm border border-white/20"></div>
+        <div className="absolute top-1/2 left-10 w-16 h-16 bg-white/10 rounded-full animate-pulse animation-delay-600 backdrop-blur-sm border border-white/20"></div>
+        
+        {/* Floating geometric shapes */}
+        <div className="absolute top-1/3 right-1/3 w-8 h-8 bg-yellow/30 rotate-45 animate-float"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-6 h-6 bg-light-blue/30 rounded-full animate-float animation-delay-1000"></div>
+        <div className="absolute top-2/3 right-1/4 w-4 h-4 bg-white/40 animate-float animation-delay-1500"></div>
+        
+        {/* Gradient overlay patterns */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer"></div>
       </div>
 
-      {/* Navigation Arrows */}
+      {/* Enhanced Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-300"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-500 backdrop-blur-sm border border-white/30 hover:scale-110 hover:shadow-lg"
       >
         <ChevronLeft size={24} className="text-white" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-300"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-500 backdrop-blur-sm border border-white/30 hover:scale-110 hover:shadow-lg"
       >
         <ChevronRight size={24} className="text-white" />
       </button>
 
-      {/* Content Overlay */}
+      {/* Enhanced Content Overlay */}
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
-          {heroSlides[currentSlide].title}
-        </h1>
-        <p className="text-xl md:text-2xl mb-8 animate-slide-up opacity-0 animation-delay-300">
-          {heroSlides[currentSlide].subtitle}
-        </p>
-        <Button
-          onClick={handleCTAClick}
-          size="lg"
-          className="bg-yellow text-yellow-foreground hover:bg-yellow/90 text-lg px-8 py-4 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-105 transition-all duration-300"
-        >
-          {heroSlides[currentSlide].cta}
-        </Button>
+        <div className="backdrop-blur-sm bg-white/5 rounded-2xl p-8 border border-white/10">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+            {heroSlides[currentSlide].title}
+          </h1>
+          <p className="text-xl md:text-2xl mb-8 animate-slide-up opacity-0 animation-delay-300 text-gray-100">
+            {heroSlides[currentSlide].subtitle}
+          </p>
+          <Button
+            onClick={handleCTAClick}
+            size="lg"
+            className="bg-gradient-to-r from-yellow to-yellow/80 text-yellow-foreground hover:from-yellow/90 hover:to-yellow/70 text-lg px-8 py-4 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-110 transition-all duration-500 shadow-2xl border border-yellow/30 backdrop-blur-sm"
+          >
+            <span className="relative z-10">{heroSlides[currentSlide].cta}</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-light-blue/20 to-yellow/20 rounded-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+          </Button>
+        </div>
       </div>
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-3">
+      {/* Enhanced Slide Indicators */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-4">
         {heroSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide ? 'bg-yellow scale-125' : 'bg-white/50 hover:bg-white/75'
-            }`}
-          />
+            className={`relative transition-all duration-500 ${
+              index === currentSlide 
+                ? 'w-8 h-3 bg-gradient-to-r from-yellow to-yellow/80 scale-125 shadow-lg' 
+                : 'w-3 h-3 bg-white/50 hover:bg-white/75 hover:scale-110'
+            } rounded-full backdrop-blur-sm border border-white/30`}
+          >
+            {index === currentSlide && (
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow/50 to-light-blue/50 rounded-full animate-pulse"></div>
+            )}
+          </button>
         ))}
       </div>
 
