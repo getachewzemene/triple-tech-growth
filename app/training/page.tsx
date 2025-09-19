@@ -425,7 +425,7 @@ export default function TrainingPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="px-4 pt-24 pb-16 md:px-8 lg:px-16">
+      <div className="px-4 pt-24 pb-16 sm:px-6 md:px-8 lg:px-16">
         <motion.h2
           className="section-title text-center"
           initial={{ opacity: 0, y: -20 }}
@@ -450,7 +450,7 @@ export default function TrainingPage() {
                 >
                   Featured Course Collections
                 </motion.h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                   {courseFolders.map((folder, index) => {
                     const enrollmentStatus = checkFolderEnrollmentStatus(folder.id);
                     return (
@@ -464,25 +464,31 @@ export default function TrainingPage() {
                         whileTap={{ scale: 0.98 }}
                         className="relative"
                       >
-                        <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group border-l-4 border-l-blue-500">
-                          <CardHeader>
+                        <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-green-200 shadow-green-500/25 border-l-4 border-l-green-500">
+                          {/* Background gradient overlay for course folders */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
+                          
+                          {/* Enhanced hover background like root page */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-800 opacity-0 group-hover:opacity-90 transition-all duration-500"></div>
+                          
+                          <CardHeader className="relative z-10">
                             <div className="flex items-center gap-3 mb-3">
-                              <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
+                              <div className="text-green-600 group-hover:text-yellow transition-colors duration-300">
                                 <FaVideo size={24} />
                               </div>
                               <div className="flex-1">
-                                <CardTitle className="text-xl">{folder.title}</CardTitle>
-                                <CardDescription className="mt-1">{folder.description}</CardDescription>
+                                <CardTitle className="text-xl group-hover:text-white transition-colors duration-300">{folder.title}</CardTitle>
+                                <CardDescription className="mt-1 group-hover:text-white group-hover:opacity-90 transition-all duration-300">{folder.description}</CardDescription>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-white transition-colors duration-300">
                               <FaClock className="w-4 h-4" />
                               <span>{folder.topicsCount || 0} topics</span>
                               <FaDollarSign className="w-4 h-4 ml-2" />
                               <span>{formatFolderPrice(folder.priceCents)}</span>
                             </div>
                           </CardHeader>
-                          <CardContent>
+                          <CardContent className="relative z-10">
                             <div className="space-y-3">
                               <div>
                                 <Badge variant="secondary" className="mb-2">
@@ -548,7 +554,7 @@ export default function TrainingPage() {
               >
                 Featured Bonus Courses
               </motion.h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {featuredBonusCourses.map((course, index) => {
                   const enrollmentStatus = user ? checkEnrollmentStatus(course.id) : null;
                   return (
@@ -565,6 +571,9 @@ export default function TrainingPage() {
                       <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-yellow-200 shadow-yellow-500/25">
                         {/* Background gradient overlay */}
                         <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
+                        
+                        {/* Enhanced hover background like root page */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-0 group-hover:opacity-90 transition-all duration-500"></div>
                         
                         {course.featured && (
                           <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
@@ -592,11 +601,11 @@ export default function TrainingPage() {
                               <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
                             </div>
                             <div className="flex-1">
-                              <CardTitle className="text-xl font-bold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">{course.title}</CardTitle>
-                              <CardDescription className="mt-1 group-hover:text-gray-700 transition-colors duration-300">{course.description}</CardDescription>
+                              <CardTitle className="text-xl font-bold group-hover:text-white transition-all duration-300">{course.title}</CardTitle>
+                              <CardDescription className="mt-1 group-hover:text-white group-hover:opacity-90 transition-all duration-300">{course.description}</CardDescription>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-white transition-colors duration-300">
                             <FaClock className="w-4 h-4" />
                             <span>{course.duration}</span>
                             <FaDollarSign className="w-4 h-4 ml-2" />
@@ -606,10 +615,10 @@ export default function TrainingPage() {
                         <CardContent className="relative z-10">
                           <div className="space-y-3">
                             <div>
-                              <Badge variant="secondary" className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300">
+                              <Badge variant="secondary" className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300 group-hover:bg-white group-hover:text-yellow-800 transition-all duration-300">
                                 {course.level}
                               </Badge>
-                              <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-gray-700 transition-colors duration-300">
+                              <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-white transition-colors duration-300">
                                 {course.detailedDescription}
                               </p>
                             </div>
@@ -694,7 +703,7 @@ export default function TrainingPage() {
               >
                 All Available Courses
               </motion.h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {courses.map((course) => {
                   const enrollmentStatus = user ? checkEnrollmentStatus(course.id) : null;
                   return (
@@ -708,8 +717,13 @@ export default function TrainingPage() {
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group">
-                        <CardHeader>
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-blue-200 shadow-blue-500/25">
+                        {/* Background gradient overlay for regular courses */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
+                        
+                        {/* Enhanced hover background like root page */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-0 group-hover:opacity-90 transition-all duration-500"></div>
+                        <CardHeader className="relative z-10">
                           <div className="flex items-center gap-3 mb-3">
                             {course.thumbnail && (
                               <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
@@ -726,24 +740,24 @@ export default function TrainingPage() {
                               {course.icon}
                             </div>
                             <div className="flex-1">
-                              <CardTitle className="text-xl">{course.title}</CardTitle>
-                              <CardDescription className="mt-1">{course.description}</CardDescription>
+                              <CardTitle className="text-xl group-hover:text-white transition-colors duration-300">{course.title}</CardTitle>
+                              <CardDescription className="mt-1 group-hover:text-white group-hover:opacity-90 transition-all duration-300">{course.description}</CardDescription>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-white transition-colors duration-300">
                             <FaClock className="w-4 h-4" />
                             <span>{course.duration}</span>
                             <FaDollarSign className="w-4 h-4 ml-2" />
                             <span>{course.price}</span>
                           </div>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="relative z-10">
                           <div className="space-y-3">
                             <div>
-                              <Badge variant="secondary" className="mb-2">
+                              <Badge variant="secondary" className="mb-2 group-hover:bg-white group-hover:text-blue-800 transition-all duration-300">
                                 {course.level}
                               </Badge>
-                              <p className="text-sm text-muted-foreground line-clamp-3">
+                              <p className="text-sm text-muted-foreground line-clamp-3 group-hover:text-white transition-colors duration-300">
                                 {course.detailedDescription}
                               </p>
                             </div>
