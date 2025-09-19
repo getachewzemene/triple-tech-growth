@@ -74,16 +74,29 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      isScrolled || pathname === '/training' || pathname === '/courses' ? 'bg-light-blue shadow-lg' : 'bg-transparent'
+      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+      isScrolled || pathname === '/training' || pathname === '/courses' 
+        ? 'bg-light-blue/95 backdrop-blur-md shadow-xl border-b border-white/10' 
+        : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className={`flex items-center space-x-3 text-2xl font-bold transition-colors duration-300 ${
+        <div className={`flex items-center space-x-3 text-2xl font-bold transition-all duration-300 cursor-pointer hover:scale-105 ${
           isScrolled ? 'text-white' : 'text-white'
-        }`}>
-          <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} />
-          <span>Triple Technologies</span>
+        }`} onClick={() => scrollToSection('hero')}>
+          <div className="relative">
+            <Image 
+              src="/logo.png" 
+              alt="Triple Technologies Logo" 
+              width={40} 
+              height={40} 
+              className="transition-transform duration-300 hover:rotate-12"
+            />
+            <div className="absolute inset-0 bg-yellow/20 rounded-full scale-0 hover:scale-110 transition-all duration-300"></div>
+          </div>
+          <span className="bg-gradient-to-r from-white to-yellow bg-clip-text text-transparent hover:from-yellow hover:to-white transition-all duration-300">
+            Triple Technologies
+          </span>
         </div>
         
         {/* Desktop Navigation */}
@@ -102,18 +115,18 @@ const Header = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`relative transition-all duration-300 font-medium ${
+                className={`relative transition-all duration-300 font-medium px-3 py-2 rounded-lg hover:bg-white/10 ${
                   (activeSection === item.id && pathname === '/') || 
                   (item.id === 'training' && pathname === '/training') ||
                   (item.id === 'courses' && pathname === '/courses')
-                    ? 'text-yellow after:w-full'
+                    ? 'text-yellow bg-white/10 after:w-full'
                     : isScrolled 
                       ? 'text-white hover:text-yellow' 
                       : 'text-white hover:text-yellow'
-                } after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full ${
+                } after:content-[''] after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-gradient-to-r after:from-yellow after:to-yellow/60 after:transition-all after:duration-300 hover:after:w-[calc(100%-24px)] ${
                   (activeSection === item.id && pathname === '/') || 
                   (item.id === 'training' && pathname === '/training') ||
-                  (item.id === 'courses' && pathname === '/courses') ? 'after:w-full' : 'after:w-0'
+                  (item.id === 'courses' && pathname === '/courses') ? 'after:w-[calc(100%-24px)]' : 'after:w-0'
                 }`}
               >
                 {item.name}
@@ -127,7 +140,7 @@ const Header = () => {
               onClick={() => router.push('/profile')}
               variant="outline"
               size="sm"
-              className="bg-transparent border-white text-white hover:bg-white hover:text-primary"
+              className="bg-transparent border-white text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-primary hover:border-yellow transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               <User className="w-4 h-4 mr-2" />
               Profile
@@ -137,7 +150,7 @@ const Header = () => {
               onClick={() => setIsAuthModalOpen(true)}
               variant="outline"
               size="sm"
-              className="bg-transparent border-white text-white hover:bg-white hover:text-primary"
+              className="bg-transparent border-white text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-primary hover:border-yellow transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               Login
             </Button>
