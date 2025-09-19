@@ -137,6 +137,18 @@ All colors MUST be HSL.
     animation: scaleIn 0.8s ease-out forwards;
   }
 
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+
   .section-title {
     @apply text-3xl font-bold text-center mb-8 relative;
     color: #000;
@@ -192,18 +204,20 @@ All colors MUST be HSL.
     color: hsl(var(--yellow));
     transform: scale(1.1);
   }
-.card-description {
-  color: #000;
-  opacity: 0.7;
-  transition: color 0.3s ease, opacity 0.3s ease;
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
-  &:hover {
+
+  .card-description {
+    color: #000;
+    opacity: 0.7;
+    transition: color 0.3s ease, opacity 0.3s ease;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+  }
+
+  .card-description:hover {
     color: #fff;
     opacity: 1;
   }
-}
 
   .service-card:hover h3,
   .service-card:hover p {
@@ -212,6 +226,56 @@ All colors MUST be HSL.
 
   .card-icon {
     @apply mx-auto transition-all duration-300;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Advanced gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--light-blue)), hsl(var(--yellow)));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Particle effects */
+  .particles {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .particles::before,
+  .particles::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: hsl(var(--yellow));
+    border-radius: 50%;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .particles::before {
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+  }
+
+  .particles::after {
+    bottom: 20%;
+    right: 20%;
+    animation-delay: 1.5s;
   }
 }
 
@@ -267,5 +331,41 @@ All colors MUST be HSL.
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
   }
 }
