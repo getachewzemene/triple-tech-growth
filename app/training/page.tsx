@@ -412,6 +412,10 @@ export default function TrainingPage() {
         description: folder.description,
         price: `$${(folder.priceCents / 100).toFixed(2)}`,
         instructor: folder.instructor,
+        instructorName: folder.instructorName,
+        instructorProfession: folder.instructorProfession,
+        instructorExperience: folder.instructorExperience,
+        instructorProfileImage: folder.instructorProfileImage,
         isFolder: true
       });
       setShowSignupModal(true);
@@ -508,14 +512,47 @@ export default function TrainingPage() {
                                     Access Course
                                   </Button>
                                 ) : (
-                                  <Button 
-                                    size="sm"
-                                    onClick={() => handleFolderEnrollment(folder)}
-                                    className="flex-1 bg-blue-600 hover:bg-blue-700"
-                                    disabled={enrollmentStatus?.status === 'payment_submitted'}
-                                  >
-                                    {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
-                                  </Button>
+                                  <>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      onClick={() => setSelectedCourse({
+                                        id: folder.id,
+                                        title: folder.title,
+                                        description: folder.description,
+                                        detailedDescription: `Comprehensive course collection with multiple topics covering various aspects of ${folder.title.toLowerCase()}. This structured program provides in-depth knowledge and practical skills through expert-curated content.`,
+                                        price: `$${(folder.priceCents / 100).toFixed(2)}`,
+                                        instructor: folder.instructor,
+                                        instructorName: folder.instructorName,
+                                        instructorProfession: folder.instructorProfession,
+                                        instructorExperience: folder.instructorExperience,
+                                        instructorProfileImage: folder.instructorProfileImage,
+                                        duration: "8-12 weeks",
+                                        level: "All Levels",
+                                        benefits: [
+                                          "Comprehensive curriculum designed by experts",
+                                          "Hands-on projects and practical applications",
+                                          "Progress tracking and milestone achievements",
+                                          "Interactive learning materials and resources",
+                                          "Certificate of completion upon finishing",
+                                          "Lifetime access to course materials"
+                                        ],
+                                        prerequisites: "Basic computer skills recommended",
+                                        isFolder: true
+                                      })}
+                                      className="flex-1"
+                                    >
+                                      View Details
+                                    </Button>
+                                    <Button 
+                                      size="sm"
+                                      onClick={() => handleFolderEnrollment(folder)}
+                                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                      disabled={enrollmentStatus?.status === 'payment_submitted'}
+                                    >
+                                      {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
+                                    </Button>
+                                  </>
                                 )}
                               </div>
                               {enrollmentStatus && (
@@ -943,8 +980,46 @@ export default function TrainingPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Card>
                           <CardContent className="p-4">
-                            <h4 className="font-semibold mb-2">Instructor</h4>
-                            <p className="text-sm text-muted-foreground">{selectedCourse.instructor}</p>
+                            <h4 className="font-semibold mb-3 text-gray-800">Meet Your Instructor</h4>
+                            {selectedCourse.isFolder && selectedCourse.instructorName ? (
+                              <div className="space-y-3">
+                                <div className="flex items-start gap-3">
+                                  {selectedCourse.instructorProfileImage ? (
+                                    <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-100 border-2 border-blue-200">
+                                      <img
+                                        src={selectedCourse.instructorProfileImage}
+                                        alt={selectedCourse.instructorName}
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-lg">
+                                      {selectedCourse.instructorName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                    </div>
+                                  )}
+                                  <div className="flex-1">
+                                    <p className="font-semibold text-gray-900">{selectedCourse.instructorName}</p>
+                                    <p className="text-sm text-blue-600 font-medium">{selectedCourse.instructorProfession}</p>
+                                  </div>
+                                </div>
+                                {selectedCourse.instructorExperience && (
+                                  <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-blue-500">
+                                    <p className="text-xs font-semibold text-gray-700 mb-1">Experience & Background</p>
+                                    <p className="text-sm text-gray-600 leading-relaxed">{selectedCourse.instructorExperience}</p>
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                  <FaUser className="text-white text-sm" />
+                                </div>
+                                <div>
+                                  <p className="font-medium text-gray-900">{selectedCourse.instructor}</p>
+                                  <p className="text-xs text-gray-500">Expert Instructor</p>
+                                </div>
+                              </div>
+                            )}
                           </CardContent>
                         </Card>
                         
