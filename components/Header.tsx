@@ -74,16 +74,21 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      isScrolled || pathname === '/training' || pathname === '/courses' ? 'bg-light-blue shadow-lg' : 'bg-transparent'
+      className={`fixed top-0 w-full z-50 transition-all duration-500 ease-in-out ${
+      isScrolled || pathname === '/training' || pathname === '/courses' 
+        ? 'bg-light-blue/95 backdrop-blur-sm shadow-lg border-b border-white/10' 
+        : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className={`flex items-center space-x-3 text-2xl font-bold transition-colors duration-300 ${
-          isScrolled ? 'text-white' : 'text-white'
-        }`}>
-          <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} />
-          <span>Triple Technologies</span>
+        <div className={`flex items-center space-x-3 text-2xl font-bold transition-all duration-300 cursor-pointer ${
+          isScrolled ? 'text-white transform hover:scale-105' : 'text-white transform hover:scale-105'
+        }`} onClick={() => router.push('/')}>
+          <div className="relative">
+            <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} className="transition-transform duration-300 hover:rotate-12" />
+            <div className="absolute inset-0 bg-yellow/20 rounded-full blur-sm opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+          <span className="bg-gradient-to-r from-white to-yellow bg-clip-text text-transparent">Triple Technologies</span>
         </div>
         
         {/* Desktop Navigation */}

@@ -41,28 +41,39 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white">
+    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
+      </div>
+
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-12 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-start">
           {/* Company Info */}
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} />
-              <span className="text-xl font-bold">Triple Technologies</span>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} className="transition-transform duration-300 hover:rotate-12" />
+                <div className="absolute inset-0 bg-yellow/20 rounded-full blur-sm opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-white to-yellow bg-clip-text text-transparent">
+                Triple Technologies
+              </span>
             </div>
-            <p className="text-gray-200 leading-relaxed text-sm">
+            <p className="text-gray-200 leading-relaxed text-sm max-w-xs">
               Accelerating business growth with smart technologies and impactful innovation.
             </p>
-            <div className="flex space-x-3">
+            <div className="flex space-x-3 pt-2">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-8 h-8 bg-white/10 hover:bg-yellow hover:text-light-blue rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110"
+                  className="group w-10 h-10 bg-white/10 hover:bg-yellow hover:text-light-blue rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:rotate-12 border border-white/20 hover:border-yellow"
                 >
-                  <social.icon size={16} />
+                  <social.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
                 </a>
               ))}
             </div>
@@ -179,22 +190,25 @@ const Footer = () => {
               </div>
         </div>
       </div>
-      {/* Bottom Bar */}
-      <div className="border-t border-white/20">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+      {/* Enhanced Bottom Bar */}
+      <div className="border-t border-white/20 bg-black/10">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
             <p className="text-gray-200 text-center md:text-left text-sm">
               &copy; {currentYear} Triple Technologies. All rights reserved.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-200 hover:text-yellow transition-colors duration-300 text-xs">
+            <div className="flex space-x-6">
+              <a href="#" className="text-gray-200 hover:text-yellow transition-all duration-300 text-sm relative group">
                 Privacy Policy
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow transition-all duration-300 group-hover:w-full"></span>
               </a>
-              <a href="#" className="text-gray-200 hover:text-yellow transition-colors duration-300 text-xs">
+              <a href="#" className="text-gray-200 hover:text-yellow transition-all duration-300 text-sm relative group">
                 Terms of Service
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow transition-all duration-300 group-hover:w-full"></span>
               </a>
-              <a href="#" className="text-gray-200 hover:text-yellow transition-colors duration-300 text-xs">
+              <a href="#" className="text-gray-200 hover:text-yellow transition-all duration-300 text-sm relative group">
                 Cookie Policy
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow transition-all duration-300 group-hover:w-full"></span>
               </a>
             </div>
           </div>
