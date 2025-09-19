@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { FolderPlus, Upload, X, AlertTriangle, CheckCircle2, Shield, DollarSign, User, FileText } from 'lucide-react';
+import { SecurityMetrics } from '@/components/ui/security-metrics';
+import { checkRateLimit, generateFormToken } from '@/lib/security';
 
 // Enhanced validation schema with security checks
 const courseFolderSchema = z.object({
@@ -102,6 +104,7 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
     title: { isValid: true, message: '' },
     price: { isValid: true, message: '' }
   });
+  const [formToken] = useState(() => generateFormToken());
   
   const {
     register,
@@ -142,6 +145,22 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
       }));
     }
   }, [watchedPrice]);
+
+  // Calculate security metrics
+  const getValidationCount = () => {
+    let passed = 0;
+    const title = watchedTitle || '';
+    const price = watchedPrice || 0;
+    
+    if (title && fieldValidations.title.isValid && !errors.title) passed++;
+    if (price && fieldValidations.price.isValid && !errors.priceCents) passed++;
+    if (watch('description') && !errors.description) passed++;
+    if (watch('instructorName') && !errors.instructorName) passed++;
+    if (watch('instructorProfession') && !errors.instructorProfession) passed++;
+    if (watch('instructorExperience') && !errors.instructorExperience) passed++;
+    
+    return { passed, total: 6 };
+  };
 
   // Handle profile image file selection
   const handleProfileImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -439,6 +458,14 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
               )}
             </div>
           </div>
+
+          {/* Security Metrics */}
+          <SecurityMetrics 
+            formType="course-creation" 
+            validationsPassed={getValidationCount().passed}
+            totalValidations={getValidationCount().total}
+            showDetails={true}
+          />
 
           {/* Submit Button */}
           <div className="flex justify-end space-x-3 pt-6 border-t">

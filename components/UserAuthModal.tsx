@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Lock, User, Mail, Phone, MapPin, Eye, EyeOff, Shield, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { SecurityMetrics } from '@/components/ui/security-metrics';
+import { checkRateLimit, generateFormToken } from '@/lib/security';
 import Image from 'next/image';
 
 interface UserAuthModalProps {
@@ -122,6 +124,28 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotErrors, setForgotErrors] = useState({ email: '' });
 
+  // Security metrics tracking
+  const [formToken] = useState(() => generateFormToken());
+  const [rateLimitStatus, setRateLimitStatus] = useState({ remaining: 5, isAllowed: true });
+
+  // Calculate security metrics
+  const getLoginValidationCount = () => {
+    let passed = 0;
+    if (loginData.email && !loginErrors.email) passed++;
+    if (loginData.password && !loginErrors.password) passed++;
+    return { passed, total: 2 };
+  };
+
+  const getSignupValidationCount = () => {
+    let passed = 0;
+    if (signupData.fullName && !signupErrors.fullName) passed++;
+    if (signupData.email && !signupErrors.email) passed++;
+    if (signupData.password && !signupErrors.password && passwordStrength >= 3) passed++;
+    if (signupData.confirmPassword && !signupErrors.confirmPassword) passed++;
+    if (!signupData.phone || !signupErrors.phone) passed++; // Optional field
+    return { passed, total: 5 };
+  };
+
   // Real-time validation functions
   const validateLoginField = (field: string, value: string) => {
     const newErrors = { ...loginErrors };
@@ -183,6 +207,20 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Check rate limiting
+    const rateCheck = checkRateLimit('login', 5, 15 * 60 * 1000); // 5 attempts per 15 minutes
+    setRateLimitStatus({ remaining: rateCheck.remainingAttempts, isAllowed: rateCheck.isAllowed });
+    
+    if (!rateCheck.isAllowed) {
+      setError('Too many login attempts. Please try again in 15 minutes.');
+      toast({
+        title: 'Rate limit exceeded',
+        description: 'Too many login attempts. Please wait before trying again.',
+        variant: 'destructive'
+      });
+      return;
+    }
 
     // Validate all fields
     const emailValidation = validateEmail(loginData.email);
@@ -529,7 +567,16 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                 </div>
               </div>
               
-              <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90">
+              {/* Security Metrics */}
+              <SecurityMetrics 
+                formType="login" 
+                validationsPassed={getLoginValidationCount().passed}
+                totalValidations={getLoginValidationCount().total}
+                rateLimitRemaining={rateLimitStatus.remaining}
+                showDetails={false}
+              />
+              
+              <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90" disabled={!rateLimitStatus.isAllowed}>
                 Sign In
               </Button>
               
@@ -723,7 +770,16 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                 )}
               </div>
               
-              <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90">
+              {/* Security Metrics */}
+              <SecurityMetrics 
+                formType="signup" 
+                validationsPassed={getSignupValidationCount().passed}
+                totalValidations={getSignupValidationCount().total}
+                rateLimitRemaining={rateLimitStatus.remaining}
+                showDetails={false}
+              />
+              
+              <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90" disabled={!rateLimitStatus.isAllowed}>
                 Create Account
               </Button>
             </form>
