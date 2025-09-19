@@ -877,17 +877,63 @@ export default function TrainingPage() {
               <div className="w-full lg:w-[35%] bg-card p-6 overflow-y-auto rounded-2xl shadow-elegant">
                 <h3 className="text-2xl font-bold text-foreground mb-6">Contents</h3>
                 {courseContents[selectedCourse.title]?.map((item, index) => (
-                  <div
+                  <motion.div
                     key={index}
-                    className={`my-3 font-medium cursor-pointer p-3 rounded-lg transition-all duration-200 ${
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.3 }}
+                    className={`my-3 font-medium cursor-pointer p-4 rounded-xl transition-all duration-500 transform relative group overflow-hidden ${
                       selectedTopic?.title === item.title
-                        ? 'text-primary border-l-2 border-yellow bg-primary/10'
-                        : 'text-foreground hover:bg-primary/10 hover:text-yellow hover:border-l-2 hover:border-yellow'
+                        ? 'text-white border-l-4 border-yellow bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg scale-105'
+                        : 'text-foreground hover:scale-105 hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-900 hover:border-l-4 hover:border-yellow'
                     }`}
                     onClick={() => setSelectedTopic(item)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    {item.title}
-                  </div>
+                    {/* Background gradient overlay for non-selected items */}
+                    {selectedTopic?.title !== item.title && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-0 group-hover:opacity-90 transition-all duration-500 rounded-xl"></div>
+                    )}
+                    
+                    {/* Enhanced hover background for selected items */}
+                    {selectedTopic?.title === item.title && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 opacity-30 rounded-xl"></div>
+                    )}
+                    
+                    {/* Content */}
+                    <div className="relative z-10 flex items-center justify-between">
+                      <span className={`font-semibold transition-colors duration-300 ${
+                        selectedTopic?.title === item.title 
+                          ? 'text-white' 
+                          : 'group-hover:text-white'
+                      }`}>
+                        {item.title}
+                      </span>
+                      
+                      {/* Topic type indicator */}
+                      <div className={`ml-3 p-1 rounded-full transition-all duration-300 ${
+                        selectedTopic?.title === item.title
+                          ? 'bg-yellow text-blue-900'
+                          : 'bg-blue-100 text-blue-600 group-hover:bg-yellow group-hover:text-blue-900'
+                      }`}>
+                        {item.type === 'video' ? (
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                          </svg>
+                        ) : (
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Shine effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 rounded-xl">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-full group-hover:-translate-x-full transition-transform duration-1000"></div>
+                    </div>
+                  </motion.div>
                 ))}
                 <Button 
                   className="mx-12 mt-6 bg-primary text-primary-foreground hover:bg-yellow hover:text-primary-foreground"
