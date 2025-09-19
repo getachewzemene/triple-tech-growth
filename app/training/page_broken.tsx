@@ -562,17 +562,32 @@ export default function TrainingPage() {
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-yellow-200 shadow-yellow-500/25">
+                      <div className={`group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 shadow-yellow-500/25 hover:shadow-2xl cursor-pointer`}>
                         {/* Background gradient overlay */}
                         <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
                         
+                        {/* Animated border gradient */}
+                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5">
+                          <div className="w-full h-full bg-white rounded-3xl"></div>
+                        </div>
+
                         {course.featured && (
-                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
+                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                             BONUS
                           </div>
                         )}
-                        <CardHeader className="relative z-10">
-                          <div className="flex items-center gap-3 mb-3">
+                        
+                        {/* Content */}
+                        <div className="relative p-6">
+                          {/* Stats badge */}
+                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <div className="px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white text-xs font-semibold">
+                              {course.price}
+                            </div>
+                          </div>
+
+                          {/* Icon and title */}
+                          <div className="flex items-center gap-4 mb-4">
                             {course.thumbnail && (
                               <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100 p-1">
                                 <Image
@@ -584,79 +599,96 @@ export default function TrainingPage() {
                                 />
                               </div>
                             )}
+                            
+                            {/* Enhanced Icon */}
                             <div className="relative">
                               <div className="p-3 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
                                 <div className="text-white text-xl">{course.icon}</div>
                               </div>
                               {/* Floating particles */}
                               <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
+                              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
                             </div>
+
+                            {/* Title and description */}
                             <div className="flex-1">
-                              <CardTitle className="text-xl font-bold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">{course.title}</CardTitle>
-                              <CardDescription className="mt-1 group-hover:text-gray-700 transition-colors duration-300">{course.description}</CardDescription>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <FaClock className="w-4 h-4" />
-                            <span>{course.duration}</span>
-                            <FaDollarSign className="w-4 h-4 ml-2" />
-                            <span>{course.price}</span>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="relative z-10">
-                          <div className="space-y-3">
-                            <div>
-                              <Badge variant="secondary" className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300">
-                                {course.level}
-                              </Badge>
-                              <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-gray-700 transition-colors duration-300">
-                                {course.detailedDescription}
+                              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
+                                {course.title}
+                              </h3>
+                              <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                                {course.description}
                               </p>
                             </div>
-                            <div className="flex gap-2">
-                              {user ? (
-                                enrollmentStatus?.status === 'approved' ? (
-                                  <Button 
-                                    size="sm"
-                                    onClick={() => router.push(`/course/${course.id}`)}
-                                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                                  >
-                                    Access Course
-                                  </Button>
-                                ) : (
-                                  <Button 
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedCourse(course);
-                                      handleEnrollment(course);
-                                    }}
-                                    className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                                    disabled={enrollmentStatus?.status === 'payment_submitted'}
-                                  >
-                                    {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
-                                  </Button>
-                                )
+                          </div>
+                          
+                          {/* Duration and price info */}
+                          <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                            <div className="flex items-center gap-2">
+                              <FaClock className="w-4 h-4 text-yellow-600" />
+                              <span>{course.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <FaDollarSign className="w-4 h-4 text-green-600" />
+                              <span className="font-semibold">{course.price}</span>
+                            </div>
+                          </div>
+
+                          {/* Level badge */}
+                          <div className="mb-4">
+                            <span className="px-3 py-1 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 text-xs font-semibold rounded-full">
+                              {course.level}
+                            </span>
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-sm text-gray-600 mb-4 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                            {course.detailedDescription}
+                          </p>
+                          {/* Enhanced Buttons */}
+                          <div className="flex gap-3 mb-4">
+                            {user ? (
+                              enrollmentStatus?.status === 'approved' ? (
+                                <Button 
+                                  size="sm"
+                                  onClick={() => router.push(`/course/${course.id}`)}
+                                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Access Course
+                                </Button>
                               ) : (
-                                <div className="flex-1 space-y-2">
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={() => setSelectedCourse(course)}
-                                    className="w-full border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 hover:text-yellow-700 transition-all duration-300"
-                                  >
-                                    View Details
-                                  </Button>
-                                  <Button 
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedCourse(course);
-                                      setShowAuthModal(true);
-                                    }}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                                  >
-                                    Enroll
-                                  </Button>
-                                </div>
+                                <Button 
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedCourse(course);
+                                    handleEnrollment(course);
+                                  }}
+                                  className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                  disabled={enrollmentStatus?.status === 'payment_submitted'}
+                                >
+                                  {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
+                                </Button>
+                              )
+                            ) : (
+                              <div className="flex-1 space-y-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => setSelectedCourse(course)}
+                                  className="w-full border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 hover:text-yellow-700 transition-all duration-300"
+                                >
+                                  View Details
+                                </Button>
+                                <Button 
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedCourse(course);
+                                    setShowAuthModal(true);
+                                  }}
+                                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Enroll
+                                </Button>
+                              </div>
                               )}
                             </div>
                             {user && enrollmentStatus && (
