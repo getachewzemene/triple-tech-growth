@@ -708,8 +708,16 @@ export default function TrainingPage() {
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg group">
-                        <CardHeader>
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 shadow-blue-500/25">
+                        {/* Background gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
+                        
+                        {/* Animated border gradient */}
+                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5">
+                          <div className="w-full h-full bg-white rounded-3xl"></div>
+                        </div>
+
+                        <CardHeader className="relative z-10">
                           <div className="flex items-center gap-3 mb-3">
                             {course.thumbnail && (
                               <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
