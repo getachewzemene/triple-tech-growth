@@ -263,12 +263,16 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
     setSuccess('');
 
     // Validate all fields
+    const emailValidation = validateEmail(signupData.email);
+    const passwordValidation = validatePassword(signupData.password);
+    const phoneValidation = validatePhone(signupData.phone);
+    
     const validations = {
       fullName: signupData.fullName.trim() ? '' : 'Full name is required',
-      email: validateEmail(signupData.email).message,
-      password: validatePassword(signupData.password).message,
+      email: emailValidation.isValid ? '' : emailValidation.message,
+      password: passwordValidation.isValid ? '' : passwordValidation.message,
       confirmPassword: signupData.password === signupData.confirmPassword ? '' : 'Passwords do not match',
-      phone: validatePhone(signupData.phone).message,
+      phone: phoneValidation.isValid ? '' : phoneValidation.message,
       address: ''
     };
 
