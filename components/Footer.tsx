@@ -41,15 +41,32 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white">
+    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-yellow/10 to-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-white/5 to-yellow/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+      
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-12 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-start">
-          {/* Company Info */}
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} />
-              <span className="text-xl font-bold">Triple Technologies</span>
+          {/* Enhanced Company Info */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3 group">
+              <div className="relative">
+                <Image 
+                  src="/logo.png" 
+                  alt="Triple Technologies Logo" 
+                  width={32} 
+                  height={32} 
+                  className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-100 bg-clip-text text-transparent">
+                Triple Technologies
+              </span>
             </div>
             <p className="text-gray-200 leading-relaxed text-sm">
               Accelerating business growth with smart technologies and impactful innovation.
@@ -60,7 +77,7 @@ const Footer = () => {
                   key={index}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-8 h-8 bg-white/10 hover:bg-yellow hover:text-light-blue rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110"
+                  className="w-10 h-10 bg-white/10 hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue rounded-full flex items-center justify-center transition-all duration-500 transform hover:scale-110 hover:rotate-12 backdrop-blur-sm border border-white/20 hover:shadow-lg"
                 >
                   <social.icon size={16} />
                 </a>
@@ -68,10 +85,10 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-yellow">Quick Links</h3>
-            <ul className="space-y-1">
+          {/* Enhanced Quick Links */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold bg-gradient-to-r from-yellow to-yellow/80 bg-clip-text text-transparent">Quick Links</h3>
+            <ul className="space-y-2">
               {[
                 { name: 'Home', id: 'hero' },
                 { name: 'Services', id: 'services' },
@@ -83,19 +100,20 @@ const Footer = () => {
                 <li key={link.id}>
                   <button
                     onClick={() => scrollToSection(link.id)}
-                    className="text-gray-200 hover:text-yellow transition-colors duration-300 text-left text-sm"
+                    className="text-gray-200 hover:text-yellow transition-all duration-300 text-left text-sm group relative overflow-hidden"
                   >
-                    {link.name}
+                    <span className="relative z-10">{link.name}</span>
+                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow to-yellow/80 group-hover:w-full transition-all duration-300"></div>
                   </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Services */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-yellow">Our Services</h3>
-            <ul className="space-y-1">
+          {/* Enhanced Services */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold bg-gradient-to-r from-yellow to-yellow/80 bg-clip-text text-transparent">Our Services</h3>
+            <ul className="space-y-2">
               {[
                 'Web Development',
                 'Mobile App Development',
@@ -103,30 +121,31 @@ const Footer = () => {
                 'IT Training',
               ].map((service) => (
                 <li key={service}>
-                  <span className="text-gray-200 hover:text-yellow transition-colors duration-300 cursor-pointer text-sm">
-                    {service}
+                  <span className="text-gray-200 hover:text-yellow transition-all duration-300 cursor-pointer text-sm group relative overflow-hidden">
+                    <span className="relative z-10">{service}</span>
+                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow to-yellow/80 group-hover:w-full transition-all duration-300"></div>
                   </span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-3" id='contact'>
-            <h3 className="text-lg font-semibold text-yellow">Contact Info</h3>
-            <div className="space-y-2">
-              <div className="flex items-start space-x-2">
-                <MapPin className="text-yellow mt-1" size={16} />
+          {/* Enhanced Contact Info */}
+          <div className="space-y-4" id='contact'>
+            <h3 className="text-lg font-semibold bg-gradient-to-r from-yellow to-yellow/80 bg-clip-text text-transparent">Contact Info</h3>
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3 group">
+                <MapPin className="text-yellow mt-1 group-hover:scale-110 transition-transform duration-300" size={16} />
                 <div>
-                  <p className="text-gray-200 text-sm">
+                  <p className="text-gray-200 text-sm group-hover:text-white transition-colors duration-300">
                     Megenagna, Shola Traffic Light,<br />
                     Fenasi Bldg 4<sup>th</sup> floor<br />
                     Addis Ababa, Ethiopia
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Phone className="text-yellow" size={16} />
+              <div className="flex items-center space-x-3 group">
+                <Phone className="text-yellow group-hover:scale-110 transition-transform duration-300" size={16} />
                 <a href="tel:+251997466952" className="text-gray-200 hover:text-yellow transition-colors duration-300 text-sm">
                   +251 997 466 952
                 </a>
