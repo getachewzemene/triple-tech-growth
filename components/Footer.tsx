@@ -41,15 +41,33 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white">
+    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-yellow/30 to-white/20 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-24 h-24 bg-gradient-to-br from-white/30 to-yellow/20 rounded-full animate-pulse animation-delay-300"></div>
+        <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-gradient-to-br from-yellow/20 to-white/30 rounded-full animate-pulse animation-delay-600"></div>
+      </div>
+      
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-12 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-start">
           {/* Company Info */}
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} />
-              <span className="text-xl font-bold">Triple Technologies</span>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3 group cursor-pointer">
+              <div className="relative">
+                <Image 
+                  src="/logo.png" 
+                  alt="Triple Technologies Logo" 
+                  width={40} 
+                  height={40} 
+                  className="transition-transform duration-300 group-hover:rotate-12"
+                />
+                <div className="absolute inset-0 bg-yellow/20 rounded-full scale-0 group-hover:scale-110 transition-all duration-300"></div>
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-white to-yellow bg-clip-text text-transparent">
+                Triple Technologies
+              </span>
             </div>
             <p className="text-gray-200 leading-relaxed text-sm">
               Accelerating business growth with smart technologies and impactful innovation.
@@ -60,18 +78,21 @@ const Footer = () => {
                   key={index}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-8 h-8 bg-white/10 hover:bg-yellow hover:text-light-blue rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110"
+                  className="w-10 h-10 bg-white/10 backdrop-blur-sm hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg group"
                 >
-                  <social.icon size={16} />
+                  <social.icon size={18} className="group-hover:scale-110 transition-transform duration-300" />
                 </a>
               ))}
             </div>
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-yellow">Quick Links</h3>
-            <ul className="space-y-1">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-yellow flex items-center gap-2">
+              Quick Links
+              <div className="h-[2px] bg-gradient-to-r from-yellow to-transparent flex-1"></div>
+            </h3>
+            <ul className="space-y-2">
               {[
                 { name: 'Home', id: 'hero' },
                 { name: 'Services', id: 'services' },
@@ -83,7 +104,7 @@ const Footer = () => {
                 <li key={link.id}>
                   <button
                     onClick={() => scrollToSection(link.id)}
-                    className="text-gray-200 hover:text-yellow transition-colors duration-300 text-left text-sm"
+                    className="text-gray-200 hover:text-yellow transition-all duration-300 text-left text-sm hover:translate-x-1 transform block"
                   >
                     {link.name}
                   </button>
