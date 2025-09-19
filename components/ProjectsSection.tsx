@@ -1,6 +1,6 @@
 'use client';
 
-import { Package, Dumbbell, Hotel, Building, ArrowUpRight, ExternalLink } from 'lucide-react';
+import { Package, Dumbbell, Hotel, Building, ArrowUpRight, ExternalLink, Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 const ProjectsSection = () => {
@@ -70,6 +70,10 @@ const ProjectsSection = () => {
       
       <div className="container mx-auto px-8 relative z-10">
         <div className="text-center mb-16">
+           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
+                      <Sparkles className="w-4 h-4 text-light-blue" />
+                      <span className="text-sm font-medium text-gray-600">Our Projects We worked on</span>
+                    </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">Projects</span>
           </h2>
