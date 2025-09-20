@@ -5,6 +5,7 @@ import { Menu, X, User } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import UserAuthModal from '@/components/UserAuthModal';
 import Image from 'next/image';
 
@@ -73,13 +74,14 @@ const Header = () => {
   };
 
   return (
-    <header
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-      isScrolled || pathname === '/training' || pathname === '/courses' 
-        ? 'bg-light-blue/95 backdrop-blur-md shadow-2xl border-b border-white/10' 
-        : 'bg-transparent'
-      }`}
-    >
+    <TooltipProvider>
+      <header
+        className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+        isScrolled || pathname === '/training' || pathname === '/courses' 
+          ? 'bg-light-blue/95 backdrop-blur-md shadow-2xl border-b border-white/10' 
+          : 'bg-transparent'
+        }`}
+      >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className={`flex items-center space-x-3 text-2xl font-bold transition-all duration-500 transform hover:scale-105 ${
           isScrolled ? 'text-white' : 'text-white'
@@ -100,8 +102,8 @@ const Header = () => {
         </div>
         
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
-          <nav className="flex space-x-8">
+        <div className="hidden md:flex items-center space-x-4">
+          <nav className="flex space-x-4">
             {[
               { name: 'Home', id: 'hero' },
               { name: 'Services', id: 'services' },
@@ -115,7 +117,7 @@ const Header = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`relative transition-all duration-500 font-medium px-3 py-2 rounded-lg group ${
+                className={`relative transition-all duration-500 font-medium px-2 py-2 rounded-lg group text-sm ${
                   (activeSection === item.id && pathname === '/') || 
                   (item.id === 'training' && pathname === '/training') ||
                   (item.id === 'courses' && pathname === '/courses')
@@ -137,15 +139,22 @@ const Header = () => {
           
           {/* Profile/Login Button */}
           {user ? (
-            <Button
-              onClick={() => router.push('/profile')}
-              variant="outline"
-              size="sm"
-              className="bg-transparent border-white/30 text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue hover:border-yellow transition-all duration-500 transform hover:scale-105 backdrop-blur-sm"
-            >
-              <User className="w-4 h-4 mr-2" />
-              Profile
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => router.push('/profile')}
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent border-white/30 text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue hover:border-yellow transition-all duration-500 transform hover:scale-105 backdrop-blur-sm"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Profile
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>View Profile</p>
+              </TooltipContent>
+            </Tooltip>
           ) : (
             <Button
               onClick={() => setIsAuthModalOpen(true)}
@@ -237,7 +246,8 @@ const Header = () => {
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
       />
-    </header>
+      </header>
+    </TooltipProvider>
   );
 };
 
