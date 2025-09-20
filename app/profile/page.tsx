@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCalendar, FaClock, FaCheckCircle, FaHourglassHalf, FaTimesCircle } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCalendar, FaClock, FaCheckCircle, FaHourglassHalf, FaTimesCircle, FaEdit } from "react-icons/fa";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import UpdateProfileModal from "@/components/UpdateProfileModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,13 +16,18 @@ import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 
 export default function ProfilePage() {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const { user, logout } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    // Load enrolled courses from localStorage
+  const loadEnrolledCourses = () => {
     const courses = safeLocalStorage.getItem('enrolledCourses', []);
     setEnrolledCourses(courses);
+  };
+
+  useEffect(() => {
+    // Load enrolled courses from localStorage
+    loadEnrolledCourses();
   }, []);
 
   if (!user) {
@@ -38,6 +45,7 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -94,30 +102,45 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <FaUser className="text-blue-600" />
-                      Account Information
-                    </CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="flex items-center gap-2">
+                        <FaUser className="text-blue-600" />
+                        Account Information
+                      </CardTitle>
+                      <Button
+                        onClick={() => setIsUpdateModalOpen(true)}
+                        size="sm"
+                        variant="outline"
+                        className="flex items-center gap-2"
+                      >
+                        <FaEdit className="w-3 h-3" />
+                        Edit Profile
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex items-center gap-3">
                       <FaUser className="text-muted-foreground" />
                       <span className="font-medium">{user.username}</span>
                     </div>
-                    {enrolledCourses.length > 0 && (
+                    {enrolledCourses.length > 0 ? (
                       <div className="space-y-2">
                         <div className="flex items-center gap-3">
                           <FaEnvelope className="text-muted-foreground" />
-                          <span>{enrolledCourses[0].email}</span>
+                          <span>{enrolledCourses[0].email || 'No email provided'}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <FaPhone className="text-muted-foreground" />
-                          <span>{enrolledCourses[0].phone}</span>
+                          <span>{enrolledCourses[0].phone || 'No phone provided'}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <FaMapMarkerAlt className="text-muted-foreground" />
-                          <span>{enrolledCourses[0].address}</span>
+                          <span>{enrolledCourses[0].address || 'No address provided'}</span>
                         </div>
+                      </div>
+                    ) : (
+                      <div className="text-muted-foreground text-sm">
+                        <p>Complete your profile by clicking "Edit Profile" above.</p>
                       </div>
                     )}
                   </CardContent>
@@ -276,6 +299,14 @@ export default function ProfilePage() {
           </Tabs>
         </motion.div>
       </div>
+      <Footer />
+      
+      {/* Update Profile Modal */}
+      <UpdateProfileModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+        onProfileUpdated={loadEnrolledCourses}
+      />
     </div>
   );
 }
