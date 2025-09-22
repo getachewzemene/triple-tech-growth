@@ -3,7 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "next-themes";
+import ThemeProviderClient from '@/components/ThemeProviderClient';
 import { AuthProvider } from "./providers/AuthProvider";
 import { LanguageProvider } from "./providers/LanguageProvider";
 
@@ -101,12 +101,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProviderClient>
           <LanguageProvider>
             <AuthProvider>
               <TooltipProvider>
@@ -116,7 +111,7 @@ export default function RootLayout({
               </TooltipProvider>
             </AuthProvider>
           </LanguageProvider>
-        </ThemeProvider>
+        </ThemeProviderClient>
       </body>
     </html>
   );
