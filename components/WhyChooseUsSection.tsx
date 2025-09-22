@@ -84,7 +84,7 @@ const WhyChooseUsSection = () => {
           {benefits.map((benefit, index) => (
             <div
               key={benefit.title}
-              className={`group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 transition-all duration-700 transform hover:-translate-y-4 hover:scale-105 ${benefit.shadowColor} hover:shadow-2xl cursor-pointer ${
+              className={`group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-4 hover:scale-105 ${benefit.shadowColor} hover:shadow-2xl cursor-pointer ${
                 isVisible ? 'animate-slide-in-left' : 'opacity-0'
               }`}
               style={{
@@ -99,7 +99,7 @@ const WhyChooseUsSection = () => {
               
               {/* Animated border gradient */}
               <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${benefit.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
-                <div className="w-full h-full bg-white rounded-3xl"></div>
+                <div className="w-full h-full bg-card rounded-3xl"></div>
               </div>
               
               {/* Content */}
@@ -111,24 +111,19 @@ const WhyChooseUsSection = () => {
                   </div>
                 </div>
                 
-                {/* Icon */}
-                <div className="relative mb-6">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${benefit.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg inline-block`}>
+                {/* Icon + Title (centered) */}
+                <div className="flex flex-col items-center text-center gap-4 mb-6">
+                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${benefit.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg inline-block card-icon`}>
                     <benefit.icon className="w-8 h-8 text-white" />
                   </div>
-                  {/* Floating particles */}
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-                  <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
-                </div>
-                
-                {/* Title and description */}
-                <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                    {benefit.description}
-                  </p>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
+                      {benefit.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                      {benefit.description}
+                    </p>
+                  </div>
                 </div>
                 
                 {/* Features list */}

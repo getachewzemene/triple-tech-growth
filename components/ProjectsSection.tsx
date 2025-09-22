@@ -86,7 +86,7 @@ const ProjectsSection = () => {
           {projects.map((project, index) => (
             <div
               key={project.title}
-              className={`group relative overflow-hidden rounded-2xl bg-card shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 cursor-pointer dark:border-transparent ${
+              className={`group service-card relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 shadow-lg hover:shadow-2xl cursor-pointer ${
                 isVisible ? 'animate-scale-in' : 'opacity-0'
               }`}
               style={{
@@ -97,31 +97,31 @@ const ProjectsSection = () => {
               onMouseLeave={() => setHoveredProject(null)}
             >
               {/* Gradient background overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${project.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500 dark:opacity-30`}></div>
+              <div className={`absolute inset-0 bg-gradient-to-br ${project.bgColor} opacity-0 group-hover:opacity-50 transition-all duration-500`}></div>
               
-              {/* Animated border */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-gray-200 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+              {/* Animated border gradient (with inner card fill) */}
+              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
+                <div className="w-full h-full bg-card rounded-3xl"></div>
+              </div>
+
               {/* Content */}
-              <div className="relative p-6">
-                {/* Icon and header */}
-                <div className="flex items-start justify-between mb-6">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${project.color} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg`}>
+              <div className="relative p-8">
+                {/* Icon + Title (centered) */}
+                <div className="flex flex-col items-center text-center gap-4 mb-6">
+                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${project.color} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg card-icon`}>
                     <project.icon className="w-8 h-8 text-white" />
                   </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-200 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
+                      {project.description}
+                    </p>
+                  </div>
+                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 absolute top-6 right-6">
                     <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-light-blue transition-colors duration-300" />
                   </div>
-                </div>
-                
-                {/* Title and description */}
-                <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-light-blue transition-colors duration-300">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-200 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
-                    {project.description}
-                  </p>
                 </div>
                 
                 {/* Features */}
@@ -144,9 +144,9 @@ const ProjectsSection = () => {
                 </div>
               </div>
               
-              {/* Shine effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-full group-hover:-translate-x-full transition-transform duration-1000"></div>
+              {/* Hover glow effect (match ServicesSection) */}
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${project.color} opacity-20 blur-xl transform scale-110`}></div>
               </div>
             </div>
           ))}

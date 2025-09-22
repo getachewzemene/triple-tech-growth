@@ -96,7 +96,7 @@ const TrainingSection = () => {
           {trainingPrograms.map((program, index) => (
             <div
               key={program.title}
-              className={`group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 ${program.shadowColor} hover:shadow-2xl cursor-pointer ${
+              className={`group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 ${program.shadowColor} hover:shadow-2xl cursor-pointer ${
                 isVisible ? 'animate-slide-in-right' : 'opacity-0'
               }`}
               style={{
@@ -112,7 +112,7 @@ const TrainingSection = () => {
               
               {/* Animated border gradient */}
               <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${program.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
-                <div className="w-full h-full bg-white rounded-3xl"></div>
+                <div className="w-full h-full bg-card rounded-3xl"></div>
               </div>
               
               {/* Content */}
@@ -136,7 +136,7 @@ const TrainingSection = () => {
                 
                 {/* Title and description */}
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
                     {program.title}
                   </h3>
                   <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300">

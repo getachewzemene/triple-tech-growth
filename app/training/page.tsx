@@ -468,7 +468,7 @@ export default function TrainingPage() {
                         whileTap={{ scale: 0.98 }}
                         className="relative"
                       >
-                        <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-green-200 shadow-green-500/25 border-l-4 border-l-green-500">
+                        <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border shadow-green-500/25 border-l-4 border-l-green-500">
                           {/* Background gradient overlay for course folders */}
                           <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
                           
@@ -605,7 +605,7 @@ export default function TrainingPage() {
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-yellow-200 shadow-yellow-500/25">
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border shadow-yellow-500/25">
                         {/* Background gradient overlay */}
                         <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
                         
@@ -652,7 +652,7 @@ export default function TrainingPage() {
                         <CardContent className="relative z-10">
                           <div className="space-y-3">
                             <div>
-                              <Badge variant="secondary" className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300 group-hover:bg-white group-hover:text-yellow-800 transition-all duration-300">
+                              <Badge variant="secondary" className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300 transition-all duration-300 dark:group-hover:text-yellow-300">
                                 {course.level}
                               </Badge>
                               <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-white transition-colors duration-300">
@@ -754,7 +754,7 @@ export default function TrainingPage() {
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-blue-200 shadow-blue-500/25">
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border shadow-blue-500/25">
                         {/* Background gradient overlay for regular courses */}
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
                         
@@ -791,7 +791,7 @@ export default function TrainingPage() {
                         <CardContent className="relative z-10">
                           <div className="space-y-3">
                             <div>
-                              <Badge variant="secondary" className="mb-2 group-hover:bg-white group-hover:text-blue-800 transition-all duration-300">
+                              <Badge variant="secondary" className="mb-2 transition-all duration-300 dark:group-hover:text-blue-200">
                                 {course.level}
                               </Badge>
                               <p className="text-sm text-muted-foreground line-clamp-3 group-hover:text-white transition-colors duration-300">

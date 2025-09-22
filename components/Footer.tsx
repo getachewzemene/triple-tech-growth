@@ -41,7 +41,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white relative overflow-hidden">
+    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white relative overflow-hidden border-t border-border/20 dark:border-white/10">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-yellow/10 to-white/5 rounded-full blur-3xl animate-pulse"></div>
@@ -199,7 +199,7 @@ const Footer = () => {
         </div>
       </div>
       {/* Bottom Bar */}
-      <div className="border-t border-white/20">
+      <div className="border-t border-border/20 dark:border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
             <p className="text-gray-200 text-center md:text-left text-sm">

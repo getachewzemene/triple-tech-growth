@@ -95,7 +95,8 @@ All colors MUST be HSL.
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%; /* white for destructive text */
 
-    --border: 222.9 84% 4.9%; /* #020817 for borders */
+  /* Make borders slightly brighter than the background so they show up in dark mode */
+  --border: 222.9 84% 12%; /* slightly brighter than bg (#020817) */
     --input: 222.9 84% 4.9%; /* #020817 for input background */
     --ring: 0 0% 100%; /* white for focus rings */
 
@@ -458,4 +459,46 @@ All colors MUST be HSL.
 .dark .rounded-3xl {
   background: hsl(var(--card)) !important;
   color: hsl(var(--card-foreground)) !important;
+}
+
+/* Dark mode: make card borders a subtle lighter line and increase on hover. Also ensure
+   group-hover text/icon styles remain visible (override text-transparent/bg-clip-text
+   used for light-mode fancies). */
+.dark .bg-card,
+.dark .card,
+.dark .service-card,
+.dark .rounded-3xl {
+  border-color: rgba(255,255,255,0.06) !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.dark .bg-card:hover,
+.dark .card:hover,
+.dark .service-card:hover,
+.dark .rounded-3xl:hover {
+  border-color: rgba(255,255,255,0.10) !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* Override light-mode 'transparent gradient text' hover effects so text/icons stay readable */
+.dark .group:hover h1,
+.dark .group:hover h2,
+.dark .group:hover h3,
+.dark .group:hover h4,
+.dark .group:hover h5,
+.dark .group:hover p,
+.dark .group:hover span,
+.dark .group:hover a {
+  color: hsl(var(--card-foreground)) !important;
+  background-image: none !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+.dark .group:hover .card-icon,
+.dark .group:hover svg,
+.dark .group:hover .w-4,
+.dark .group:hover .w-5,
+.dark .group:hover .w-8 {
+  color: hsl(var(--card-foreground)) !important;
+  fill: currentColor !important;
 }

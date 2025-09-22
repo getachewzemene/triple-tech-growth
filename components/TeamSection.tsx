@@ -96,7 +96,7 @@ const TeamSection = () => {
           {teamMembers.map((member, index) => (
             <div
               key={member.title}
-              className={`group relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 cursor-pointer ${
+              className={`group relative overflow-hidden rounded-3xl bg-card shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 cursor-pointer border border-border ${
                 isVisible ? 'animate-slide-in-right' : 'opacity-0'
               }`}
               style={{
@@ -121,27 +121,25 @@ const TeamSection = () => {
                   </div>
                 </div>
                 
-                {/* Avatar */}
-                <div className="relative mb-6 flex justify-center">
-                  <div className={`p-6 rounded-full bg-gradient-to-br ${member.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
+                {/* Avatar + Member Info (centered) */}
+                <div className="flex flex-col items-center text-center gap-4 mb-6">
+                  <div className={`p-6 rounded-full bg-gradient-to-br ${member.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg card-icon`}>
                     <User className="w-12 h-12 text-white" />
                   </div>
-                  {/* Status indicator */}
-                  <div className="absolute bottom-2 right-6 w-4 h-4 bg-green-400 border-2 border-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse"></div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
+                      {member.name}
+                    </h3>
+                    <h4 className={`text-lg font-semibold bg-gradient-to-r ${member.gradient} bg-clip-text text-transparent mb-3`}>
+                      {member.title}
+                    </h4>
+                    <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                      {member.description}
+                    </p>
+                  </div>
                 </div>
-                
-                {/* Member info */}
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
-                    {member.name}
-                  </h3>
-                  <h4 className={`text-lg font-semibold bg-gradient-to-r ${member.gradient} bg-clip-text text-transparent mb-3`}>
-                    {member.title}
-                  </h4>
-                  <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                    {member.description}
-                  </p>
-                </div>
+                {/* Status indicator (absolute) */}
+                <div className="absolute bottom-2 right-6 w-4 h-4 bg-green-400 border-2 border-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse"></div>
                 
                 {/* Expertise */}
                 <div className="mb-6">
