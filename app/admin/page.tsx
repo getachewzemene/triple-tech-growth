@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth } from '@/app/providers/AuthProvider';
+import { useLanguage } from '@/app/providers/LanguageProvider';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -142,9 +143,9 @@ function AdminPageContent() {
   const { logout, user } = useAuth();
   const router = useRouter();
   const { theme, toggleTheme, isDark } = useThemeToggle();
+  const { language, setLanguage, getLanguageDisplayName } = useLanguage();
   const [activeSection, setActiveSection] = useState('dashboard');
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
-  const [language, setLanguage] = useState('en');
   const [enrollments, setEnrollments] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -431,7 +432,7 @@ function AdminPageContent() {
               <div className="space-y-0.5">
                 <div className="text-sm font-medium">Interface Language</div>
                 <div className="text-xs text-muted-foreground">
-                  Currently: {language === 'en' ? 'English' : language === 'am' ? 'Amharic' : 'Oromo'}
+                  Currently: {getLanguageDisplayName(language)}
                 </div>
               </div>
               <div className="flex space-x-2">
@@ -665,7 +666,7 @@ function AdminPageContent() {
             <div className="flex-1" />
             <div className="flex items-center space-x-2">
               <Badge variant="outline">
-                {language === 'en' ? 'English' : language === 'am' ? 'አማርኛ' : 'Oromiffa'}
+                {getLanguageDisplayName(language)}
               </Badge>
               <Button
                 variant="ghost"

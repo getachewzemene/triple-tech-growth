@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Menu, X, User } from 'lucide-react';
+import { Menu, X, User, Sun, Moon, Globe } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/app/providers/AuthProvider';
+import { useLanguage } from '@/app/providers/LanguageProvider';
+import { useThemeToggle } from '@/hooks/use-theme-toggle';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import UserAuthModal from '@/components/UserAuthModal';
 import Image from 'next/image';
@@ -17,6 +20,8 @@ const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuth();
+  const { language, setLanguage, getLanguageDisplayName } = useLanguage();
+  const { toggleTheme, isDark } = useThemeToggle();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -137,6 +142,65 @@ const Header = () => {
             ))}
           </nav>
           
+          {/* Theme and Language Controls */}
+          <div className="flex items-center space-x-2">
+            {/* Theme Toggle */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={toggleTheme}
+                  variant="ghost"
+                  size="sm"
+                  className="bg-transparent text-white hover:bg-white/10 transition-all duration-500 transform hover:scale-105 h-8 w-8"
+                >
+                  {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Toggle {isDark ? 'Light' : 'Dark'} Mode</p>
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Language Selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="bg-transparent text-white hover:bg-white/10 transition-all duration-500 transform hover:scale-105 h-8 px-2"
+                >
+                  <Globe className="h-4 w-4 mr-1" />
+                  <span className="text-xs font-medium">
+                    {language.toUpperCase()}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="end" 
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg z-[100]"
+              >
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('en')}
+                  className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${language === 'en' ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : ''}`}
+                >
+                  <span className="font-medium">🇺🇸 English</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('am')}
+                  className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${language === 'am' ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : ''}`}
+                >
+                  <span className="font-medium">🇪🇹 አማርኛ</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setLanguage('or')}
+                  className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${language === 'or' ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : ''}`}
+                >
+                  <span className="font-medium">🇪🇹 Oromiffa</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          
           {/* Profile/Login Button */}
           {user ? (
             <Tooltip>
@@ -206,6 +270,62 @@ const Header = () => {
                   {item.name}
                 </button>
               ))}
+              
+              {/* Mobile Theme and Language Controls */}
+              <div className="pt-4 border-t border-white/20 space-y-3">
+                <div className="text-white text-sm font-medium">Settings</div>
+                
+                {/* Theme Toggle */}
+                <Button
+                  onClick={toggleTheme}
+                  variant="outline"
+                  size="sm"
+                  className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary justify-start"
+                >
+                  {isDark ? <Sun className="w-4 h-4 mr-2" /> : <Moon className="w-4 h-4 mr-2" />}
+                  {isDark ? 'Light Mode' : 'Dark Mode'}
+                </Button>
+                
+                {/* Language Selection */}
+                <div className="space-y-2">
+                  <div className="text-white text-xs">Language:</div>
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={() => setLanguage('en')}
+                      variant={language === 'en' ? 'default' : 'outline'}
+                      size="sm"
+                      className={`flex-1 ${language === 'en' 
+                        ? 'bg-yellow text-light-blue hover:bg-yellow/90' 
+                        : 'bg-transparent border-white text-white hover:bg-white hover:text-primary'
+                      }`}
+                    >
+                      EN
+                    </Button>
+                    <Button
+                      onClick={() => setLanguage('am')}
+                      variant={language === 'am' ? 'default' : 'outline'}
+                      size="sm"
+                      className={`flex-1 ${language === 'am' 
+                        ? 'bg-yellow text-light-blue hover:bg-yellow/90' 
+                        : 'bg-transparent border-white text-white hover:bg-white hover:text-primary'
+                      }`}
+                    >
+                      አማ
+                    </Button>
+                    <Button
+                      onClick={() => setLanguage('or')}
+                      variant={language === 'or' ? 'default' : 'outline'}
+                      size="sm"
+                      className={`flex-1 ${language === 'or' 
+                        ? 'bg-yellow text-light-blue hover:bg-yellow/90' 
+                        : 'bg-transparent border-white text-white hover:bg-white hover:text-primary'
+                      }`}
+                    >
+                      OR
+                    </Button>
+                  </div>
+                </div>
+              </div>
               
               {/* Mobile Profile/Login Button */}
               <div className="pt-4 border-t border-white/20">
