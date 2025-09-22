@@ -74,7 +74,7 @@ All colors MUST be HSL.
     --background: 222.2 84% 4.9%;
     --foreground: 48 100% 50%; /* #ffd700 for headers in dark */
 
-    --card: 210 14% 97%; /* #F4F6F8 */
+    --card: 217.2 32.6% 17.5%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -98,6 +98,14 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    /* Custom Triple Technologies Colors for Dark Mode */
+    --light-blue: 210 100% 15%; /* Darker blue for dark theme */
+    --light-blue-foreground: 0 0% 100%;
+    --yellow: 48 100% 50%; /* Keep yellow bright */
+    --yellow-foreground: 222.2 84% 4.9%;
+    --light-gray: 217.2 32.6% 20%; /* Dark gray for dark theme */
+    --light-gray-foreground: 210 40% 98%;
     
     /* Chart color variables for dark mode */
     --chart-1: 220 70% 60%;
