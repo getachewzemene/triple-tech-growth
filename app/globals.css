@@ -459,3 +459,37 @@ All colors MUST be HSL.
   background: hsl(var(--card)) !important;
   color: hsl(var(--card-foreground)) !important;
 }
+
+/* Main page service cards dark mode styling */
+.dark .group.relative.overflow-hidden.rounded-3xl.bg-white,
+.dark .group.relative.overflow-hidden.rounded-3xl {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Improve border visibility in dark mode */
+.dark .group.relative.overflow-hidden.rounded-3xl {
+  border: 1px solid hsl(var(--border) / 0.3) !important;
+}
+
+.dark .group.relative.overflow-hidden.rounded-3xl:hover {
+  border-color: hsl(var(--yellow) / 0.6) !important;
+}
+
+/* Fix hover background gradients in dark mode */
+.dark .group.relative.overflow-hidden.rounded-3xl .bg-white {
+  background: hsl(var(--card)) !important;
+}
+
+/* Ensure text visibility on hover in dark mode */
+.dark .group:hover h3,
+.dark .group:hover p,
+.dark .group:hover span {
+  color: #ffffff !important;
+}
+
+/* Icon visibility in hover state */
+.dark .group:hover svg {
+  color: hsl(var(--yellow)) !important;
+}
