@@ -83,7 +83,9 @@ const Header = () => {
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-500 ${
         isScrolled || pathname === '/training' || pathname === '/courses' 
-          ? 'bg-light-blue/95 backdrop-blur-md shadow-2xl border-b border-white/10' 
+          ? isDark 
+            ? 'bg-gradient-to-r from-black/95 via-gray-900/95 to-black/95 backdrop-blur-md shadow-2xl border-b border-yellow/20' 
+            : 'bg-light-blue/95 backdrop-blur-md shadow-2xl border-b border-white/10'
           : 'bg-transparent'
         }`}
       >
