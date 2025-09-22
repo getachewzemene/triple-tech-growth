@@ -59,7 +59,7 @@ const WhyChooseUsSection = () => {
   ];
 
   return (
-    <section id="why-choose-us" ref={sectionRef} className="py-20 bg-gradient-to-br from-gray-50 via-white to-slate-50 relative overflow-hidden">
+    <section id="why-choose-us" ref={sectionRef} className="py-20 bg-background from-gray-50 via-white to-slate-50 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-light-blue/10 to-yellow/10 rounded-full blur-3xl animate-pulse"></div>

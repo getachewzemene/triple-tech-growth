@@ -69,7 +69,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" ref={sectionRef} className="py-20 bg-gradient-to-br from-white via-gray-50 to-slate-50 relative overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-light-blue/10 to-yellow/10 rounded-full blur-3xl animate-pulse"></div>
@@ -77,7 +77,7 @@ const ServicesSection = () => {
       </div>
 
       <div className="container mx-auto px-8 relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-light-blue" />
             <span className="text-sm font-medium text-gray-600">Our Professional Services</span>

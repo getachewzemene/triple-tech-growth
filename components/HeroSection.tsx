@@ -29,6 +29,17 @@ const HeroSection = () => {
     }
   ];
 
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+    const obs = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => obs.disconnect();
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -71,7 +82,7 @@ const HeroSection = () => {
       {/* Enhanced Animated Background */}
       <div 
         className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out"
-        style={{ background: heroSlides[currentSlide].background }}
+        style={ isDark ? { background: `hsl(var(--background))` } : { background: heroSlides[currentSlide].background }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/40"></div>
         
@@ -115,7 +126,7 @@ const HeroSection = () => {
           <Button
             onClick={handleCTAClick}
             size="lg"
-            className="bg-gradient-to-r from-yellow to-yellow/80 text-yellow-foreground hover:from-yellow/90 hover:to-yellow/70 text-lg px-8 py-4 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-110 transition-all duration-500 shadow-2xl border border-yellow/30 backdrop-blur-sm"
+            className={`${isDark ? 'bg-[#e2a70f] hover:bg-[#d69e0b] text-white' : 'bg-gradient-to-r from-yellow to-yellow/80 text-yellow-foreground hover:from-yellow/90 hover:to-yellow/70'} text-lg px-8 py-4 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-110 transition-all duration-500 shadow-2xl border border-yellow/30 backdrop-blur-sm`}
           >
             <span className="relative z-10">{heroSlides[currentSlide].cta}</span>
             <div className="absolute inset-0 bg-gradient-to-r from-light-blue/20 to-yellow/20 rounded-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>

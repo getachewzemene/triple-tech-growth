@@ -61,7 +61,7 @@ const ProjectsSection = () => {
   ];
 
   return (
-    <section id="projects" ref={sectionRef} className="py-20 bg-gradient-to-br from-slate-50 via-white to-gray-50 relative overflow-hidden">
+    <section id="projects" ref={sectionRef} className="py-20 bg-background from-slate-50 via-white to-gray-50 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-yellow/20 to-light-blue/20 rounded-full blur-3xl"></div>
@@ -86,7 +86,7 @@ const ProjectsSection = () => {
           {projects.map((project, index) => (
             <div
               key={project.title}
-              className={`group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 cursor-pointer ${
+              className={`group relative overflow-hidden rounded-2xl bg-card shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 cursor-pointer dark:border-transparent ${
                 isVisible ? 'animate-scale-in' : 'opacity-0'
               }`}
               style={{
@@ -97,13 +97,13 @@ const ProjectsSection = () => {
               onMouseLeave={() => setHoveredProject(null)}
             >
               {/* Gradient background overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${project.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+              <div className={`absolute inset-0 bg-gradient-to-br ${project.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500 dark:opacity-30`}></div>
               
               {/* Animated border */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-gray-200 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               
               {/* Content */}
-              <div className="relative p-8">
+              <div className="relative p-6">
                 {/* Icon and header */}
                 <div className="flex items-start justify-between mb-6">
                   <div className={`p-4 rounded-2xl bg-gradient-to-br ${project.color} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg`}>
@@ -116,10 +116,10 @@ const ProjectsSection = () => {
                 
                 {/* Title and description */}
                 <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-light-blue transition-colors duration-300">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-light-blue transition-colors duration-300">
                     {project.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                  <p className="text-gray-600 dark:text-gray-200 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
                     {project.description}
                   </p>
                 </div>
@@ -133,7 +133,7 @@ const ProjectsSection = () => {
                       style={{ transitionDelay: `${idx * 100}ms` }}
                     >
                       <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${project.color}`}></div>
-                      <span className="text-sm text-gray-600 group-hover:text-gray-700">{feature}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-200 group-hover:text-gray-700 dark:group-hover:text-gray-100">{feature}</span>
                     </div>
                   ))}
                 </div>

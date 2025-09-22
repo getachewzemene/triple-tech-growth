@@ -71,7 +71,7 @@ const TrainingSection = () => {
   ];
 
   return (
-    <section id="training" ref={sectionRef} className="py-20 bg-gradient-to-br from-slate-50 via-white to-gray-50 relative overflow-hidden">
+    <section id="training" ref={sectionRef} className="py-20 bg-background from-slate-50 via-white to-gray-50 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/3 w-72 h-72 bg-gradient-to-r from-light-blue/15 to-yellow/15 rounded-full blur-3xl animate-pulse"></div>

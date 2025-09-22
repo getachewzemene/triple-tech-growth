@@ -547,7 +547,7 @@ export default function TrainingPage() {
                                     <Button 
                                       size="sm"
                                       onClick={() => handleFolderEnrollment(folder)}
-                                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                      className="flex-1 bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
                                       disabled={enrollmentStatus?.status === 'payment_submitted'}
                                     >
                                       {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
@@ -676,7 +676,7 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       handleEnrollment(course);
                                     }}
-                                    className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    className="flex-1 bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                     disabled={enrollmentStatus?.status === 'payment_submitted'}
                                   >
                                     {enrollmentStatus?.status === 'payment_submitted' ? 'Pending' : 'Enroll Now'}
@@ -698,7 +698,7 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       setShowAuthModal(true);
                                     }}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                   >
                                     Enroll
                                   </Button>
@@ -815,7 +815,7 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       handleEnrollment(course);
                                     }}
-                                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                    className="flex-1 bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
                                     disabled={enrollmentStatus?.status === 'approved'}
                                   >
                                     {enrollmentStatus?.status === 'approved' ? 'Enrolled' : 
@@ -839,7 +839,7 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       setShowAuthModal(true);
                                     }}
-                                    className="w-full bg-blue-600 hover:bg-blue-700"
+                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
                                   >
                                     Enroll
                                   </Button>
@@ -1081,7 +1081,7 @@ export default function TrainingPage() {
                         <Button 
                           size="lg"
                           onClick={() => handleEnrollment(selectedCourse)}
-                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                          className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
                           disabled={checkEnrollmentStatus(selectedCourse.id)?.status === 'approved'}
                         >
                           {checkEnrollmentStatus(selectedCourse.id)?.status === 'approved' ? 'Already Enrolled' : 
