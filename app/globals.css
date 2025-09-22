@@ -459,3 +459,35 @@ All colors MUST be HSL.
   background: hsl(var(--card)) !important;
   color: hsl(var(--card-foreground)) !important;
 }
+
+/* Service cards dark mode styling */
+.dark .services-section .group {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Dark mode hover states for service cards */
+.dark .services-section .group:hover {
+  background: linear-gradient(135deg, hsl(var(--light-blue)) 0%, hsl(var(--light-blue)/0.9) 100%) !important;
+  border-color: hsl(var(--yellow)/0.5) !important;
+}
+
+/* Dark mode text colors for service cards */
+.dark .services-section .group h3,
+.dark .services-section .group p,
+.dark .services-section .group span {
+  color: hsl(var(--card-foreground)) !important;
+}
+
+/* Dark mode hover text colors for service cards */
+.dark .services-section .group:hover h3,
+.dark .services-section .group:hover p,
+.dark .services-section .group:hover span {
+  color: #ffffff !important;
+}
+
+/* Ensure icons remain visible in dark mode hover */
+.dark .services-section .group:hover .lucide {
+  color: hsl(var(--yellow)) !important;
+}
