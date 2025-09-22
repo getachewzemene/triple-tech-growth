@@ -538,6 +538,7 @@ export default function AddCourseModal({ isOpen, onClose, onCourseSaved }: AddCo
             </Button>
             <Button
               type="submit"
+              variant="gold"
               disabled={isSubmitting || !selectedFile || uploadState.status === 'uploading'}
             >
               {isSubmitting ? 'Creating Course...' : 'Create Course'}

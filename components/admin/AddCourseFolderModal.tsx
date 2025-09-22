@@ -472,7 +472,7 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
             <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" variant="gold" disabled={isSubmitting}>
               {isSubmitting ? 'Creating...' : 'Create Course Folder'}
             </Button>
           </div>

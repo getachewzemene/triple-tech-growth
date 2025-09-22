@@ -299,7 +299,7 @@ const UpdateProfileModal = ({ isOpen, onClose, onProfileUpdated }: UpdateProfile
             <Button
               type="submit"
               disabled={loading}
-              className="bg-light-blue hover:bg-light-blue/90"
+              variant="gold"
             >
               {loading ? 'Updating...' : 'Update Profile'}
             </Button>

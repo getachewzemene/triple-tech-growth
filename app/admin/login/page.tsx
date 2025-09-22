@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
               </div>
             </div>
             
-            <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90">
+            <Button type="submit" variant="gold" className="w-full">
               Sign In
             </Button>
           </form>

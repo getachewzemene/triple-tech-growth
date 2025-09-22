@@ -417,7 +417,8 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
   if (showForgotPassword) {
     return (
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-        <DialogContent className="sm:max-w-md">
+        {/* Slightly wider modal to accommodate inputs in some locales */}
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader className="text-center space-y-4">
             <div className="flex justify-center">
               <Image src="/logo.png" alt="Triple Technologies Logo" width={64} height={64} />
@@ -469,7 +470,7 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
             </div>
             
             <div className="flex gap-2">
-              <Button type="submit" className="flex-1 bg-light-blue hover:bg-light-blue/90">
+              <Button type="submit" variant="gold" className="flex-1">
                 Send Reset Link
               </Button>
               <Button 
@@ -490,7 +491,8 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {/* When on the login tab we hide the vertical scrollbar; for signup/forgot we allow scrolling */}
-      <DialogContent className={`sm:max-w-md ${activeTab === 'login' ? 'overflow-y-hidden' : 'overflow-y-auto'}`}>
+  {/* Keep modal scrollable and add safe padding at bottom so actions (forgot link) are visible on small screens */}
+  <DialogContent className={`sm:max-w-lg overflow-y-auto max-h-[90vh] pb-12`}> 
         <DialogHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <Image src="/logo.png" alt="Triple Technologies Logo" width={64} height={64} />
@@ -580,7 +582,7 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                 showDetails={false}
               />
               
-              <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90" disabled={!rateLimitStatus.isAllowed}>
+              <Button type="submit" variant="gold" className="w-full" disabled={!rateLimitStatus.isAllowed}>
                 Sign In
               </Button>
               
@@ -589,7 +591,7 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                   type="button" 
                   variant="link" 
                   onClick={() => setShowForgotPassword(true)}
-                  className="text-sm text-light-blue hover:text-light-blue/80"
+                  className="text-sm text-light-blue hover:text-light-blue/80 dark:text-card-foreground dark:hover:text-card-foreground/80"
                 >
                   Forgot your password?
                 </Button>
@@ -783,7 +785,7 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                 showDetails={false}
               />
               
-              <Button type="submit" className="w-full bg-light-blue hover:bg-light-blue/90" disabled={!rateLimitStatus.isAllowed}>
+              <Button type="submit" variant="gold" className="w-full" disabled={!rateLimitStatus.isAllowed}>
                 Create Account
               </Button>
             </form>

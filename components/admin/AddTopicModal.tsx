@@ -587,7 +587,7 @@ export default function AddTopicModal({
             <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || (!hasVideo && !hasPDF)}>
+            <Button type="submit" variant="gold" disabled={isSubmitting || (!hasVideo && !hasPDF)}>
               {isSubmitting ? 'Creating...' : 'Add Topic'}
             </Button>
           </div>
