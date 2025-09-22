@@ -125,6 +125,18 @@ All colors MUST be HSL.
   }
 }
 
+/* Explicit dark-mode utility overrides to ensure Tailwind bg utilities use the exact hex color where needed. */
+.dark .bg-background,
+.dark .bg-card,
+.dark .bg-popover {
+  background-color: #020817 !important;
+}
+
+.dark body {
+  background-color: #020817 !important;
+  color: #ffffff !important;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -391,4 +403,59 @@ All colors MUST be HSL.
   50% {
     opacity: 1;
   }
+}
+
+/* Dark mode specific UI refinements requested */
+.dark .card-header h3,
+.dark .card-title {
+  color: #e2a70f; /* golden header color in dark mode */
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark p,
+.dark span,
+.dark a {
+  color: #ffffff; /* ensure body and subheaders are white */
+}
+
+/* Modal/button styling in dark mode */
+.dark .dialog-content, .dark .modal, .dark [role="dialog"] {
+  background: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+}
+
+.dark button,
+.dark .btn,
+.dark .button,
+.dark .px-4.py-2 {
+  color: #ffffff !important; /* ensure button text is white */
+}
+
+.dark .bg-primary,
+.dark .btn-primary,
+.dark .button-primary {
+  background: #e2a70f !important; /* golden background for primary buttons */
+  color: #ffffff !important;
+  border-color: #d69e0b !important;
+}
+
+/* Ensure hero and root backgrounds in dark mode use the main background color */
+.dark #hero,
+.dark .hero,
+.dark .root-hero,
+.dark body {
+  background: hsl(var(--background)) !important;
+}
+
+/* Training page cards should use the card background color in dark mode */
+.dark .card,
+.dark .Card,
+.dark .service-card,
+.dark .rounded-3xl {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
 }
