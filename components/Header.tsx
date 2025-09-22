@@ -177,23 +177,23 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="end" 
-                className="bg-white/95 backdrop-blur-md border border-white/20"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg z-[100]"
               >
                 <DropdownMenuItem 
                   onClick={() => setLanguage('en')}
-                  className={`cursor-pointer ${language === 'en' ? 'bg-primary/10 text-primary' : ''}`}
+                  className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${language === 'en' ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : ''}`}
                 >
                   <span className="font-medium">🇺🇸 English</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => setLanguage('am')}
-                  className={`cursor-pointer ${language === 'am' ? 'bg-primary/10 text-primary' : ''}`}
+                  className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${language === 'am' ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : ''}`}
                 >
                   <span className="font-medium">🇪🇹 አማርኛ</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => setLanguage('or')}
-                  className={`cursor-pointer ${language === 'or' ? 'bg-primary/10 text-primary' : ''}`}
+                  className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${language === 'or' ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300' : ''}`}
                 >
                   <span className="font-medium">🇪🇹 Oromiffa</span>
                 </DropdownMenuItem>
