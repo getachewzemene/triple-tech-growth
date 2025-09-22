@@ -72,32 +72,32 @@ All colors MUST be HSL.
 
   .dark {
     --background: 222.2 84% 4.9%;
-    --foreground: 48 100% 50%; /* #ffd700 for headers in dark */
+    --foreground: 48 100% 50%; /* Yellow text for dark mode */
 
     --card: 217.2 32.6% 17.5%;
-    --card-foreground: 210 40% 98%;
+    --card-foreground: 48 100% 50%; /* Yellow text on cards */
 
     --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover-foreground: 48 100% 50%; /* Yellow text in popovers */
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 48 100% 50%; /* Yellow primary elements */
+    --primary-foreground: 222.2 84% 4.9%; /* Dark text on yellow */
 
     --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary-foreground: 48 100% 50%; /* Yellow text on secondary */
 
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted-foreground: 48 100% 70%; /* Lighter yellow for muted text */
 
     --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent-foreground: 48 100% 50%; /* Yellow accent text */
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 48 100% 50%; /* Yellow text on destructive */
 
-    --border: 217.2 32.6% 17.5%;
+    --border: 48 100% 25%; /* Yellow borders in dark mode */
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 48 100% 50%; /* Yellow focus rings */
 
     /* Custom Triple Technologies Colors for Dark Mode */
     --light-blue: 210 100% 15%; /* Darker blue for dark theme */
@@ -132,6 +132,17 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Dark mode gradient background */
+  .dark body {
+    background: linear-gradient(135deg, 
+      hsl(222.2 84% 4.9%) 0%, 
+      hsl(220 84% 3%) 25%, 
+      hsl(218 84% 2%) 50%, 
+      hsl(216 84% 1%) 75%, 
+      hsl(214 84% 0.5%) 100%);
+    min-height: 100vh;
   }
 
   html {

@@ -2,27 +2,33 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useThemeToggle } from '@/hooks/use-theme-toggle';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const router = useRouter();
+  const { isDark } = useThemeToggle();
+  
   const heroSlides = [
     {
-      background: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #67e8f9 100%)',
+      lightBackground: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #67e8f9 100%)',
+      darkBackground: 'linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #000000 100%)',
       title: 'Accelerating business growth with smart technologies',
       subtitle: 'Triple Technologies fuels business growth with smart software, training, and digital marketing.',
       cta: 'Contact Us'
     },
     {
-      background: 'linear-gradient(135deg, #164e63 0%, #0891b2 50%, #06b6d4 100%)',
+      lightBackground: 'linear-gradient(135deg, #164e63 0%, #0891b2 50%, #06b6d4 100%)',
+      darkBackground: 'linear-gradient(135deg, #0a0a0a 0%, #1f1f1f 25%, #333333 50%, #1f1f1f 75%, #0a0a0a 100%)',
       title: 'Innovation at the heart of everything we do',
       subtitle: 'From web development to mobile apps, we create solutions that drive success.',
       cta: 'Our Services'
     },
     {
-      background: 'linear-gradient(135deg, #155e75 0%, #0e7490 50%, #0891b2 100%)',
+      lightBackground: 'linear-gradient(135deg, #155e75 0%, #0e7490 50%, #0891b2 100%)',
+      darkBackground: 'linear-gradient(135deg, #050505 0%, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%, #050505 100%)',
       title: 'Expert training and consultation services',
       subtitle: 'Upskill your team with our comprehensive IT training programs and expert consultancy.',
       cta: 'Learn More'
@@ -71,7 +77,7 @@ const HeroSection = () => {
       {/* Enhanced Animated Background */}
       <div 
         className="absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out"
-        style={{ background: heroSlides[currentSlide].background }}
+        style={{ background: isDark ? heroSlides[currentSlide].darkBackground : heroSlides[currentSlide].lightBackground }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/40"></div>
         
@@ -106,10 +112,16 @@ const HeroSection = () => {
       {/* Enhanced Content Overlay */}
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
         <div className="backdrop-blur-sm bg-white/5 rounded-2xl p-8 border border-white/10">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+          <h1 className={`text-5xl md:text-7xl font-bold mb-6 animate-fade-in ${
+            isDark 
+              ? 'text-yellow' 
+              : 'bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent'
+          }`}>
             {heroSlides[currentSlide].title}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 animate-slide-up opacity-0 animation-delay-300 text-gray-100">
+          <p className={`text-xl md:text-2xl mb-8 animate-slide-up opacity-0 animation-delay-300 ${
+            isDark ? 'text-yellow/80' : 'text-gray-100'
+          }`}>
             {heroSlides[currentSlide].subtitle}
           </p>
           <Button
