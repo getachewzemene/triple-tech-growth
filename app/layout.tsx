@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./providers/AuthProvider";
+import { LanguageProvider } from "./providers/LanguageProvider";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tripletechnologies.com';
 
@@ -106,13 +107,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <TooltipProvider>
-              {children}
-              <Toaster />
-              <Sonner />
-            </TooltipProvider>
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <TooltipProvider>
+                {children}
+                <Toaster />
+                <Sonner />
+              </TooltipProvider>
+            </AuthProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>
