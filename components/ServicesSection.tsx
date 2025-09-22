@@ -69,7 +69,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" ref={sectionRef} className="py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden services-section">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-light-blue/10 to-yellow/10 rounded-full blur-3xl animate-pulse"></div>
@@ -94,7 +94,7 @@ const ServicesSection = () => {
           {services.map((service, index) => (
             <div
               key={service.title}
-              className={`group relative overflow-hidden rounded-3xl bg-white backdrop-blur-sm border border-gray-100 hover:border-gray-200 transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 ${service.shadowColor} hover:shadow-2xl cursor-pointer ${
+              className={`group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-yellow/30 transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 ${service.shadowColor} hover:shadow-2xl cursor-pointer ${
                 isVisible ? 'animate-scale-in' : 'opacity-0'
               }`}
               style={{
@@ -109,7 +109,7 @@ const ServicesSection = () => {
               
               {/* Animated border gradient */}
               <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
-                <div className="w-full h-full bg-white rounded-3xl"></div>
+                <div className="w-full h-full bg-card rounded-3xl"></div>
               </div>
               
               {/* Content */}
@@ -133,10 +133,10 @@ const ServicesSection = () => {
                 
                 {/* Title and description */}
                 <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
+                  <h3 className="text-2xl font-bold text-card-foreground mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300">
                     {service.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                  <p className="text-muted-foreground leading-relaxed group-hover:text-white transition-colors duration-300">
                     {service.description}
                   </p>
                 </div>
@@ -150,14 +150,14 @@ const ServicesSection = () => {
                       style={{ transitionDelay: `${idx * 100 + 200}ms` }}
                     >
                       <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.gradient} animate-pulse`}></div>
-                      <span className="text-sm font-medium text-gray-600">{feature}</span>
+                      <span className="text-sm font-medium text-muted-foreground group-hover:text-white">{feature}</span>
                     </div>
                   ))}
                 </div>
                 
                 {/* Progress indicator */}
                 <div className="absolute bottom-4 left-8 right-8 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                  <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-1 bg-border rounded-full overflow-hidden">
                     <div className={`h-full bg-gradient-to-r ${service.gradient} transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out`}></div>
                   </div>
                 </div>
