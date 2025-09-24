@@ -9,40 +9,41 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Light mode: use pure black for foregrounds */
+    --foreground: 0 0% 0%;
 
     --card: 210 14% 97%; /* #F4F6F8 */
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 0 0% 0%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 0 0% 0%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 0 0% 0%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 0%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
     /* Custom Triple Technologies Colors */
-    --light-blue: 210 100% 20%;
-    --light-blue-foreground: 0 0% 100%;
-    --yellow: 48 100% 50%; /* #ffd700 */
-    --yellow-foreground: 222.2 84% 4.9%;
-    --light-gray: 0 0% 96%;
-    --light-gray-foreground: 222.2 84% 4.9%;
+  --light-blue: 210 100% 20%;
+  --light-blue-foreground: 0 0% 0%;
+  --yellow: 48 100% 50%; /* #ffd700 */
+  --yellow-foreground: 0 0% 0%;
+  --light-gray: 0 0% 96%;
+  --light-gray-foreground: 0 0% 0%;
 
     --radius: 0.5rem;
 
@@ -262,6 +263,34 @@ All colors MUST be HSL.
 
   .card-icon {
     @apply mx-auto transition-all duration-300;
+  }
+
+  /* Dark-mode: ensure hovered cards show readable text/icons. Some hover rules above use --light-blue
+     which in dark mode can be similar to the background and reduce contrast. Force readable colors here. */
+  .dark .service-card:hover,
+  .dark .project-card:hover,
+  .dark .team-card:hover,
+  .dark .card:hover {
+    /* Keep the dark card background but make the foreground white for contrast */
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card)) 100%);
+    color: #ffffff;
+    border-color: rgba(255,255,255,0.06);
+  }
+
+  .dark .service-card:hover .card-icon,
+  .dark .project-card:hover .card-icon,
+  .dark .team-card:hover .card-icon,
+  .dark .card:hover .card-icon {
+    color: #e2a70f; /* gold CTA color */
+    transform: scale(1.1);
+  }
+
+  .dark .service-card:hover .card-description,
+  .dark .project-card:hover .card-description,
+  .dark .team-card:hover .card-description,
+  .dark .card:hover .card-description {
+    color: rgba(255,255,255,0.85);
+    opacity: 1;
   }
 
   /* Glass morphism effect */

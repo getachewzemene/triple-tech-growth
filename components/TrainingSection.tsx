@@ -107,16 +107,16 @@ const TrainingSection = () => {
               onMouseLeave={() => setActiveCard(null)}
               onClick={() => router.push('/training')}
             >
-              {/* Background gradient overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${program.bgGradient} opacity-0 group-hover:opacity-60 transition-all duration-500`}></div>
-              
-              {/* Animated border gradient */}
-              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${program.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
+              {/* Background gradient overlay (behind content) */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${program.bgGradient} opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0`}></div>
+
+              {/* Animated border gradient (behind content) */}
+              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${program.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0`}>
                 <div className="w-full h-full bg-card rounded-3xl"></div>
               </div>
               
               {/* Content */}
-              <div className="relative p-6">
+              <div className="relative z-20 p-6">
                 {/* Stats badge */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <div className={`px-3 py-1 rounded-full bg-gradient-to-r ${program.gradient} text-white text-xs font-semibold`}>
@@ -126,8 +126,8 @@ const TrainingSection = () => {
                 
                 {/* Icon */}
                 <div className="relative mb-6 flex justify-center">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${program.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
-                    <program.icon className="w-8 h-8 text-white" />
+                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${program.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}> 
+                    <program.icon className="w-8 h-8 text-white dark:group-hover:text-[#e2a70f]" />
                   </div>
                   {/* Floating particles */}
                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
@@ -136,10 +136,10 @@ const TrainingSection = () => {
                 
                 {/* Title and description */}
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                     {program.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                  <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
                     {program.description}
                   </p>
                 </div>
@@ -167,7 +167,7 @@ const TrainingSection = () => {
               </div>
               
               {/* Hover glow effect */}
-              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
                 <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${program.gradient} opacity-20 blur-xl transform scale-110`}></div>
               </div>
             </div>

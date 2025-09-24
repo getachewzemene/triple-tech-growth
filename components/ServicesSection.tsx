@@ -105,15 +105,15 @@ const ServicesSection = () => {
               onMouseLeave={() => setActiveCard(null)}
             >
               {/* Background gradient overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-50 transition-all duration-500`}></div>
+              <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-50 transition-all duration-500 pointer-events-none z-0`}></div>
               
               {/* Animated border gradient */}
-              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
+              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0`}>
                 <div className="w-full h-full bg-card rounded-3xl"></div>
               </div>
               
               {/* Content */}
-              <div className="relative p-8">
+              <div className="relative p-8 z-20">
                 {/* Stats badge */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <div className={`px-3 py-1 rounded-full bg-gradient-to-r ${service.gradient} text-white text-xs font-semibold`}>
@@ -123,14 +123,14 @@ const ServicesSection = () => {
                 
                 {/* Icon + Title (centered) */}
                 <div className="flex flex-col items-center text-center gap-4 mb-6">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${service.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg inline-block card-icon`}>
-                    <service.icon className="w-8 h-8 text-white" />
+                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${service.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg inline-block card-icon`}> 
+                    <service.icon className="w-8 h-8 text-white dark:group-hover:text-[#e2a70f]" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-card-foreground mb-2 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                       {service.title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                    <p className="text-gray-600 dark:text-card-foreground leading-relaxed group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                       {service.description}
                     </p>
                   </div>
@@ -145,7 +145,7 @@ const ServicesSection = () => {
                       style={{ transitionDelay: `${idx * 100 + 200}ms` }}
                     >
                       <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.gradient} animate-pulse`}></div>
-                      <span className="text-sm font-medium text-gray-600">{feature}</span>
+                      <span className="text-sm font-medium text-gray-600 dark:text-card-foreground group-hover:text-black dark:group-hover:text-white">{feature}</span>
                     </div>
                   ))}
                 </div>

@@ -481,11 +481,11 @@ export default function TrainingPage() {
                                 <FaVideo size={24} />
                               </div>
                               <div className="flex-1">
-                                <CardTitle className="text-xl group-hover:text-white transition-colors duration-300">{folder.title}</CardTitle>
-                                <CardDescription className="mt-1 group-hover:text-white group-hover:opacity-90 transition-all duration-300">{folder.description}</CardDescription>
+                                <CardTitle className="text-xl group-hover:text-black dark:group-hover:text-white transition-colors duration-300">{folder.title}</CardTitle>
+                                <CardDescription className="mt-1 group-hover:text-black dark:group-hover:text-white group-hover:opacity-90 transition-all duration-300">{folder.description}</CardDescription>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-white transition-colors duration-300">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                               <FaClock className="w-4 h-4" />
                               <span>{folder.topicsCount || 0} topics</span>
                               <FaDollarSign className="w-4 h-4 ml-2" />
@@ -638,11 +638,11 @@ export default function TrainingPage() {
                               <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
                             </div>
                             <div className="flex-1">
-                              <CardTitle className="text-xl font-bold group-hover:text-white transition-all duration-300">{course.title}</CardTitle>
-                              <CardDescription className="mt-1 group-hover:text-white group-hover:opacity-90 transition-all duration-300">{course.description}</CardDescription>
+                              <CardTitle className="text-xl font-bold group-hover:text-black dark:group-hover:text-white transition-all duration-300">{course.title}</CardTitle>
+                              <CardDescription className="mt-1 group-hover:text-black dark:group-hover:text-white group-hover:opacity-90 transition-all duration-300">{course.description}</CardDescription>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-white transition-colors duration-300">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                             <FaClock className="w-4 h-4" />
                             <span>{course.duration}</span>
                             <FaDollarSign className="w-4 h-4 ml-2" />
@@ -655,7 +655,7 @@ export default function TrainingPage() {
                               <Badge variant="secondary" className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300 transition-all duration-300 dark:group-hover:text-yellow-300">
                                 {course.level}
                               </Badge>
-                              <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-white transition-colors duration-300">
+                              <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                                 {course.detailedDescription}
                               </p>
                             </div>
@@ -777,8 +777,8 @@ export default function TrainingPage() {
                               {course.icon}
                             </div>
                             <div className="flex-1">
-                              <CardTitle className="text-xl group-hover:text-white transition-colors duration-300">{course.title}</CardTitle>
-                              <CardDescription className="mt-1 group-hover:text-white group-hover:opacity-90 transition-all duration-300">{course.description}</CardDescription>
+                              <CardTitle className="text-xl group-hover:text-black dark:group-hover:text-white transition-colors duration-300">{course.title}</CardTitle>
+                              <CardDescription className="mt-1 group-hover:text-black dark:group-hover:text-white group-hover:opacity-90 transition-all duration-300">{course.description}</CardDescription>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-white transition-colors duration-300">
@@ -794,7 +794,7 @@ export default function TrainingPage() {
                               <Badge variant="secondary" className="mb-2 transition-all duration-300 dark:group-hover:text-blue-200">
                                 {course.level}
                               </Badge>
-                              <p className="text-sm text-muted-foreground line-clamp-3 group-hover:text-white transition-colors duration-300">
+                              <p className="text-sm text-muted-foreground line-clamp-3 group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                                 {course.detailedDescription}
                               </p>
                             </div>
@@ -906,7 +906,7 @@ export default function TrainingPage() {
                       <span className={`font-semibold transition-colors duration-300 ${
                         selectedTopic?.title === item.title 
                           ? 'text-white' 
-                          : 'group-hover:text-white'
+                          : 'group-hover:text-black dark:group-hover:text-white'
                       }`}>
                         {item.title}
                       </span>

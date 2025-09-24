@@ -94,16 +94,16 @@ const WhyChooseUsSection = () => {
               onMouseEnter={() => setActiveCard(index)}
               onMouseLeave={() => setActiveCard(null)}
             >
-              {/* Background gradient overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${benefit.bgGradient} opacity-0 group-hover:opacity-50 transition-all duration-500`}></div>
-              
-              {/* Animated border gradient */}
-              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${benefit.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
+              {/* Background gradient overlay (behind content) */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${benefit.bgGradient} opacity-0 group-hover:opacity-50 transition-all duration-500 pointer-events-none z-0`}></div>
+
+              {/* Animated border gradient (behind content) */}
+              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${benefit.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0`}>
                 <div className="w-full h-full bg-card rounded-3xl"></div>
               </div>
               
               {/* Content */}
-              <div className="relative p-8">
+              <div className="relative z-20 p-8">
                 {/* Stats badge */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <div className={`px-3 py-1 rounded-full bg-gradient-to-r ${benefit.gradient} text-white text-xs font-semibold`}>
@@ -114,13 +114,13 @@ const WhyChooseUsSection = () => {
                 {/* Icon + Title (centered) */}
                 <div className="flex flex-col items-center text-center gap-4 mb-6">
                   <div className={`p-4 rounded-2xl bg-gradient-to-br ${benefit.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg inline-block card-icon`}>
-                    <benefit.icon className="w-8 h-8 text-white" />
+                    <benefit.icon className="w-8 h-8 text-white dark:group-hover:text-[#e2a70f]" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                       {benefit.title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                    <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
                       {benefit.description}
                     </p>
                   </div>

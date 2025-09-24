@@ -99,12 +99,12 @@ const Footer = () => {
               ].map((link) => (
                 <li key={link.id}>
                   <button
-                    onClick={() => scrollToSection(link.id)}
-                    className="text-gray-200 hover:text-yellow transition-all duration-300 text-left text-sm group relative overflow-hidden"
-                  >
-                    <span className="relative z-10">{link.name}</span>
-                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow to-yellow/80 group-hover:w-full transition-all duration-300"></div>
-                  </button>
+                      onClick={() => scrollToSection(link.id)}
+                      className="text-gray-200 hover:text-yellow transition-all duration-300 text-left text-sm group relative overflow-hidden"
+                    >
+                      <span className="relative z-10 group-hover:text-black dark:group-hover:text-white">{link.name}</span>
+                      <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow to-yellow/80 group-hover:w-full transition-all duration-300"></div>
+                    </button>
                 </li>
               ))}
             </ul>
@@ -137,7 +137,7 @@ const Footer = () => {
               <div className="flex items-start space-x-3 group">
                 <MapPin className="text-yellow mt-1 group-hover:scale-110 transition-transform duration-300" size={16} />
                 <div>
-                  <p className="text-gray-200 text-sm group-hover:text-white transition-colors duration-300">
+                  <p className="text-gray-200 text-sm group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                     Megenagna, Shola Traffic Light,<br />
                     Fenasi Bldg 4<sup>th</sup> floor<br />
                     Addis Ababa, Ethiopia

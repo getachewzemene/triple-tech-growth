@@ -96,23 +96,23 @@ const ProjectsSection = () => {
               onMouseEnter={() => setHoveredProject(index)}
               onMouseLeave={() => setHoveredProject(null)}
             >
-              {/* Gradient background overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${project.bgColor} opacity-0 group-hover:opacity-50 transition-all duration-500`}></div>
-              
-              {/* Animated border gradient (with inner card fill) */}
-              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5`}>
+              {/* Gradient background overlay (behind content) */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${project.bgColor} opacity-0 group-hover:opacity-50 transition-all duration-500 pointer-events-none z-0`}></div>
+
+              {/* Animated border gradient (with inner card fill) - behind content */}
+              <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0`}>
                 <div className="w-full h-full bg-card rounded-3xl"></div>
               </div>
 
               {/* Content */}
-              <div className="relative p-8">
+              <div className="relative z-20 p-8">
                 {/* Icon + Title (centered) */}
                 <div className="flex flex-col items-center text-center gap-4 mb-6">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${project.color} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg card-icon`}>
-                    <project.icon className="w-8 h-8 text-white" />
+                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${project.color} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg card-icon`}> 
+                    <project.icon className="w-8 h-8 text-white dark:group-hover:text-[#e2a70f]" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                       {project.title}
                     </h3>
                     <p className="text-gray-600 dark:text-gray-200 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
@@ -120,7 +120,7 @@ const ProjectsSection = () => {
                     </p>
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 absolute top-6 right-6">
-                    <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-light-blue transition-colors duration-300" />
+                    <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-light-blue dark:group-hover:text-[#e2a70f] transition-colors duration-300" />
                   </div>
                 </div>
                 
@@ -145,7 +145,7 @@ const ProjectsSection = () => {
               </div>
               
               {/* Hover glow effect (match ServicesSection) */}
-              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
                 <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${project.color} opacity-20 blur-xl transform scale-110`}></div>
               </div>
             </div>

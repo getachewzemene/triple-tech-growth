@@ -106,14 +106,14 @@ const TeamSection = () => {
               onMouseEnter={() => setHoveredMember(index)}
               onMouseLeave={() => setHoveredMember(null)}
             >
-              {/* Background gradient overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${member.bgGradient} opacity-0 group-hover:opacity-60 transition-all duration-500`}></div>
+              {/* Background gradient overlay (behind content) */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${member.bgGradient} opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0`}></div>
               
               {/* Top gradient bar */}
               <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${member.gradient}`}></div>
               
               {/* Content */}
-              <div className="relative p-8">
+              <div className="relative z-20 p-8">
                 {/* Experience badge */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <div className={`px-3 py-1 rounded-full bg-gradient-to-r ${member.gradient} text-white text-xs font-semibold`}>
@@ -124,16 +124,16 @@ const TeamSection = () => {
                 {/* Avatar + Member Info (centered) */}
                 <div className="flex flex-col items-center text-center gap-4 mb-6">
                   <div className={`p-6 rounded-full bg-gradient-to-br ${member.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg card-icon`}>
-                    <User className="w-12 h-12 text-white" />
+                    <User className="w-12 h-12 text-white dark:group-hover:text-[#e2a70f]" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-light-blue group-hover:to-yellow transition-all duration-300 dark:group-hover:text-white dark:group-hover:bg-clip-text-none">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                       {member.name}
                     </h3>
                     <h4 className={`text-lg font-semibold bg-gradient-to-r ${member.gradient} bg-clip-text text-transparent mb-3`}>
                       {member.title}
                     </h4>
-                    <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                    <p className="text-gray-600 text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
                       {member.description}
                     </p>
                   </div>
@@ -182,7 +182,7 @@ const TeamSection = () => {
               </div>
               
               {/* Glow effect */}
-              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
                 <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${member.gradient} opacity-20 blur-xl transform scale-110`}></div>
               </div>
             </div>
