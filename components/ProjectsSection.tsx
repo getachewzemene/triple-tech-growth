@@ -86,7 +86,7 @@ const ProjectsSection = () => {
           {projects.map((project, index) => (
             <div
               key={project.title}
-              className={`group service-card relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 shadow-lg hover:shadow-2xl cursor-pointer ${
+              className={`group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 shadow-lg hover:shadow-2xl cursor-pointer ${
                 isVisible ? 'animate-scale-in' : 'opacity-0'
               }`}
               style={{
@@ -112,10 +112,10 @@ const ProjectsSection = () => {
                     <project.icon className="w-8 h-8 text-white dark:group-hover:text-[#e2a70f]" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-card-foreground mb-2 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                       {project.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-200 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
+                    <p className="text-gray-600 dark:text-card-foreground leading-relaxed group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                       {project.description}
                     </p>
                   </div>
@@ -133,14 +133,14 @@ const ProjectsSection = () => {
                       style={{ transitionDelay: `${idx * 100}ms` }}
                     >
                       <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${project.color}`}></div>
-                      <span className="text-sm text-gray-600 dark:text-gray-200 group-hover:text-gray-700 dark:group-hover:text-gray-100">{feature}</span>
+                      <span className="text-sm font-medium text-gray-600 dark:text-card-foreground group-hover:text-black dark:group-hover:text-white">{feature}</span>
                     </div>
                   ))}
                 </div>
                 
                 {/* Hover indicator */}
                 <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                  <ArrowUpRight className="w-5 h-5 text-light-blue" />
+                  <ArrowUpRight className="w-5 h-5 text-light-blue dark:group-hover:text-[#e2a70f] transition-colors duration-300" />
                 </div>
               </div>
               
