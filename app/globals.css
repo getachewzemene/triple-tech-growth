@@ -33,9 +33,12 @@ All colors MUST be HSL.
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 0%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+  --border: 214.3 31.8% 91.4%;
+  /* Make inputs more visible by default (slightly darker than the very light background) */
+  --input: 214.3 31.8% 85%;
+  /* Focus / ring color: use the gold CTA color (#e2a70f) to match CTAs */
+  /* #e2a70f -> HSL ~ 43.3 87.5% 47.3% */
+  --ring: 43.3 87.5% 47.3%;
 
     /* Custom Triple Technologies Colors */
   --light-blue: 210 100% 20%;
@@ -98,8 +101,10 @@ All colors MUST be HSL.
 
   /* Make borders slightly brighter than the background so they show up in dark mode */
   --border: 222.9 84% 12%; /* slightly brighter than bg (#020817) */
-    --input: 222.9 84% 4.9%; /* #020817 for input background */
-    --ring: 0 0% 100%; /* white for focus rings */
+    /* Inputs should be slightly lighter than the background so borders are visible */
+    --input: 222.9 84% 12%; /* slightly lighter than background for contrast */
+    /* Use gold for focus rings in dark mode as well so focus matches CTAs */
+    --ring: 43.3 87.5% 47.3%;
 
     /* Custom Triple Technologies Colors for Dark Mode */
     --light-blue: 222.9 84% 4.9%; /* #020817 for dark theme blue */
