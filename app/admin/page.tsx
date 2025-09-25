@@ -17,6 +17,9 @@ import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { safeLocalStorage } from '@/lib/hooks/useLocalStorage';
 import { useThemeToggle } from '@/hooks/use-theme-toggle';
+import AddCourseModal from '@/components/admin/AddCourseModal';
+import AddCourseFolderModal from '@/components/admin/AddCourseFolderModal';
+import AddTopicModal from '@/components/admin/AddTopicModal';
 import {
   SidebarProvider,
   Sidebar,
@@ -151,6 +154,11 @@ function AdminPageContent() {
   const [courses, setCourses] = useState([]);
   const [courseFolders, setCourseFolders] = useState([]);
   const [topics, setTopics] = useState([]);
+  const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
+  const [isAddCourseFolderModalOpen, setIsAddCourseFolderModalOpen] = useState(false);
+  const [isAddTopicModalOpen, setIsAddTopicModalOpen] = useState(false);
+  const [selectedFolderForTopic, setSelectedFolderForTopic] = useState<any>(null);
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Load data from localStorage
@@ -189,6 +197,151 @@ function AdminPageContent() {
       newExpanded.add(menuId);
     }
     setExpandedMenus(newExpanded);
+  };
+
+  // Course management handlers
+  const handleCourseSaved = (course: any) => {
+    const savedCourses = safeLocalStorage.getItem('adminCourses', []);
+    const updatedCourses = [course, ...savedCourses];
+    safeLocalStorage.setItem('adminCourses', updatedCourses);
+    setCourses(updatedCourses);
+  };
+
+  const handleCourseFolderSaved = (courseFolder: any) => {
+    const savedCourseFolders = safeLocalStorage.getItem('adminCourseFolders', []);
+    const updatedCourseFolders = [courseFolder, ...savedCourseFolders];
+    safeLocalStorage.setItem('adminCourseFolders', updatedCourseFolders);
+    setCourseFolders(updatedCourseFolders);
+  };
+
+  const handleTopicSaved = (topic: any) => {
+    const savedTopics = safeLocalStorage.getItem('adminTopics', []);
+    const updatedTopics = [topic, ...savedTopics];
+    safeLocalStorage.setItem('adminTopics', updatedTopics);
+    setTopics(updatedTopics);
+
+    // Update the folder's topic count
+    const updatedCourseFolders = courseFolders.map(folder => 
+      folder.id === topic.courseFolderId 
+        ? { ...folder, topicsCount: (folder.topicsCount || 0) + 1 }
+        : folder
+    );
+    setCourseFolders(updatedCourseFolders);
+    safeLocalStorage.setItem('adminCourseFolders', updatedCourseFolders);
+  };
+
+  const toggleFolderExpansion = (folderId: string) => {
+    const newExpanded = new Set(expandedFolders);
+    if (newExpanded.has(folderId)) {
+      newExpanded.delete(folderId);
+    } else {
+      newExpanded.add(folderId);
+    }
+    setExpandedFolders(newExpanded);
+  };
+
+  const openAddTopicModal = (folder: any) => {
+    setSelectedFolderForTopic(folder);
+    setIsAddTopicModalOpen(true);
+  };
+
+  const getTopicsForFolder = (folderId: string) => {
+    return topics.filter(topic => topic.courseFolderId === folderId).sort((a, b) => a.order - b.order);
+  };
+
+  // Payment approval handlers
+  const handleApprovePayment = async (courseId: number, studentEmail: string) => {
+    try {
+      const proofId = `proof_${courseId}_${studentEmail.replace('@', '_')}`;
+      
+      const response = await fetch(`/api/admin/proofs/${proofId}/approve`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          comment: 'Payment approved by admin',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to approve payment');
+      }
+
+      const result = await response.json();
+      
+      // Update local storage for demo purposes
+      const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+      const updatedCourses = enrolledCourses.map((course: any) => 
+        course.courseId === courseId && course.email === studentEmail
+          ? { ...course, status: 'approved', approvedAt: new Date().toISOString() }
+          : course
+      );
+      safeLocalStorage.setItem('enrolledCourses', updatedCourses);
+      setEnrollments(updatedCourses);
+      
+      // Remove from notifications
+      const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
+      const updatedNotifications = adminNotifications.filter((notif: any) => 
+        !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
+      );
+      safeLocalStorage.setItem('adminNotifications', updatedNotifications);
+      setNotifications(updatedNotifications);
+      
+      alert(`Payment approved successfully! ${result.message}`);
+      
+    } catch (error: any) {
+      console.error('Error approving payment:', error);
+      alert(`Error: ${error.message}`);
+    }
+  };
+
+  const handleRejectPayment = async (courseId: number, studentEmail: string) => {
+    try {
+      const proofId = `proof_${courseId}_${studentEmail.replace('@', '_')}`;
+      
+      const response = await fetch(`/api/admin/proofs/${proofId}/reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          comment: 'Payment proof requires resubmission with clearer documentation',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to reject payment');
+      }
+
+      const result = await response.json();
+      
+      // Update local storage for demo purposes
+      const enrolledCourses = safeLocalStorage.getItem('enrolledCourses', []);
+      const updatedCourses = enrolledCourses.map((course: any) => 
+        course.courseId === courseId && course.email === studentEmail
+          ? { ...course, status: 'rejected', rejectedAt: new Date().toISOString() }
+          : course
+      );
+      safeLocalStorage.setItem('enrolledCourses', updatedCourses);
+      setEnrollments(updatedCourses);
+      
+      // Remove from notifications
+      const adminNotifications = safeLocalStorage.getItem('adminNotifications', []);
+      const updatedNotifications = adminNotifications.filter((notif: any) => 
+        !(notif.type === 'payment_proof' && notif.studentEmail === studentEmail)
+      );
+      safeLocalStorage.setItem('adminNotifications', updatedNotifications);
+      setNotifications(updatedNotifications);
+      
+      alert(`Payment rejected. ${result.message}`);
+      
+    } catch (error: any) {
+      console.error('Error rejecting payment:', error);
+      alert(`Error: ${error.message}`);
+    }
   };
 
   const renderDashboard = () => (
@@ -531,13 +684,358 @@ function AdminPageContent() {
       case 'courses-all':
         return (
           <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Course Management</h1>
-              <p className="text-muted-foreground">Manage your courses and educational content</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">Course Management</h1>
+                <p className="text-muted-foreground">Manage your courses and educational content</p>
+              </div>
+              <div className="flex space-x-3">
+                <Button onClick={() => setIsAddCourseFolderModalOpen(true)} variant="outline" className="flex items-center space-x-2">
+                  <FolderPlus className="h-4 w-4" />
+                  <span>Add Course Folder</span>
+                </Button>
+                <Button onClick={() => setIsAddCourseModalOpen(true)} variant="outline" className="flex items-center space-x-2">
+                  <Plus className="h-4 w-4" />
+                  <span>Add Individual Course</span>
+                </Button>
+              </div>
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Course Folders</CardTitle>
+                  <Folder className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{courseFolders.length}</div>
+                  <p className="text-xs text-muted-foreground">Main course categories</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Individual Courses</CardTitle>
+                  <Video className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{courses.length}</div>
+                  <p className="text-xs text-muted-foreground">Standalone courses</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Topics</CardTitle>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{topics.length}</div>
+                  <p className="text-xs text-muted-foreground">Topics across all folders</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Enrollments</CardTitle>
+                  <UserCheck className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{enrollments.filter((e: any) => e.status === 'approved').length}</div>
+                  <p className="text-xs text-muted-foreground">Students actively enrolled</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {courseFolders.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Course Folders</CardTitle>
+                  <CardDescription>Organize your courses into folders and manage topics</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {courseFolders.map((folder: any) => (
+                    <div key={folder.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleFolderExpansion(folder.id)}
+                            className="h-6 w-6 p-0"
+                          >
+                            {expandedFolders.has(folder.id) ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Folder className="h-5 w-5 text-blue-500" />
+                          <div>
+                            <h3 className="font-medium">{folder.title}</h3>
+                            <p className="text-sm text-muted-foreground">{folder.description}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant="outline">
+                            {getTopicsForFolder(folder.id).length} topics
+                          </Badge>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openAddTopicModal(folder)}
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            Add Topic
+                          </Button>
+                        </div>
+                      </div>
+
+                      {expandedFolders.has(folder.id) && (
+                        <div className="mt-4 pl-8 space-y-2">
+                          {getTopicsForFolder(folder.id).map((topic: any) => (
+                            <div key={topic.id} className="flex items-center justify-between py-2 px-3 bg-muted rounded">
+                              <div className="flex items-center space-x-2">
+                                <FileText className="h-4 w-4 text-green-500" />
+                                <span className="text-sm">{topic.title}</span>
+                              </div>
+                              <Badge variant="secondary" className="text-xs">
+                                Order: {topic.order}
+                              </Badge>
+                            </div>
+                          ))}
+                          {getTopicsForFolder(folder.id).length === 0 && (
+                            <p className="text-sm text-muted-foreground py-2">No topics in this folder yet.</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {courses.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Individual Courses</CardTitle>
+                  <CardDescription>Standalone courses not organized in folders</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {courses.map((course: any) => (
+                      <div key={course.id} className="border rounded-lg p-4">
+                        <div className="flex items-center space-x-3 mb-2">
+                          <Video className="h-5 w-5 text-purple-500" />
+                          <h3 className="font-medium">{course.title}</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2">{course.detail}</p>
+                        <div className="text-xs text-muted-foreground">
+                          Instructor: {course.instructor}
+                        </div>
+                        {course.duration && (
+                          <div className="text-xs text-muted-foreground mt-1">
+                            Duration: {Math.round(course.duration / 60)} minutes
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {courseFolders.length === 0 && courses.length === 0 && (
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <GraduationCap className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No courses yet</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Start by creating your first course folder or individual course.
+                    </p>
+                    <div className="flex justify-center space-x-3">
+                      <Button onClick={() => setIsAddCourseFolderModalOpen(true)} variant="outline">
+                        <FolderPlus className="h-4 w-4 mr-2" />
+                        Add Course Folder
+                      </Button>
+                      <Button onClick={() => setIsAddCourseModalOpen(true)}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Course
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        );
+      case 'courses-folders':
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">Course Folders</h1>
+                <p className="text-muted-foreground">Organize courses into structured learning paths</p>
+              </div>
+              <Button onClick={() => setIsAddCourseFolderModalOpen(true)} className="flex items-center space-x-2">
+                <FolderPlus className="h-4 w-4" />
+                <span>Add Course Folder</span>
+              </Button>
+            </div>
+
+            {courseFolders.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {courseFolders.map((folder: any) => (
+                  <Card key={folder.id}>
+                    <CardHeader>
+                      <div className="flex items-center space-x-2">
+                        <Folder className="h-5 w-5 text-blue-500" />
+                        <CardTitle className="text-lg">{folder.title}</CardTitle>
+                      </div>
+                      <CardDescription>{folder.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Topics</span>
+                          <Badge variant="outline">{getTopicsForFolder(folder.id).length}</Badge>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openAddTopicModal(folder)}
+                          className="w-full"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Topic
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <Folder className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No course folders</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Create your first course folder to organize learning content.
+                    </p>
+                    <Button onClick={() => setIsAddCourseFolderModalOpen(true)}>
+                      <FolderPlus className="h-4 w-4 mr-2" />
+                      Create Course Folder
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        );
+      case 'enrollments':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Enrollment Management</h1>
+              <p className="text-muted-foreground">Review and approve student enrollment requests</p>
+            </div>
+
+            {notifications.length > 0 && (
+              <Card className="border-orange-200 bg-orange-50">
+                <CardHeader>
+                  <CardTitle className="text-orange-800">Pending Payment Approvals</CardTitle>
+                  <CardDescription className="text-orange-600">
+                    {notifications.length} payment proof(s) require your review
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {notifications.map((notification: any, index: number) => (
+                    <div key={index} className="flex items-center justify-between p-4 bg-white rounded border">
+                      <div className="flex items-center space-x-3">
+                        <div className="h-2 w-2 bg-orange-500 rounded-full"></div>
+                        <div>
+                          <p className="font-medium text-foreground">{notification.studentName}</p>
+                          <p className="text-sm text-muted-foreground">{notification.studentEmail}</p>
+                          <p className="text-sm text-muted-foreground">Course ID: {notification.courseId}</p>
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button
+                          onClick={() => handleApprovePayment(notification.courseId, notification.studentEmail)}
+                          size="sm"
+                          variant="default"
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          Approve
+                        </Button>
+                        <Button
+                          onClick={() => handleRejectPayment(notification.courseId, notification.studentEmail)}
+                          size="sm"
+                          variant="destructive"
+                        >
+                          <XCircle className="h-4 w-4 mr-1" />
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
             <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground">Course management interface coming soon...</p>
+              <CardHeader>
+                <CardTitle>All Enrollments</CardTitle>
+                <CardDescription>Complete list of student enrollments and their status</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {enrollments.length > 0 ? (
+                  <div className="space-y-4">
+                    {enrollments.map((enrollment: any, index: number) => (
+                      <div key={index} className="flex items-center justify-between p-4 border rounded">
+                        <div className="flex items-center space-x-4">
+                          <div>
+                            <p className="font-medium">{enrollment.studentName}</p>
+                            <p className="text-sm text-muted-foreground">{enrollment.email}</p>
+                            <p className="text-sm text-muted-foreground">Course ID: {enrollment.courseId}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <Badge
+                            variant={
+                              enrollment.status === 'approved'
+                                ? 'default'
+                                : enrollment.status === 'rejected'
+                                ? 'destructive'
+                                : 'secondary'
+                            }
+                          >
+                            {enrollment.status}
+                          </Badge>
+                          <div className="text-sm text-muted-foreground">
+                            {enrollment.status === 'approved' && enrollment.approvedAt
+                              ? new Date(enrollment.approvedAt).toLocaleDateString()
+                              : enrollment.status === 'rejected' && enrollment.rejectedAt
+                              ? new Date(enrollment.rejectedAt).toLocaleDateString()
+                              : new Date(enrollment.enrolledAt).toLocaleDateString()
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No enrollments yet</h3>
+                    <p className="text-muted-foreground">
+                      Student enrollment requests will appear here.
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -606,6 +1104,11 @@ function AdminPageContent() {
                   >
                     <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
+                    {item.id === 'courses' && notifications.length > 0 && (
+                      <Badge variant="destructive" className="ml-2 px-1 py-0 text-xs">
+                        {notifications.length}
+                      </Badge>
+                    )}
                     {item.submenu && (
                       <ChevronRight 
                         className={`h-4 w-4 ml-auto transition-transform ${
@@ -624,6 +1127,11 @@ function AdminPageContent() {
                             isActive={activeSection === subItem.id}
                           >
                             {subItem.title}
+                            {subItem.id === 'enrollments' && notifications.length > 0 && (
+                              <Badge variant="destructive" className="ml-2 px-1 py-0 text-xs">
+                                {notifications.length}
+                              </Badge>
+                            )}
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
@@ -684,6 +1192,33 @@ function AdminPageContent() {
           </main>
         </SidebarInset>
       </div>
+
+      {/* Modals */}
+      <AddCourseModal
+        isOpen={isAddCourseModalOpen}
+        onClose={() => setIsAddCourseModalOpen(false)}
+        onCourseSaved={handleCourseSaved}
+      />
+      
+      <AddCourseFolderModal
+        isOpen={isAddCourseFolderModalOpen}
+        onClose={() => setIsAddCourseFolderModalOpen(false)}
+        onCourseFolderSaved={handleCourseFolderSaved}
+      />
+
+      {selectedFolderForTopic && (
+        <AddTopicModal
+          isOpen={isAddTopicModalOpen}
+          onClose={() => {
+            setIsAddTopicModalOpen(false);
+            setSelectedFolderForTopic(null);
+          }}
+          courseFolderId={selectedFolderForTopic.id}
+          courseFolderTitle={selectedFolderForTopic.title}
+          existingTopics={getTopicsForFolder(selectedFolderForTopic.id)}
+          onTopicSaved={handleTopicSaved}
+        />
+      )}
     </SidebarProvider>
   );
 }
