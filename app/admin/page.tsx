@@ -6,11 +6,16 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
   LogOut, Users, MessageSquare, BarChart3, Settings, Home, GraduationCap, 
   CheckCircle, XCircle, Plus, Video, FolderPlus, Folder, ChevronRight, 
   ChevronDown, FileText, Moon, Sun, Globe, Palette, TrendingUp, 
-  TrendingDown, Activity, BookOpen, UserCheck
+  TrendingDown, Activity, BookOpen, UserCheck, Reply, Search, Filter,
+  Eye, Trash2, Archive, Star, Clock, Mail, Phone, MapPin, Calendar,
+  PieChart, Download, RefreshCw, Edit
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -70,6 +75,182 @@ const revenueData = [
   { month: 'Apr', revenue: 16000, profit: 11200 },
   { month: 'May', revenue: 22000, profit: 15400 },
   { month: 'Jun', revenue: 28000, profit: 19600 },
+];
+
+// Sample message data for demonstration
+const sampleMessages = [
+  {
+    id: 1,
+    sender: "John Smith",
+    email: "john.smith@example.com",
+    phone: "+1-555-0123",
+    subject: "Course Inquiry - Web Development",
+    message: "Hi, I'm interested in your web development course. Could you provide more details about the curriculum and start dates?",
+    timestamp: new Date('2024-01-15T10:30:00'),
+    status: "unread",
+    priority: "high",
+    type: "inquiry",
+    location: "New York, NY"
+  },
+  {
+    id: 2,
+    sender: "Sarah Johnson",
+    email: "sarah.j@company.com",
+    phone: "+1-555-0124",
+    subject: "Corporate Training Request",
+    message: "We're looking for corporate training solutions for our development team of 15 people. Please send a quote for custom training programs.",
+    timestamp: new Date('2024-01-14T15:45:00'),
+    status: "replied",
+    priority: "high",
+    type: "business",
+    location: "San Francisco, CA"
+  },
+  {
+    id: 3,
+    sender: "Mike Chen",
+    email: "mike.chen@email.com",
+    phone: "+1-555-0125",
+    subject: "Technical Support - Course Access",
+    message: "I'm having trouble accessing my enrolled course materials. The videos won't load properly.",
+    timestamp: new Date('2024-01-13T08:15:00'),
+    status: "in_progress",
+    priority: "medium",
+    type: "support",
+    location: "Seattle, WA"
+  },
+  {
+    id: 4,
+    sender: "Emily Davis",
+    email: "emily.davis@student.edu",
+    phone: "+1-555-0126",
+    subject: "Payment Confirmation",
+    message: "I just completed payment for the Data Science course. When will I receive access to the materials?",
+    timestamp: new Date('2024-01-12T14:20:00'),
+    status: "read",
+    priority: "low",
+    type: "payment",
+    location: "Boston, MA"
+  },
+  {
+    id: 5,
+    sender: "David Wilson",
+    email: "d.wilson@techcorp.com",
+    phone: "+1-555-0127",
+    subject: "Partnership Opportunity",
+    message: "We're interested in discussing a potential partnership for providing training to our clients. Let's schedule a call.",
+    timestamp: new Date('2024-01-11T11:30:00'),
+    status: "starred",
+    priority: "high",
+    type: "business",
+    location: "Austin, TX"
+  }
+];
+
+// Analytics data for demonstration
+const analyticsData = {
+  overview: {
+    totalPageViews: 45678,
+    uniqueVisitors: 12345,
+    bounceRate: 35.2,
+    avgSessionDuration: "4m 32s",
+    conversionRate: 8.7,
+    totalRevenue: 89650
+  },
+  traffic: [
+    { source: 'Organic Search', visitors: 4250, percentage: 34.5 },
+    { source: 'Direct', visitors: 2890, percentage: 23.4 },
+    { source: 'Social Media', visitors: 2156, percentage: 17.5 },
+    { source: 'Referral', visitors: 1844, percentage: 14.9 },
+    { source: 'Email Campaign', visitors: 1205, percentage: 9.7 }
+  ],
+  devices: [
+    { device: 'Desktop', users: 6789, percentage: 55.0 },
+    { device: 'Mobile', users: 4321, percentage: 35.0 },
+    { device: 'Tablet', users: 1235, percentage: 10.0 }
+  ],
+  topPages: [
+    { page: '/courses', views: 8945, uniqueViews: 6234 },
+    { page: '/', views: 7823, uniqueViews: 5456 },
+    { page: '/training', views: 5432, uniqueViews: 3987 },
+    { page: '/about', views: 3456, uniqueViews: 2876 },
+    { page: '/contact', views: 2345, uniqueViews: 1987 }
+  ],
+  conversionFunnel: [
+    { stage: 'Visitors', count: 12345, percentage: 100 },
+    { stage: 'Course Views', count: 5678, percentage: 46.0 },
+    { stage: 'Contact Forms', count: 1234, percentage: 10.0 },
+    { stage: 'Enrollments', count: 567, percentage: 4.6 },
+    { stage: 'Payments', count: 345, percentage: 2.8 }
+  ]
+};
+
+// User management sample data
+const sampleUsers = [
+  {
+    id: 1,
+    username: "johnsmith",
+    email: "john.smith@example.com",
+    fullName: "John Smith",
+    role: "student",
+    status: "active",
+    joinDate: new Date('2024-01-10'),
+    lastLogin: new Date('2024-01-15T09:30:00'),
+    coursesEnrolled: 3,
+    completedCourses: 1,
+    location: "New York, NY"
+  },
+  {
+    id: 2,
+    username: "sarahjohnson",
+    email: "sarah.j@company.com",
+    fullName: "Sarah Johnson",
+    role: "corporate",
+    status: "active",
+    joinDate: new Date('2023-12-15'),
+    lastLogin: new Date('2024-01-14T16:45:00'),
+    coursesEnrolled: 5,
+    completedCourses: 4,
+    location: "San Francisco, CA"
+  },
+  {
+    id: 3,
+    username: "mikechen",
+    email: "mike.chen@email.com",
+    fullName: "Mike Chen",
+    role: "student",
+    status: "pending",
+    joinDate: new Date('2024-01-12'),
+    lastLogin: new Date('2024-01-13T08:15:00'),
+    coursesEnrolled: 1,
+    completedCourses: 0,
+    location: "Seattle, WA"
+  },
+  {
+    id: 4,
+    username: "emilydavis",
+    email: "emily.davis@student.edu",
+    fullName: "Emily Davis",
+    role: "student",
+    status: "active",
+    joinDate: new Date('2023-11-20'),
+    lastLogin: new Date('2024-01-12T14:20:00'),
+    coursesEnrolled: 2,
+    completedCourses: 2,
+    location: "Boston, MA"
+  },
+  {
+    id: 5,
+    username: "admin",
+    email: "admin@tripletechnologies.com",
+    fullName: "Admin User",
+    role: "admin",
+    status: "active",
+    joinDate: new Date('2023-01-01'),
+    lastLogin: new Date('2024-01-15T10:00:00'),
+    coursesEnrolled: 0,
+    completedCourses: 0,
+    location: "Ethiopia"
+  }
 ];
 
 const chartConfig = {
@@ -159,6 +340,19 @@ function AdminPageContent() {
   const [isAddTopicModalOpen, setIsAddTopicModalOpen] = useState(false);
   const [selectedFolderForTopic, setSelectedFolderForTopic] = useState<any>(null);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
+
+  // Messages management state
+  const [messages, setMessages] = useState(sampleMessages);
+  const [messageFilter, setMessageFilter] = useState('all');
+  const [messageSearch, setMessageSearch] = useState('');
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
+  const [replyContent, setReplyContent] = useState('');
+
+  // User management state
+  const [users, setUsers] = useState(sampleUsers);
+  const [userFilter, setUserFilter] = useState('all');
+  const [userSearch, setUserSearch] = useState('');
+  const [selectedUser, setSelectedUser] = useState<any>(null);
 
   useEffect(() => {
     // Load data from localStorage
@@ -667,17 +861,394 @@ function AdminPageContent() {
       case 'settings-language':
         return renderSettings();
       case 'users':
+        const filteredUsers = users.filter(user => {
+          const matchesSearch = userSearch === '' || 
+            user.username.toLowerCase().includes(userSearch.toLowerCase()) ||
+            user.fullName.toLowerCase().includes(userSearch.toLowerCase()) ||
+            user.email.toLowerCase().includes(userSearch.toLowerCase());
+          
+          const matchesFilter = userFilter === 'all' || user.role === userFilter || user.status === userFilter;
+          
+          return matchesSearch && matchesFilter;
+        });
+
         return (
           <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">User Management</h1>
-              <p className="text-muted-foreground">Manage website users and permissions</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">User Management</h1>
+                <p className="text-muted-foreground">Manage users, roles, and permissions</p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search users..."
+                    value={userSearch}
+                    onChange={(e) => setUserSearch(e.target.value)}
+                    className="pl-10 w-full sm:w-[300px]"
+                  />
+                </div>
+                <select 
+                  value={userFilter}
+                  onChange={(e) => setUserFilter(e.target.value)}
+                  className="px-3 py-2 border border-input bg-background rounded-md text-sm"
+                >
+                  <option value="all">All Users</option>
+                  <option value="admin">Admins</option>
+                  <option value="student">Students</option>
+                  <option value="corporate">Corporate</option>
+                  <option value="active">Active</option>
+                  <option value="pending">Pending</option>
+                  <option value="suspended">Suspended</option>
+                </select>
+              </div>
             </div>
+
+            {/* User Statistics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-4 w-4 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{users.length}</p>
+                      <p className="text-xs text-muted-foreground">Total Users</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <UserCheck className="h-4 w-4 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{users.filter(u => u.status === 'active').length}</p>
+                      <p className="text-xs text-muted-foreground">Active</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="h-4 w-4 text-yellow-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{users.filter(u => u.status === 'pending').length}</p>
+                      <p className="text-xs text-muted-foreground">Pending</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Settings className="h-4 w-4 text-purple-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{users.filter(u => u.role === 'admin').length}</p>
+                      <p className="text-xs text-muted-foreground">Admins</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* User Management Table */}
             <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground">User management features coming soon...</p>
+              <CardHeader>
+                <CardTitle>User Directory</CardTitle>
+                <CardDescription>
+                  {filteredUsers.length} of {users.length} users
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>User</TableHead>
+                        <TableHead className="hidden sm:table-cell">Email</TableHead>
+                        <TableHead className="hidden md:table-cell">Role</TableHead>
+                        <TableHead className="hidden lg:table-cell">Courses</TableHead>
+                        <TableHead className="hidden lg:table-cell">Last Login</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="w-[120px]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredUsers.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{user.fullName}</p>
+                              <p className="text-xs text-muted-foreground">@{user.username}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <div>
+                              <p className="text-sm">{user.email}</p>
+                              <p className="text-xs text-muted-foreground">{user.location}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <Badge 
+                              variant={
+                                user.role === 'admin' ? 'default' : 
+                                user.role === 'corporate' ? 'secondary' : 
+                                'outline'
+                              }
+                              className="capitalize"
+                            >
+                              {user.role}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <div>
+                              <p className="text-sm font-medium">{user.coursesEnrolled} enrolled</p>
+                              <p className="text-xs text-muted-foreground">{user.completedCourses} completed</p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <div>
+                              <p className="text-sm">
+                                {user.lastLogin.toLocaleDateString()}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {user.lastLogin.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              variant={
+                                user.status === 'active' ? 'default' :
+                                user.status === 'pending' ? 'secondary' :
+                                'destructive'
+                              }
+                              className="capitalize"
+                            >
+                              {user.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-1">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => setSelectedUser(user)}
+                              >
+                                <Eye className="h-3 w-3" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => {
+                                  const updatedUsers = users.map(u => 
+                                    u.id === user.id 
+                                      ? { 
+                                          ...u, 
+                                          status: u.status === 'active' ? 'suspended' : 'active' 
+                                        }
+                                      : u
+                                  );
+                                  setUsers(updatedUsers);
+                                }}
+                              >
+                                {user.status === 'active' ? (
+                                  <XCircle className="h-3 w-3" />
+                                ) : (
+                                  <CheckCircle className="h-3 w-3" />
+                                )}
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                              >
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  
+                  {filteredUsers.length === 0 && (
+                    <div className="text-center py-8">
+                      <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-medium mb-2">No users found</h3>
+                      <p className="text-muted-foreground">
+                        {userSearch || userFilter !== 'all' 
+                          ? 'Try adjusting your search or filter criteria.'
+                          : 'Users will appear here when they register.'
+                        }
+                      </p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
+
+            {/* User Detail Modal - Mobile Friendly */}
+            {selectedUser && (
+              <Card className="fixed inset-4 z-50 bg-background border shadow-lg md:inset-x-1/4 md:inset-y-16 overflow-auto">
+                <CardHeader className="border-b">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg">{selectedUser.fullName}</CardTitle>
+                      <CardDescription>@{selectedUser.username}</CardDescription>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setSelectedUser(null)}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4 p-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="font-medium text-muted-foreground">Email</p>
+                      <p>{selectedUser.email}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-muted-foreground">Role</p>
+                      <Badge variant="outline" className="capitalize">
+                        {selectedUser.role}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="font-medium text-muted-foreground">Status</p>
+                      <Badge 
+                        variant={selectedUser.status === 'active' ? 'default' : 'secondary'}
+                        className="capitalize"
+                      >
+                        {selectedUser.status}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="font-medium text-muted-foreground">Location</p>
+                      <p>{selectedUser.location}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-muted-foreground">Join Date</p>
+                      <p>{selectedUser.joinDate.toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-muted-foreground">Last Login</p>
+                      <p>{selectedUser.lastLogin.toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-muted-foreground">Courses Enrolled</p>
+                      <p>{selectedUser.coursesEnrolled}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-muted-foreground">Completed</p>
+                      <p>{selectedUser.completedCourses}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between pt-4">
+                    <div className="flex gap-2">
+                      <Button 
+                        size="sm"
+                        onClick={() => {
+                          const updatedUsers = users.map(u => 
+                            u.id === selectedUser.id 
+                              ? { 
+                                  ...u, 
+                                  status: u.status === 'active' ? 'suspended' : 'active' 
+                                }
+                              : u
+                          );
+                          setUsers(updatedUsers);
+                          setSelectedUser(null);
+                        }}
+                      >
+                        {selectedUser.status === 'active' ? 'Suspend User' : 'Activate User'}
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                      >
+                        Edit User
+                      </Button>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => setSelectedUser(null)}
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* User Role Distribution Chart */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>User Role Distribution</CardTitle>
+                  <CardDescription>Breakdown of user roles</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {['admin', 'student', 'corporate'].map(role => {
+                      const count = users.filter(u => u.role === role).length;
+                      const percentage = (count / users.length) * 100;
+                      return (
+                        <div key={role} className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium text-sm capitalize">{role}</span>
+                            <span className="text-sm">{count} ({percentage.toFixed(1)}%)</span>
+                          </div>
+                          <div className="w-full bg-muted rounded-full h-2">
+                            <div 
+                              className="bg-primary rounded-full h-2 transition-all duration-300"
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Activity</CardTitle>
+                  <CardDescription>Latest user activities</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {users
+                      .sort((a, b) => b.lastLogin.getTime() - a.lastLogin.getTime())
+                      .slice(0, 5)
+                      .map((user, index) => (
+                        <div key={index} className="flex items-center space-x-3">
+                          <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
+                            {user.fullName.charAt(0)}
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium text-sm">{user.fullName}</p>
+                            <p className="text-xs text-muted-foreground">
+                              Last active: {user.lastLogin.toLocaleString()}
+                            </p>
+                          </div>
+                          <Badge variant="outline" className="text-xs">
+                            {user.role}
+                          </Badge>
+                        </div>
+                      ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         );
       case 'courses':
@@ -1041,31 +1612,607 @@ function AdminPageContent() {
           </div>
         );
       case 'messages':
+        const filteredMessages = messages.filter(message => {
+          const matchesSearch = messageSearch === '' || 
+            message.sender.toLowerCase().includes(messageSearch.toLowerCase()) ||
+            message.subject.toLowerCase().includes(messageSearch.toLowerCase()) ||
+            message.email.toLowerCase().includes(messageSearch.toLowerCase());
+          
+          const matchesFilter = messageFilter === 'all' || message.status === messageFilter;
+          
+          return matchesSearch && matchesFilter;
+        });
+
         return (
           <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Messages</h1>
-              <p className="text-muted-foreground">View and respond to customer inquiries</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Messages</h1>
+                <p className="text-muted-foreground">Manage customer inquiries and communications</p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search messages..."
+                    value={messageSearch}
+                    onChange={(e) => setMessageSearch(e.target.value)}
+                    className="pl-10 w-full sm:w-[300px]"
+                  />
+                </div>
+                <select 
+                  value={messageFilter}
+                  onChange={(e) => setMessageFilter(e.target.value)}
+                  className="px-3 py-2 border border-input bg-background rounded-md text-sm"
+                >
+                  <option value="all">All Messages</option>
+                  <option value="unread">Unread</option>
+                  <option value="read">Read</option>
+                  <option value="replied">Replied</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="starred">Starred</option>
+                </select>
+              </div>
             </div>
+
+            {/* Message Statistics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Mail className="h-4 w-4 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{messages.length}</p>
+                      <p className="text-xs text-muted-foreground">Total</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <MessageSquare className="h-4 w-4 text-red-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{messages.filter(m => m.status === 'unread').length}</p>
+                      <p className="text-xs text-muted-foreground">Unread</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Reply className="h-4 w-4 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{messages.filter(m => m.status === 'replied').length}</p>
+                      <p className="text-xs text-muted-foreground">Replied</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Star className="h-4 w-4 text-yellow-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{messages.filter(m => m.status === 'starred').length}</p>
+                      <p className="text-xs text-muted-foreground">Starred</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Messages Table */}
             <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground">Message management features coming soon...</p>
+              <CardHeader>
+                <CardTitle>Customer Messages</CardTitle>
+                <CardDescription>
+                  {filteredMessages.length} of {messages.length} messages
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[200px]">Sender</TableHead>
+                        <TableHead className="hidden sm:table-cell">Contact</TableHead>
+                        <TableHead>Subject</TableHead>
+                        <TableHead className="hidden md:table-cell">Type</TableHead>
+                        <TableHead className="hidden lg:table-cell">Date</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="w-[100px]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredMessages.map((message) => (
+                        <TableRow key={message.id}>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{message.sender}</p>
+                              <p className="text-xs text-muted-foreground sm:hidden">
+                                {message.email}
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <div className="space-y-1">
+                              <p className="text-sm">{message.email}</p>
+                              <p className="text-xs text-muted-foreground">{message.phone}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium truncate max-w-[200px]">{message.subject}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {message.message.length > 50 
+                                  ? message.message.substring(0, 50) + '...' 
+                                  : message.message
+                                }
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <Badge 
+                              variant={message.type === 'business' ? 'default' : 'secondary'}
+                              className="capitalize"
+                            >
+                              {message.type}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <div>
+                              <p className="text-sm">
+                                {message.timestamp.toLocaleDateString()}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              variant={
+                                message.status === 'unread' ? 'destructive' :
+                                message.status === 'replied' ? 'default' :
+                                message.status === 'starred' ? 'secondary' :
+                                'outline'
+                              }
+                              className="capitalize"
+                            >
+                              {message.status.replace('_', ' ')}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-1">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => setSelectedMessage(message)}
+                              >
+                                <Eye className="h-3 w-3" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => {
+                                  const updatedMessages = messages.map(m => 
+                                    m.id === message.id 
+                                      ? { ...m, status: m.status === 'starred' ? 'read' : 'starred' }
+                                      : m
+                                  );
+                                  setMessages(updatedMessages);
+                                }}
+                              >
+                                <Star className={`h-3 w-3 ${message.status === 'starred' ? 'fill-current' : ''}`} />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  
+                  {filteredMessages.length === 0 && (
+                    <div className="text-center py-8">
+                      <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-medium mb-2">No messages found</h3>
+                      <p className="text-muted-foreground">
+                        {messageSearch || messageFilter !== 'all' 
+                          ? 'Try adjusting your search or filter criteria.'
+                          : 'Customer messages will appear here.'
+                        }
+                      </p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
+
+            {/* Message Detail Modal - Mobile Friendly */}
+            {selectedMessage && (
+              <Card className="fixed inset-4 z-50 bg-background border shadow-lg md:inset-x-1/4 md:inset-y-16 overflow-auto">
+                <CardHeader className="border-b">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg">{selectedMessage.subject}</CardTitle>
+                      <CardDescription>
+                        From: {selectedMessage.sender} ({selectedMessage.email})
+                      </CardDescription>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setSelectedMessage(null)}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4 p-4">
+                  <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Phone className="h-3 w-3" />
+                      {selectedMessage.phone}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      {selectedMessage.location}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {selectedMessage.timestamp.toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium mb-2">Message</h4>
+                    <p className="text-sm bg-muted p-3 rounded">{selectedMessage.message}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium mb-2">Quick Reply</h4>
+                    <Textarea
+                      placeholder="Type your response..."
+                      value={replyContent}
+                      onChange={(e) => setReplyContent(e.target.value)}
+                      rows={4}
+                    />
+                    <div className="flex justify-between mt-2">
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          onClick={() => {
+                            const updatedMessages = messages.map(m => 
+                              m.id === selectedMessage.id ? { ...m, status: 'replied' } : m
+                            );
+                            setMessages(updatedMessages);
+                            setReplyContent('');
+                            setSelectedMessage(null);
+                          }}
+                          disabled={!replyContent.trim()}
+                        >
+                          Send Reply
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => {
+                            const updatedMessages = messages.map(m => 
+                              m.id === selectedMessage.id ? { ...m, status: 'read' } : m
+                            );
+                            setMessages(updatedMessages);
+                            setSelectedMessage(null);
+                          }}
+                        >
+                          Mark as Read
+                        </Button>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setSelectedMessage(null)}
+                      >
+                        Close
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         );
       case 'analytics':
         return (
           <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Analytics</h1>
-              <p className="text-muted-foreground">Detailed analytics and insights</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Analytics</h1>
+                <p className="text-muted-foreground">Comprehensive business intelligence and insights</p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+                <Button variant="outline" size="sm">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Refresh
+                </Button>
+              </div>
             </div>
+
+            {/* Key Metrics Overview */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Eye className="h-4 w-4 text-blue-500" />
+                    <div>
+                      <p className="text-xl sm:text-2xl font-bold">{analyticsData.overview.totalPageViews.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">Page Views</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-4 w-4 text-green-500" />
+                    <div>
+                      <p className="text-xl sm:text-2xl font-bold">{analyticsData.overview.uniqueVisitors.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">Unique Visitors</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <TrendingDown className="h-4 w-4 text-orange-500" />
+                    <div>
+                      <p className="text-xl sm:text-2xl font-bold">{analyticsData.overview.bounceRate}%</p>
+                      <p className="text-xs text-muted-foreground">Bounce Rate</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="h-4 w-4 text-purple-500" />
+                    <div>
+                      <p className="text-xl sm:text-2xl font-bold">{analyticsData.overview.avgSessionDuration}</p>
+                      <p className="text-xs text-muted-foreground">Avg Session</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <TrendingUp className="h-4 w-4 text-green-500" />
+                    <div>
+                      <p className="text-xl sm:text-2xl font-bold">{analyticsData.overview.conversionRate}%</p>
+                      <p className="text-xs text-muted-foreground">Conversion</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <BarChart3 className="h-4 w-4 text-green-600" />
+                    <div>
+                      <p className="text-xl sm:text-2xl font-bold">${analyticsData.overview.totalRevenue.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">Revenue</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Traffic Sources */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Traffic Sources</CardTitle>
+                  <CardDescription>Where your visitors are coming from</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {analyticsData.traffic.map((source, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-3 h-3 rounded-full bg-primary" style={{ backgroundColor: `hsl(${index * 60}, 70%, 50%)` }}></div>
+                          <span className="font-medium text-sm">{source.source}</span>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-sm">{source.visitors.toLocaleString()}</p>
+                          <p className="text-xs text-muted-foreground">{source.percentage}%</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Device Breakdown */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Device Breakdown</CardTitle>
+                  <CardDescription>User device preferences</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {analyticsData.devices.map((device, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium text-sm">{device.device}</span>
+                          <span className="text-sm">{device.percentage}%</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2">
+                          <div 
+                            className="bg-primary rounded-full h-2 transition-all duration-300"
+                            style={{ width: `${device.percentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Top Pages Table */}
             <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground">Advanced analytics features coming soon...</p>
+              <CardHeader>
+                <CardTitle>Top Performing Pages</CardTitle>
+                <CardDescription>Most visited pages on your website</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Page</TableHead>
+                        <TableHead className="hidden sm:table-cell">Total Views</TableHead>
+                        <TableHead>Unique Views</TableHead>
+                        <TableHead className="hidden md:table-cell">Performance</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {analyticsData.topPages.map((page, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium">{page.page}</TableCell>
+                          <TableCell className="hidden sm:table-cell">{page.views.toLocaleString()}</TableCell>
+                          <TableCell>{page.uniqueViews.toLocaleString()}</TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <div className="flex items-center space-x-2">
+                              <div className="w-full bg-muted rounded-full h-2 max-w-[100px]">
+                                <div 
+                                  className="bg-primary rounded-full h-2"
+                                  style={{ width: `${(page.views / analyticsData.topPages[0].views) * 100}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-xs text-muted-foreground">
+                                {Math.round((page.views / analyticsData.topPages[0].views) * 100)}%
+                              </span>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
+
+            {/* Conversion Funnel */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Conversion Funnel</CardTitle>
+                <CardDescription>Customer journey from visitor to conversion</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {analyticsData.conversionFunnel.map((stage, index) => (
+                    <div key={index} className="relative">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">{stage.stage}</span>
+                        <div className="text-right">
+                          <span className="font-bold">{stage.count.toLocaleString()}</span>
+                          <span className="text-sm text-muted-foreground ml-2">({stage.percentage}%)</span>
+                        </div>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-3">
+                        <div 
+                          className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-full h-3 transition-all duration-500"
+                          style={{ width: `${stage.percentage}%` }}
+                        ></div>
+                      </div>
+                      {index < analyticsData.conversionFunnel.length - 1 && (
+                        <div className="flex justify-center mt-2">
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Real-time Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Real-time Activity</CardTitle>
+                  <CardDescription>Current website activity</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Active Users</span>
+                      <span className="font-bold text-lg text-green-600">23</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Pages/Session</span>
+                      <span className="font-bold">3.2</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Top Active Page</span>
+                      <span className="font-bold text-sm">/courses</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">New Sessions</span>
+                      <span className="font-bold">67%</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Performance Insights</CardTitle>
+                  <CardDescription>Key performance indicators</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Page Load Time</span>
+                      <Badge variant="outline" className="bg-green-50 text-green-700">
+                        1.2s
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Server Response</span>
+                      <Badge variant="outline" className="bg-green-50 text-green-700">
+                        98ms
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Uptime</span>
+                      <Badge variant="outline" className="bg-green-50 text-green-700">
+                        99.9%
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Error Rate</span>
+                      <Badge variant="outline" className="bg-green-50 text-green-700">
+                        0.1%
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         );
       default:
@@ -1075,8 +2222,8 @@ function AdminPageContent() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full">
-        <Sidebar className="border-r">
+      <div className="flex h-screen w-full overflow-hidden">
+        <Sidebar className="border-r hidden lg:block">
           <SidebarHeader className="border-b px-6 py-4">
             <div className="flex items-center space-x-3">
               <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} />
@@ -1168,12 +2315,20 @@ function AdminPageContent() {
           <SidebarRail />
         </Sidebar>
         
-        <SidebarInset className="flex-1">
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-6">
-            <SidebarTrigger className="-ml-1" />
-            <div className="flex-1" />
+        <SidebarInset className="flex-1 flex flex-col">
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 lg:px-6">
+            <SidebarTrigger className="-ml-1 lg:hidden" />
+            <div className="flex-1 lg:hidden">
+              <h2 className="text-lg font-semibold truncate">
+                {sidebarItems.find(item => 
+                  item.id === activeSection || 
+                  item.submenu?.some(sub => sub.id === activeSection)
+                )?.title || 'Dashboard'}
+              </h2>
+            </div>
+            <div className="hidden lg:flex flex-1" />
             <div className="flex items-center space-x-2">
-              <Badge variant="outline">
+              <Badge variant="outline" className="hidden sm:flex">
                 {getLanguageDisplayName(language)}
               </Badge>
               <Button
@@ -1184,13 +2339,119 @@ function AdminPageContent() {
               >
                 {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
+              <div className="lg:hidden">
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </header>
           
-          <main className="flex-1 overflow-auto p-6">
+          <main className="flex-1 overflow-auto p-4 lg:p-6">
             {renderContent()}
           </main>
         </SidebarInset>
+
+        {/* Mobile Navigation Drawer */}
+        <div className="lg:hidden">
+          <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 hidden" />
+          <div className="fixed inset-y-0 left-0 z-50 h-full w-72 border-r bg-background shadow-lg transition-transform -translate-x-full data-[state=open]:translate-x-0 hidden">
+            <div className="flex h-16 items-center border-b px-6">
+              <div className="flex items-center space-x-3">
+                <Image src="/logo.png" alt="Triple Technologies Logo" width={32} height={32} />
+                <div>
+                  <div className="font-semibold text-lg">Triple Tech</div>
+                  <div className="text-xs text-muted-foreground">Admin Panel</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="px-4 py-4">
+              <div className="space-y-2">
+                {sidebarItems.map((item) => (
+                  <div key={item.id}>
+                    <button
+                      onClick={() => {
+                        if (item.submenu) {
+                          toggleMenu(item.id);
+                        } else {
+                          setActiveSection(item.id);
+                        }
+                      }}
+                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                        activeSection === item.id || activeSection.startsWith(item.id + '-')
+                          ? 'bg-primary text-primary-foreground'
+                          : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                      {item.id === 'courses' && notifications.length > 0 && (
+                        <Badge variant="destructive" className="ml-auto px-1 py-0 text-xs">
+                          {notifications.length}
+                        </Badge>
+                      )}
+                      {item.submenu && (
+                        <ChevronRight 
+                          className={`h-4 w-4 ml-auto transition-transform ${
+                            expandedMenus.has(item.id) ? 'transform rotate-90' : ''
+                          }`} 
+                        />
+                      )}
+                    </button>
+                    
+                    {item.submenu && expandedMenus.has(item.id) && (
+                      <div className="ml-6 mt-2 space-y-1">
+                        {item.submenu.map((subItem) => (
+                          <button
+                            key={subItem.id}
+                            onClick={() => setActiveSection(subItem.id)}
+                            className={`w-full flex items-center space-x-2 px-3 py-2 rounded-md text-sm transition-colors ${
+                              activeSection === subItem.id
+                                ? 'bg-primary/10 text-primary'
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                            }`}
+                          >
+                            <span>{subItem.title}</span>
+                            {subItem.id === 'enrollments' && notifications.length > 0 && (
+                              <Badge variant="destructive" className="ml-auto px-1 py-0 text-xs">
+                                {notifications.length}
+                              </Badge>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="absolute bottom-0 left-0 right-0 border-t p-4">
+              <div className="space-y-2">
+                <div className="flex items-center space-x-3 px-2">
+                  <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
+                    {user?.username?.[0]?.toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate">{user?.username}</div>
+                    <div className="text-xs text-muted-foreground">Administrator</div>
+                  </div>
+                </div>
+                <div className="flex space-x-1">
+                  <Button variant="outline" size="sm" onClick={goHome} className="flex-1">
+                    <Home className="h-4 w-4 mr-2" />
+                    Home
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={handleLogout} className="flex-1">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Modals */}
