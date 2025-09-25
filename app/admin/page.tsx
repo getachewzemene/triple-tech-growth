@@ -48,33 +48,47 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from '@/components/ui/chart';
-import { Line, LineChart, Bar, BarChart, Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { Line, LineChart, Bar, BarChart, Area, AreaChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Pie as RechartsPie, PieChart as RechartsPieChart, Cell } from 'recharts';
 
-// Sample data for charts
+// Realistic sample data for charts (12 months)
 const visitorData = [
-  { month: 'Jan', visitors: 400, pageViews: 1200 },
-  { month: 'Feb', visitors: 600, pageViews: 1800 },
-  { month: 'Mar', visitors: 800, pageViews: 2400 },
-  { month: 'Apr', visitors: 750, pageViews: 2250 },
-  { month: 'May', visitors: 900, pageViews: 2700 },
-  { month: 'Jun', visitors: 1200, pageViews: 3600 },
+  { month: 'Oct', visitors: 820, pageViews: 2400 },
+  { month: 'Nov', visitors: 910, pageViews: 2700 },
+  { month: 'Dec', visitors: 980, pageViews: 2950 },
+  { month: 'Jan', visitors: 1150, pageViews: 3600 },
+  { month: 'Feb', visitors: 1250, pageViews: 3800 },
+  { month: 'Mar', visitors: 1420, pageViews: 4300 },
+  { month: 'Apr', visitors: 1580, pageViews: 4900 },
+  { month: 'May', visitors: 1700, pageViews: 5200 },
+  { month: 'Jun', visitors: 1900, pageViews: 6000 },
+  { month: 'Jul', visitors: 2100, pageViews: 6800 },
+  { month: 'Aug', visitors: 2300, pageViews: 7400 },
+  { month: 'Sep', visitors: 2540, pageViews: 8200 },
 ];
 
 const courseEnrollmentData = [
-  { course: 'Web Dev', enrolled: 45, completed: 35 },
-  { course: 'Mobile Dev', enrolled: 30, completed: 22 },
-  { course: 'Data Science', enrolled: 25, completed: 18 },
-  { course: 'DevOps', enrolled: 20, completed: 15 },
-  { course: 'UI/UX', enrolled: 35, completed: 28 },
+  { course: 'Web Dev', enrolled: 540, completed: 420 },
+  { course: 'Mobile Dev', enrolled: 380, completed: 290 },
+  { course: 'Data Science', enrolled: 310, completed: 240 },
+  { course: 'DevOps', enrolled: 220, completed: 180 },
+  { course: 'UI/UX', enrolled: 410, completed: 330 },
+  { course: 'Cloud Fundamentals', enrolled: 285, completed: 230 },
+  { course: 'Marketing', enrolled: 190, completed: 150 },
 ];
 
 const revenueData = [
-  { month: 'Jan', revenue: 12000, profit: 8000 },
-  { month: 'Feb', revenue: 15000, profit: 10500 },
-  { month: 'Mar', revenue: 18000, profit: 12600 },
-  { month: 'Apr', revenue: 16000, profit: 11200 },
-  { month: 'May', revenue: 22000, profit: 15400 },
-  { month: 'Jun', revenue: 28000, profit: 19600 },
+  { month: 'Oct', revenue: 14000, profit: 9000 },
+  { month: 'Nov', revenue: 15500, profit: 10200 },
+  { month: 'Dec', revenue: 16500, profit: 10800 },
+  { month: 'Jan', revenue: 19800, profit: 12800 },
+  { month: 'Feb', revenue: 21000, profit: 13600 },
+  { month: 'Mar', revenue: 23500, profit: 15500 },
+  { month: 'Apr', revenue: 24800, profit: 16400 },
+  { month: 'May', revenue: 27000, profit: 17800 },
+  { month: 'Jun', revenue: 28900, profit: 19100 },
+  { month: 'Jul', revenue: 31500, profit: 21400 },
+  { month: 'Aug', revenue: 34200, profit: 23500 },
+  { month: 'Sep', revenue: 37000, profit: 25600 },
 ];
 
 // Sample message data for demonstration
@@ -330,11 +344,11 @@ function AdminPageContent() {
   const { language, setLanguage, getLanguageDisplayName } = useLanguage();
   const [activeSection, setActiveSection] = useState('dashboard');
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
-  const [enrollments, setEnrollments] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [courses, setCourses] = useState([]);
-  const [courseFolders, setCourseFolders] = useState([]);
-  const [topics, setTopics] = useState([]);
+  const [enrollments, setEnrollments] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [courseFolders, setCourseFolders] = useState<any[]>([]);
+  const [topics, setTopics] = useState<any[]>([]);
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
   const [isAddCourseFolderModalOpen, setIsAddCourseFolderModalOpen] = useState(false);
   const [isAddTopicModalOpen, setIsAddTopicModalOpen] = useState(false);
@@ -612,8 +626,32 @@ function AdminPageContent() {
             <CardDescription>Monthly visitors and page views</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[300px]">
-              <AreaChart data={visitorData}>
+            {/* Website traffic KPIs */}
+            {/* compute total visitors (last 12 months), last month, month-over-month % */}
+            {(() => {
+              const totalVisitors = visitorData.reduce((s, r) => s + (r.visitors || 0), 0);
+              const lastMonthVisitors = visitorData[visitorData.length - 1]?.visitors || 0;
+              const prevMonthVisitors = visitorData[visitorData.length - 2]?.visitors || 0;
+              const momGrowth = prevMonthVisitors > 0 ? Math.round(((lastMonthVisitors - prevMonthVisitors) / prevMonthVisitors) * 100) : 0;
+
+              return (
+                <div className="mb-4 flex gap-4">
+                  <div className="flex-1 bg-muted/5 rounded-md p-3">
+                    <div className="text-xs text-muted-foreground">Total visitors (12m)</div>
+                    <div className="text-xl font-semibold">{totalVisitors.toLocaleString()}</div>
+                  </div>
+                  <div className="flex-1 bg-muted/5 rounded-md p-3">
+                    <div className="text-xs text-muted-foreground">Visitors (last month)</div>
+                    <div className="text-xl font-semibold">{lastMonthVisitors.toLocaleString()}</div>
+                    <div className={`text-sm ${momGrowth >= 0 ? 'text-green-600' : 'text-red-600'}`}>{momGrowth >= 0 ? `+${momGrowth}% MoM` : `${momGrowth}% MoM`}</div>
+                  </div>
+                </div>
+              );
+            })()}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+              <div className="col-span-2">
+                <ChartContainer config={chartConfig} className="h-[300px]">
+                  <AreaChart data={visitorData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
@@ -634,8 +672,20 @@ function AdminPageContent() {
                   fill="var(--color-pageViews)"
                   fillOpacity={0.6}
                 />
-              </AreaChart>
-            </ChartContainer>
+                  </AreaChart>
+                </ChartContainer>
+              </div>
+
+              {/* Sparkline / mini trend */}
+              <div className="col-span-1 bg-muted/5 rounded-md p-3">
+                <div className="text-xs text-muted-foreground mb-2">Visitor trend (last 12 months)</div>
+                <ResponsiveContainer width="100%" height={80}>
+                  <LineChart data={visitorData}>
+                    <Line type="monotone" dataKey="visitors" stroke="var(--color-visitors)" strokeWidth={2} dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -645,16 +695,55 @@ function AdminPageContent() {
             <CardDescription>Enrollment vs completion rates</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[300px]">
-              <BarChart data={courseEnrollmentData}>
+            {/* Course performance KPIs */}
+            {(() => {
+              const totalEnrolled = courseEnrollmentData.reduce((s, c) => s + (c.enrolled || 0), 0);
+              const totalCompleted = courseEnrollmentData.reduce((s, c) => s + (c.completed || 0), 0);
+              const completionRate = totalEnrolled > 0 ? Math.round((totalCompleted / totalEnrolled) * 100) : 0;
+              const topCourse = [...courseEnrollmentData].sort((a, b) => b.enrolled - a.enrolled)[0];
+
+              return (
+                <div className="mb-4 flex gap-4">
+                  <div className="flex-1 bg-muted/5 rounded-md p-3">
+                    <div className="text-xs text-muted-foreground">Total Enrolled</div>
+                    <div className="text-xl font-semibold">{totalEnrolled.toLocaleString()}</div>
+                  </div>
+                  <div className="flex-1 bg-muted/5 rounded-md p-3">
+                    <div className="text-xs text-muted-foreground">Completion Rate</div>
+                    <div className="text-xl font-semibold">{completionRate}%</div>
+                    <div className="text-sm text-muted-foreground">Top course: {topCourse?.course}</div>
+                  </div>
+                </div>
+              );
+            })()}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+              <div className="col-span-2">
+                <ChartContainer config={chartConfig} className="h-[300px]">
+                  <BarChart data={courseEnrollmentData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="course" />
                 <YAxis />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Bar dataKey="enrolled" fill="var(--color-enrolled)" />
                 <Bar dataKey="completed" fill="var(--color-completed)" />
-              </BarChart>
-            </ChartContainer>
+                  </BarChart>
+                </ChartContainer>
+              </div>
+
+              {/* Course distribution pie */}
+              <div className="col-span-1 bg-muted/5 rounded-md p-3">
+                <div className="text-xs text-muted-foreground mb-2">Enrollment distribution</div>
+                <ResponsiveContainer width="100%" height={120}>
+                  <RechartsPieChart>
+                    <RechartsPie data={courseEnrollmentData} dataKey="enrolled" nameKey="course" cx="50%" cy="50%" outerRadius={48} fill="#8884d8" label={false}>
+                      {courseEnrollmentData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={index % 2 === 0 ? 'var(--color-enrolled)' : 'var(--color-completed)'} />
+                      ))}
+                    </RechartsPie>
+                  </RechartsPieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -665,8 +754,31 @@ function AdminPageContent() {
           <CardDescription>Monthly revenue and profit analysis</CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-[400px]">
-            <LineChart data={revenueData}>
+            {/* Revenue KPIs */}
+            {(() => {
+              const totalRevenue = revenueData.reduce((s, r) => s + (r.revenue || 0), 0);
+              const lastRev = revenueData[revenueData.length - 1]?.revenue || 0;
+              const prevRev = revenueData[revenueData.length - 2]?.revenue || 0;
+              const revGrowth = prevRev > 0 ? Math.round(((lastRev - prevRev) / prevRev) * 100) : 0;
+
+              return (
+                <div className="mb-4 flex gap-4">
+                  <div className="flex-1 bg-muted/5 rounded-md p-3">
+                    <div className="text-xs text-muted-foreground">Total Revenue (12m)</div>
+                    <div className="text-xl font-semibold">{`$${totalRevenue.toLocaleString()}`}</div>
+                  </div>
+                  <div className="flex-1 bg-muted/5 rounded-md p-3">
+                    <div className="text-xs text-muted-foreground">Revenue (last month)</div>
+                    <div className="text-xl font-semibold">{`$${lastRev.toLocaleString()}`}</div>
+                    <div className={`text-sm ${revGrowth >= 0 ? 'text-green-600' : 'text-red-600'}`}>{revGrowth >= 0 ? `+${revGrowth}% MoM` : `${revGrowth}% MoM`}</div>
+                  </div>
+                </div>
+              );
+            })()}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+            <div className="col-span-2">
+              <ChartContainer config={chartConfig} className="h-[400px]">
+                <LineChart data={revenueData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
@@ -685,8 +797,20 @@ function AdminPageContent() {
                 strokeWidth={3}
                 dot={{ fill: "var(--color-profit)", strokeWidth: 2, r: 4 }}
               />
-            </LineChart>
-          </ChartContainer>
+                </LineChart>
+              </ChartContainer>
+            </div>
+
+            {/* Mini monthly revenue bar */}
+            <div className="col-span-1 bg-muted/5 rounded-md p-3">
+              <div className="text-xs text-muted-foreground mb-2">Monthly revenue</div>
+              <ResponsiveContainer width="100%" height={160}>
+                <BarChart data={revenueData} margin={{ left: 0, right: 0 }}>
+                  <Bar dataKey="revenue" fill="var(--color-revenue)" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
