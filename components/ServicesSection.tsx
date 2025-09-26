@@ -82,7 +82,7 @@ const ServicesSection = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden"
+      className="py-12 xs:py-16 sm:py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -94,30 +94,29 @@ const ServicesSection = () => {
       </div>
 
       <div className="container mx-auto px-8 relative z-10">
-        <div className="text-center mb-10">
+  <div className="text-center mb-8 sm:mb-10 px-4">
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-light-blue" />
             <span className="text-sm font-medium text-gray-600">
               Our Professional Services
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Our{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
               Services
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm xs:text-base text-gray-600 max-w-2xl mx-auto">
             We provide comprehensive technology solutions to accelerate your
             business growth
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 sm:mt-12 px-4">
           {services.map((service, index) => (
             <div
               key={service.title}
-              className={`group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 ${service.shadowColor} hover:shadow-2xl cursor-pointer ${
+              className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 ${service.shadowColor} sm:hover:shadow-2xl cursor-pointer ${
                 isVisible ? "animate-scale-in" : "opacity-0"
               }`}
               style={{
@@ -140,7 +139,7 @@ const ServicesSection = () => {
               </div>
 
               {/* Content */}
-              <div className="relative p-8 z-20">
+              <div className="relative p-4 sm:p-8 z-20">
                 {/* Stats badge */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <div

@@ -43,6 +43,35 @@ import Footer from "@/components/Footer";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 import UserAuthModal from "@/components/UserAuthModal";
 
+// Types
+type Topic = {
+  title: string;
+  type: "video" | "pdf" | string;
+  src: string;
+};
+
+type Course = {
+  id: number | string;
+  title: string;
+  description: string;
+  icon?: React.ReactNode;
+  detailedDescription?: string;
+  duration?: string;
+  level?: string;
+  price?: string;
+  benefits?: string[];
+  instructor?: string;
+  thumbnail?: string;
+  isFolder?: boolean;
+  instructorName?: string;
+  instructorProfession?: string;
+  instructorExperience?: string;
+  instructorProfileImage?: string;
+  priceCents?: number;
+  topicsCount?: number;
+  prerequisites?: string;
+};
+
 // Featured bonus courses as specified in the requirements
 const featuredBonusCourses = [
   {
@@ -242,7 +271,7 @@ const courses = [
   },
 ];
 
-const courseContents = {
+const courseContents: Record<string, Topic[]> = {
   "Video Editing": [
     {
       title: "Basics of Video Cutting",
@@ -302,12 +331,12 @@ const courseContents = {
 };
 
 export default function TrainingPage() {
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [courseFolders, setCourseFolders] = useState([]);
+  const [courseFolders, setCourseFolders] = useState<Course[]>([]);
   const [enrollmentData, setEnrollmentData] = useState({
     fullName: "",
     email: "",
@@ -315,7 +344,7 @@ export default function TrainingPage() {
     age: "",
     address: "",
   });
-  const [paymentProof, setPaymentProof] = useState(null);
+  const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const { user, registerUser } = useAuth();
   const router = useRouter();
 
@@ -332,13 +361,13 @@ export default function TrainingPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleEnrollment = (course) => {
+  const handleEnrollment = (course: Course) => {
     // Check if user is already enrolled
-    const enrolledCourses = JSON.parse(
+    const enrolledCourses: any[] = JSON.parse(
       localStorage.getItem("enrolledCourses") || "[]",
     );
-    const isEnrolled = enrolledCourses.some(
-      (enrolled) => enrolled.courseId === course.id,
+    const isEnrolled = enrolledCourses.some((enrolled: any) =>
+      enrolled.courseId === course.id,
     );
 
     if (isEnrolled) {
@@ -348,8 +377,10 @@ export default function TrainingPage() {
     }
   };
 
-  const handleSignupSubmit = (e) => {
+  const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!selectedCourse) return;
 
     // Register the user if not already authenticated
     if (!user) {
@@ -379,7 +410,7 @@ export default function TrainingPage() {
 
   const handlePaymentUpload = async (e: any) => {
     e.preventDefault();
-    if (!paymentProof || !selectedCourse) return;
+  if (!paymentProof || !selectedCourse) return;
 
     try {
       // Get presigned upload URL for the proof file
@@ -389,7 +420,7 @@ export default function TrainingPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          key: paymentProof.name,
+        key: paymentProof.name,
           contentType: paymentProof.type,
           fileSize: paymentProof.size,
         }),
@@ -461,15 +492,15 @@ export default function TrainingPage() {
     }
   };
 
-  const checkEnrollmentStatus = (courseId: number) => {
+  const checkEnrollmentStatus = (courseId: string | number) => {
     const enrolledCourses = safeLocalStorage.getItem("enrolledCourses", []);
     return enrolledCourses.find((course: any) => course.courseId === courseId);
   };
 
-  const checkFolderEnrollmentStatus = (folderId: string) => {
+  const checkFolderEnrollmentStatus = (folderId: string | number) => {
     const enrolledCourses = safeLocalStorage.getItem("enrolledCourses", []);
     return enrolledCourses.find(
-      (course: any) => course.courseId.toString() === folderId,
+      (course: any) => course.courseId.toString() === folderId.toString(),
     );
   };
 
@@ -499,14 +530,14 @@ export default function TrainingPage() {
     }
   };
 
-  const formatFolderPrice = (priceCents: number) => {
-    return `$${(priceCents / 100).toFixed(2)}`;
+  const formatFolderPrice = (priceCents?: number) => {
+    return `$${((priceCents ?? 0) / 100).toFixed(2)}`;
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="px-4 pt-24 pb-16 sm:px-6 md:px-8 lg:px-16">
+  <div className="px-4 pt-24 pb-16 sm:px-6 md:px-8 lg:px-16 xl:px-24">
         <motion.h2
           className="section-title text-center"
           initial={{ opacity: 0, y: -20 }}
@@ -533,7 +564,7 @@ export default function TrainingPage() {
                 >
                   Featured Course Collections
                 </motion.h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                   {courseFolders.map((folder, index) => {
                     const enrollmentStatus = checkFolderEnrollmentStatus(
                       folder.id,
@@ -613,7 +644,7 @@ export default function TrainingPage() {
                                           title: folder.title,
                                           description: folder.description,
                                           detailedDescription: `Comprehensive course collection with multiple topics covering various aspects of ${folder.title.toLowerCase()}. This structured program provides in-depth knowledge and practical skills through expert-curated content.`,
-                                          price: `$${(folder.priceCents / 100).toFixed(2)}`,
+                                          price: `$${((folder.priceCents ?? 0) / 100).toFixed(2)}`,
                                           instructor: folder.instructor,
                                           instructorName: folder.instructorName,
                                           instructorProfession:
@@ -702,7 +733,7 @@ export default function TrainingPage() {
               >
                 Featured Bonus Courses
               </motion.h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                 {featuredBonusCourses.map((course, index) => {
                   const enrollmentStatus = user
                     ? checkEnrollmentStatus(course.id)
@@ -876,7 +907,7 @@ export default function TrainingPage() {
               >
                 All Available Courses
               </motion.h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                 {courses.map((course) => {
                   const enrollmentStatus = user
                     ? checkEnrollmentStatus(course.id)
@@ -1028,9 +1059,9 @@ export default function TrainingPage() {
           </div>
         ) : (
           <AnimatePresence>
-            <div className="flex flex-col lg:flex-row h-[75vh] mt-10 gap-6">
+            <div className="flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row h-[75vh] mt-10 gap-6">
               {/* Course Content Section */}
-              <div className="w-full lg:w-[35%] bg-card p-6 overflow-y-auto rounded-2xl shadow-elegant">
+              <div className="w-full sm:w-full md:w-[35%] lg:w-[35%] xl:w-[35%] bg-card p-6 overflow-y-auto rounded-2xl shadow-elegant">
                 <h3 className="text-2xl font-bold text-foreground mb-6">
                   Contents
                 </h3>
@@ -1197,7 +1228,7 @@ export default function TrainingPage() {
                           Course Overview
                         </h3>
                         <p className="text-muted-foreground">
-                          {selectedCourse.detailedDescription}
+                          {selectedCourse?.detailedDescription ?? ""}
                         </p>
                       </div>
 
@@ -1206,7 +1237,7 @@ export default function TrainingPage() {
                           What You'll Learn
                         </h3>
                         <ul className="space-y-2">
-                          {selectedCourse.benefits.map((benefit, index) => (
+                          {selectedCourse?.benefits?.map((benefit, index) => (
                             <li key={index} className="flex items-start gap-2">
                               <FaStar className="text-yellow-500 mt-1 flex-shrink-0" />
                               <span className="text-muted-foreground">
@@ -1290,7 +1321,7 @@ export default function TrainingPage() {
                               Prerequisites
                             </h4>
                             <p className="text-sm text-muted-foreground">
-                              {selectedCourse.prerequisites}
+                              {selectedCourse?.prerequisites ?? "No prerequisites"}
                             </p>
                           </CardContent>
                         </Card>
@@ -1445,7 +1476,12 @@ export default function TrainingPage() {
                 id="paymentProof"
                 type="file"
                 accept="image/*,application/pdf"
-                onChange={(e) => setPaymentProof(e.target.files[0])}
+                onChange={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  const files = target.files;
+                  if (!files) return;
+                  if (files.length > 0) setPaymentProof(files[0]);
+                }}
                 required
               />
             </div>

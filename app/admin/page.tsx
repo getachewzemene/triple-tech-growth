@@ -677,7 +677,7 @@ function AdminPageContent() {
       </div>
 
       {/* Key Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -740,7 +740,7 @@ function AdminPageContent() {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Website Traffic</CardTitle>
@@ -795,7 +795,7 @@ function AdminPageContent() {
                 </div>
               );
             })()}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
               <div className="col-span-2">
                 <ChartContainer config={chartConfig} className="h-[300px]">
                   <AreaChart data={visitorData}>
@@ -892,7 +892,7 @@ function AdminPageContent() {
                 </div>
               );
             })()}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
               <div className="col-span-2">
                 <ChartContainer config={chartConfig} className="h-[300px]">
                   <BarChart data={courseEnrollmentData}>
@@ -985,7 +985,7 @@ function AdminPageContent() {
               </div>
             );
           })()}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
             <div className="col-span-2">
               <ChartContainer config={chartConfig} className="h-[400px]">
                 <LineChart data={revenueData}>
@@ -1085,7 +1085,7 @@ function AdminPageContent() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
@@ -1343,10 +1343,10 @@ function AdminPageContent() {
                         <TableHead className="hidden md:table-cell">
                           Role
                         </TableHead>
-                        <TableHead className="hidden lg:table-cell">
+                        <TableHead className="hidden md:table-cell">
                           Courses
                         </TableHead>
-                        <TableHead className="hidden lg:table-cell">
+                        <TableHead className="hidden md:table-cell">
                           Last Login
                         </TableHead>
                         <TableHead>Status</TableHead>
@@ -1386,7 +1386,7 @@ function AdminPageContent() {
                               {user.role}
                             </Badge>
                           </TableCell>
-                          <TableCell className="hidden lg:table-cell">
+                          <TableCell className="hidden md:table-cell">
                             <div>
                               <p className="text-sm font-medium">
                                 {user.coursesEnrolled} enrolled
@@ -1396,7 +1396,7 @@ function AdminPageContent() {
                               </p>
                             </div>
                           </TableCell>
-                          <TableCell className="hidden lg:table-cell">
+                          <TableCell className="hidden md:table-cell">
                             <div>
                               <p className="text-sm">
                                 {user.lastLogin.toLocaleDateString()}
@@ -1605,7 +1605,7 @@ function AdminPageContent() {
             )}
 
             {/* User Role Distribution Chart */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle>User Role Distribution</CardTitle>
@@ -1939,7 +1939,7 @@ function AdminPageContent() {
                                     </span>
                                   </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-2">
                                   {list
                                     .sort((a, b) => a.order - b.order)
                                     .map((topic: any) => (
@@ -1975,7 +1975,7 @@ function AdminPageContent() {
                       );
                     })()}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
                     {courses.map((course: any) => (
                       <div key={course.id} className="border rounded-lg p-4">
                         <div className="flex items-center space-x-3 mb-2">
@@ -2063,7 +2063,7 @@ function AdminPageContent() {
             </div>
 
             {courseFolders.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                 {courseFolders.map((folder: any) => (
                   <Card key={folder.id}>
                     <CardHeader>
@@ -2407,7 +2407,7 @@ function AdminPageContent() {
                         <TableHead className="hidden md:table-cell">
                           Type
                         </TableHead>
-                        <TableHead className="hidden lg:table-cell">
+                        <TableHead className="hidden md:table-cell">
                           Date
                         </TableHead>
                         <TableHead>Status</TableHead>
@@ -2457,7 +2457,7 @@ function AdminPageContent() {
                               {message.type}
                             </Badge>
                           </TableCell>
-                          <TableCell className="hidden lg:table-cell">
+                          <TableCell className="hidden md:table-cell">
                             <div>
                               <p className="text-sm">
                                 {message.timestamp.toLocaleDateString()}
@@ -2667,7 +2667,7 @@ function AdminPageContent() {
             </div>
 
             {/* Key Metrics Overview */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 md:grid-cols-6 gap-4">
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center space-x-2">
@@ -2764,7 +2764,7 @@ function AdminPageContent() {
             </div>
 
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Traffic Sources */}
               <Card>
                 <CardHeader>
@@ -3025,7 +3025,7 @@ function AdminPageContent() {
   return (
     <SidebarProvider>
       <div className="flex h-screen w-full overflow-hidden">
-        <Sidebar className="border-r hidden lg:block">
+  <Sidebar className="border-r hidden md:block">
           <SidebarHeader className="border-b px-6 py-4">
             <div className="flex items-center space-x-3">
               <Image
@@ -3149,9 +3149,9 @@ function AdminPageContent() {
         </Sidebar>
 
         <SidebarInset className="flex-1 flex flex-col">
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 lg:px-6">
-            <SidebarTrigger className="-ml-1 lg:hidden" />
-            <div className="flex-1 lg:hidden">
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 md:px-6">
+            <SidebarTrigger className="-ml-1 md:hidden" />
+            <div className="flex-1 md:hidden">
               <h2 className="text-lg font-semibold truncate">
                 {sidebarItems.find(
                   (item) =>
@@ -3160,7 +3160,7 @@ function AdminPageContent() {
                 )?.title || "Dashboard"}
               </h2>
             </div>
-            <div className="hidden lg:flex flex-1" />
+            <div className="hidden md:flex flex-1" />
             <div className="flex items-center space-x-2">
               <Badge variant="outline" className="hidden sm:flex">
                 {getLanguageDisplayName(language)}
@@ -3177,7 +3177,7 @@ function AdminPageContent() {
                   <Moon className="h-4 w-4" />
                 )}
               </Button>
-              <div className="lg:hidden">
+              <div className="md:hidden">
                 <Button variant="outline" size="sm" onClick={handleLogout}>
                   <LogOut className="h-4 w-4" />
                 </Button>
@@ -3185,13 +3185,13 @@ function AdminPageContent() {
             </div>
           </header>
 
-          <main className="flex-1 overflow-auto p-4 lg:p-6">
+          <main className="flex-1 overflow-auto p-4 md:p-6">
             {renderContent()}
           </main>
         </SidebarInset>
 
         {/* Mobile Navigation Drawer */}
-        <div className="lg:hidden">
+        <div className="md:hidden">
           <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 hidden" />
           <div className="fixed inset-y-0 left-0 z-50 h-full w-72 border-r bg-background shadow-lg transition-transform -translate-x-full data-[state=open]:translate-x-0 hidden">
             <div className="flex h-16 items-center border-b px-6">

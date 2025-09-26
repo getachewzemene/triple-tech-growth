@@ -85,7 +85,7 @@ const TeamSection = () => {
     <section
       id="team"
       ref={sectionRef}
-      className="py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden"
+      className="py-12 xs:py-16 sm:py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden"
     >
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -97,14 +97,14 @@ const TeamSection = () => {
       </div>
 
       <div className="container mx-auto px-8 relative z-10">
-        <div className="text-center mb-16">
+  <div className="text-center mb-12 sm:mb-16 px-4">
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
             <Star className="w-4 h-4 text-light-blue" />
             <span className="text-sm font-medium text-gray-600">
               Meet Our Expert Team
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Our{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
               Team
@@ -116,11 +116,11 @@ const TeamSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 sm:mt-12 px-4">
           {teamMembers.map((member, index) => (
             <div
               key={member.title}
-              className={`group relative overflow-hidden rounded-3xl bg-card shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 cursor-pointer border border-border ${
+              className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 cursor-pointer border border-border ${
                 isVisible ? "animate-slide-in-right" : "opacity-0"
               }`}
               style={{
@@ -141,7 +141,7 @@ const TeamSection = () => {
               ></div>
 
               {/* Content */}
-              <div className="relative z-20 p-8">
+              <div className="relative z-20 p-4 sm:p-8">
                 {/* Experience badge */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <div
@@ -154,9 +154,9 @@ const TeamSection = () => {
                 {/* Avatar + Member Info (centered) */}
                 <div className="flex flex-col items-center text-center gap-4 mb-6">
                   <div
-                    className={`p-6 rounded-full bg-gradient-to-br ${member.gradient} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg card-icon`}
+                    className={`p-4 sm:p-6 rounded-full bg-gradient-to-br ${member.gradient} group-hover:scale-105 transition-all duration-500 shadow-lg card-icon`}
                   >
-                    <User className="w-12 h-12 text-white dark:group-hover:text-[#e2a70f]" />
+                    <User className="w-10 h-10 sm:w-12 sm:h-12 text-white dark:group-hover:text-[#e2a70f]" />
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">

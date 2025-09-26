@@ -84,7 +84,7 @@ const WhyChooseUsSection = () => {
     <section
       id="why-choose-us"
       ref={sectionRef}
-      className="py-20 bg-background from-gray-50 via-white to-slate-50 relative overflow-hidden"
+      className="py-12 xs:py-16 sm:py-20 bg-background from-gray-50 via-white to-slate-50 relative overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -96,30 +96,29 @@ const WhyChooseUsSection = () => {
       </div>
 
       <div className="container mx-auto px-8 relative z-10">
-        <div className="text-center mb-16">
+  <div className="text-center mb-12 sm:mb-16 px-4">
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-light-blue" />
             <span className="text-sm font-medium text-gray-600">
               Why Choose Triple Technologies
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Why{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
               Choose Us
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm xs:text-base text-gray-600 max-w-2xl mx-auto">
             We combine innovation, expertise, and dedication to deliver
             exceptional results that exceed expectations
           </p>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 sm:mt-12 px-4">
           {benefits.map((benefit, index) => (
             <div
               key={benefit.title}
-              className={`group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-4 hover:scale-105 ${benefit.shadowColor} hover:shadow-2xl cursor-pointer ${
+              className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-2 sm:hover:-translate-y-4 hover:scale-102 sm:hover:scale-105 ${benefit.shadowColor} sm:hover:shadow-2xl cursor-pointer ${
                 isVisible ? "animate-slide-in-left" : "opacity-0"
               }`}
               style={{
@@ -142,7 +141,7 @@ const WhyChooseUsSection = () => {
               </div>
 
               {/* Content */}
-              <div className="relative z-20 p-8">
+              <div className="relative z-20 p-4 sm:p-8">
                 {/* Stats badge */}
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <div

@@ -76,7 +76,7 @@ export default function CoursePage() {
   const [contentLoading, setContentLoading] = useState(false);
 
   // Course data with instructor information (should match training page data)
-  const courseInstructors = {
+  const courseInstructors: Record<string, string> = {
     "Video Editing": "Sarah Johnson - 10+ years industry experience",
     "Digital Marketing": "Mike Chen - Digital Marketing Expert",
     "Web Development": "Alex Thompson - Senior Full-Stack Developer",
@@ -127,10 +127,10 @@ export default function CoursePage() {
     setCourseFolder(folder);
 
     // Get topics for this course
-    const allTopics = safeLocalStorage.getItem("adminTopics", []);
+    const allTopics = safeLocalStorage.getItem("adminTopics", []) as Topic[];
     const courseTopics = allTopics
       .filter((t: Topic) => t.courseFolderId === courseId)
-      .sort((a, b) => a.order - b.order);
+      .sort((a: Topic, b: Topic) => a.order - b.order);
 
     setTopics(courseTopics);
 
@@ -321,9 +321,9 @@ export default function CoursePage() {
 
       {/* Course Content */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
           {/* Course Navigation Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="md:col-span-1">
             <Card className="h-full">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-lg">
@@ -416,7 +416,7 @@ export default function CoursePage() {
           </div>
 
           {/* Content Display Area */}
-          <div className="lg:col-span-3">
+          <div className="md:col-span-3">
             <Card className="h-full">
               {selectedTopic ? (
                 <div className="h-full flex flex-col">

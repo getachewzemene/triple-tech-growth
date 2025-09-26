@@ -32,7 +32,7 @@ import { useRouter } from "next/navigation";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 
 export default function ProfilePage() {
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const { user, logout } = useAuth();
   const router = useRouter();
@@ -69,7 +69,7 @@ export default function ProfilePage() {
     );
   }
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "approved":
         return "bg-green-100 text-green-800";
@@ -82,7 +82,7 @@ export default function ProfilePage() {
     }
   };
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case "approved":
         return <FaCheckCircle className="text-green-600" />;
@@ -95,7 +95,7 @@ export default function ProfilePage() {
     }
   };
 
-  const getStatusText = (status) => {
+  const getStatusText = (status: string) => {
     switch (status) {
       case "approved":
         return "Approved";
@@ -272,7 +272,7 @@ export default function ProfilePage() {
                     </CardContent>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                     {enrolledCourses.map((course, index) => (
                       <motion.div
                         key={index}

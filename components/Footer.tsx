@@ -57,7 +57,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white relative overflow-hidden border-t border-border/20 dark:border-white/10">
+  <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white relative overflow-hidden border-t border-border/20 dark:border-white/10">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-yellow/10 to-white/5 rounded-full blur-3xl animate-pulse"></div>
@@ -68,8 +68,8 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-start">
+      <div className="container mx-auto px-4 py-8 sm:py-10 relative z-10">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-6 items-start">
           {/* Enhanced Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3 group">

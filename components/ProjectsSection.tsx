@@ -84,7 +84,7 @@ const ProjectsSection = () => {
     <section
       id="projects"
       ref={sectionRef}
-      className="py-20 bg-background from-slate-50 via-white to-gray-50 relative overflow-hidden"
+      className="py-12 xs:py-16 sm:py-20 bg-background from-slate-50 via-white to-gray-50 relative overflow-hidden"
     >
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -93,30 +93,29 @@ const ProjectsSection = () => {
       </div>
 
       <div className="container mx-auto px-8 relative z-10">
-        <div className="text-center mb-16">
+  <div className="text-center mb-12 sm:mb-16 px-4">
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-light-blue" />
             <span className="text-sm font-medium text-gray-600">
               Our Projects We worked on
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Our{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
               Projects
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm xs:text-base text-gray-600 max-w-2xl mx-auto">
             Showcasing our expertise through innovative solutions that drive
             real business results
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 sm:mt-12 px-4">
           {projects.map((project, index) => (
             <div
               key={project.title}
-              className={`group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 shadow-lg hover:shadow-2xl cursor-pointer ${
+              className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 shadow-lg sm:hover:shadow-2xl cursor-pointer ${
                 isVisible ? "animate-scale-in" : "opacity-0"
               }`}
               style={{
@@ -139,7 +138,7 @@ const ProjectsSection = () => {
               </div>
 
               {/* Content */}
-              <div className="relative z-20 p-8">
+              <div className="relative z-20 p-4 sm:p-8">
                 {/* Icon + Title (centered) */}
                 <div className="flex flex-col items-center text-center gap-4 mb-6">
                   <div

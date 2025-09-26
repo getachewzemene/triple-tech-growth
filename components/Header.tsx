@@ -108,7 +108,7 @@ const Header = () => {
             : "bg-transparent"
         }`}
       >
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="container mx-auto px-4 py-3 sm:py-4 flex justify-between items-center">
           <div
             className={`flex items-center space-x-3 text-2xl font-bold transition-all duration-500 transform hover:scale-105 ${
               isScrolled ? "text-white" : "text-white"
@@ -266,15 +266,17 @@ const Header = () => {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className={`md:hidden transition-colors duration-300 ${
               isScrolled ? "text-white" : "text-white"
-            }`}
+            } p-2 rounded-md bg-transparent`}
+            aria-expanded={isMobileMenuOpen}
+            aria-label="Toggle navigation menu"
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
           {/* Mobile Navigation Modal */}
           {isMobileMenuOpen && (
-            <div className="absolute top-full left-0 w-full bg-light-blue shadow-lg md:hidden z-40">
-              <nav className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+            <div className="absolute top-0 left-0 w-full h-screen bg-light-blue/95 shadow-lg md:hidden z-50">
+              <nav className="container mx-auto px-4 py-8 flex flex-col space-y-4 h-full">
                 {[
                   { name: "Home", id: "hero" },
                   { name: "Services", id: "services" },
@@ -365,6 +367,35 @@ const Header = () => {
 
                 {/* Mobile Profile/Login Button */}
                 <div className="pt-4 border-t border-white/20">
+                  {user ? (
+                    <Button
+                      onClick={() => {
+                        router.push("/profile");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Profile
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        setIsAuthModalOpen(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
+                    >
+                      Login
+                    </Button>
+                  )}
+                </div>
+                <div className="mt-auto pt-6 border-t border-white/20">
+                  {/* Mobile Profile/Login Button duplicated below for easy access */}
                   {user ? (
                     <Button
                       onClick={() => {

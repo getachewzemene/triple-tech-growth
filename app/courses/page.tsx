@@ -164,7 +164,7 @@ const allCourses = [
 ];
 
 export default function CoursesPage() {
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const { user } = useAuth();
   const router = useRouter();
 
@@ -195,7 +195,7 @@ export default function CoursesPage() {
     );
   }
 
-  const checkEnrollmentStatus = (courseId: number) => {
+  const checkEnrollmentStatus = (courseId: number): any | undefined => {
     return enrolledCourses.find((course: any) => course.courseId === courseId);
   };
 
@@ -267,7 +267,7 @@ export default function CoursesPage() {
                       Featured
                     </Badge>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                     {featuredCourses.map((course, index) => {
                       const enrollmentStatus = checkEnrollmentStatus(course.id);
                       return (
@@ -368,7 +368,7 @@ export default function CoursesPage() {
                 {/* All Available Courses */}
                 <div>
                   <h2 className="text-2xl font-bold mb-6">All Courses</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                     {allCourses.map((course, index) => {
                       const enrollmentStatus = checkEnrollmentStatus(course.id);
                       return (
@@ -501,7 +501,7 @@ export default function CoursesPage() {
                     </CardContent>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                     {enrolledCourses.map((course: any, index: number) => (
                       <motion.div
                         key={index}

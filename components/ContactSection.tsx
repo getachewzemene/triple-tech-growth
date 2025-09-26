@@ -102,6 +102,12 @@ const ContactSection = () => {
                   required
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
                 />
+                <Input
+                  type="text"
+                  name="subject"
+                  placeholder="Subject"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
+                />
                 <Textarea
                   name="message"
                   placeholder="Your Message"
