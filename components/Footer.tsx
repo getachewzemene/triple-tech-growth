@@ -58,40 +58,40 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-br from-light-blue via-light-blue/95 to-light-blue/90 text-white relative overflow-hidden border-t border-border/20 dark:border-white/10">
-      {/* Background decorative elements */}
+      {/* Background decorative elements - responsive sizing */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-yellow/10 to-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/4 left-1/4 w-32 xs:w-48 sm:w-64 h-32 xs:h-48 sm:h-64 bg-gradient-to-r from-yellow/10 to-white/5 rounded-full blur-2xl xs:blur-3xl animate-pulse"></div>
         <div
-          className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-white/5 to-yellow/10 rounded-full blur-3xl animate-pulse"
+          className="absolute bottom-1/4 right-1/4 w-32 xs:w-48 sm:w-64 h-32 xs:h-48 sm:h-64 bg-gradient-to-r from-white/5 to-yellow/10 rounded-full blur-2xl xs:blur-3xl animate-pulse"
           style={{ animationDelay: "2s" }}
         ></div>
       </div>
 
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-start">
-          {/* Enhanced Company Info */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3 group">
+      <div className="container mx-auto px-4 xs:px-6 sm:px-8 py-8 xs:py-10 sm:py-12 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 xs:gap-8 items-start">
+          {/* Enhanced Company Info - responsive sizing */}
+          <div className="space-y-3 xs:space-y-4 sm:col-span-2 md:col-span-1">
+            <div className="flex items-center space-x-2 xs:space-x-3 group">
               <div className="relative">
                 <Image
                   src="/logo.png"
                   alt="Triple Technologies Logo"
-                  width={32}
-                  height={32}
-                  className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
+                  width={24}
+                  height={24}
+                  className="xs:w-7 xs:h-7 sm:w-8 sm:h-8 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-100 bg-clip-text text-transparent">
+              <span className="text-lg xs:text-xl font-bold bg-gradient-to-r from-white to-gray-100 bg-clip-text text-transparent">
                 Triple Technologies
               </span>
             </div>
-            <p className="text-gray-200 leading-relaxed text-sm">
+            <p className="text-gray-200 leading-relaxed text-xs xs:text-sm">
               Accelerating business growth with smart technologies and impactful
               innovation.
             </p>
-            <div className="flex space-x-3">
+            <div className="flex space-x-2 xs:space-x-3">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}

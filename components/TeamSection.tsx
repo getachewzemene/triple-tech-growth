@@ -85,19 +85,18 @@ const TeamSection = () => {
     <section
       id="team"
       ref={sectionRef}
-      className="py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden"
-    >
-      {/* Background decorations */}
+      className="py-12 xs:py-16 sm:py-20 bg-background from-white via-gray-50 to-slate-50 relative overflow-hidden">
+      {/* Background decorations - responsive sizing */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/3 w-72 h-72 bg-gradient-to-r from-light-blue/15 to-yellow/15 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/3 left-1/3 w-40 xs:w-56 sm:w-72 h-40 xs:h-56 sm:h-72 bg-gradient-to-r from-light-blue/15 to-yellow/15 rounded-full blur-2xl xs:blur-3xl animate-pulse"></div>
         <div
-          className="absolute bottom-1/3 right-1/3 w-72 h-72 bg-gradient-to-r from-yellow/15 to-light-blue/15 rounded-full blur-3xl animate-pulse"
+          className="absolute bottom-1/3 right-1/3 w-40 xs:w-56 sm:w-72 h-40 xs:h-56 sm:h-72 bg-gradient-to-r from-yellow/15 to-light-blue/15 rounded-full blur-2xl xs:blur-3xl animate-pulse"
           style={{ animationDelay: "2s" }}
         ></div>
       </div>
 
-      <div className="container mx-auto px-8 relative z-10">
-        <div className="text-center mb-16">
+      <div className="container mx-auto px-4 xs:px-6 sm:px-8 relative z-10">
+        <div className="text-center mb-8 xs:mb-12 sm:mb-16">
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
             <Star className="w-4 h-4 text-light-blue" />
             <span className="text-sm font-medium text-gray-600">
