@@ -417,7 +417,7 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
             <div>
               <Label htmlFor="priceCents" className="flex items-center gap-2">
                 <DollarSign className="h-4 w-4" />
-                Course Price (USD) *
+                Course Price (Birr) *
               </Label>
               <div className="flex items-center space-x-2">
                 <span className="text-gray-500 font-medium">$</span>

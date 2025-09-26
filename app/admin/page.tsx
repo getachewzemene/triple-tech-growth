@@ -18,6 +18,7 @@ import {
   PieChart, Download, RefreshCw, Edit
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { safeLocalStorage } from '@/lib/hooks/useLocalStorage';
@@ -358,6 +359,7 @@ function AdminPageContent() {
   const [isAddTopicModalOpen, setIsAddTopicModalOpen] = useState(false);
   const [selectedFolderForTopic, setSelectedFolderForTopic] = useState<any>(null);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
+  const [courseFilter, setCourseFilter] = useState<string>('all');
 
   // Messages management state
   const [messages, setMessages] = useState(sampleMessages);
@@ -1389,13 +1391,13 @@ function AdminPageContent() {
                 <p className="text-muted-foreground">Manage your courses and educational content</p>
               </div>
               <div className="flex space-x-3">
-                <Button onClick={() => setIsAddCourseFolderModalOpen(true)} variant="outline" className="flex items-center space-x-2">
+                <Button onClick={() => setIsAddCourseFolderModalOpen(true)} variant="outline" className={cn("flex items-center space-x-2", !isDark && "bg-primary/10 text-primary hover:bg-primary/20")}>
                   <FolderPlus className="h-4 w-4" />
                   <span>Add Course Folder</span>
                 </Button>
-                <Button onClick={() => setIsAddCourseModalOpen(true)} variant="outline" className="flex items-center space-x-2">
+                <Button onClick={() => { setSelectedFolderForTopic(null); setIsAddTopicModalOpen(true); }} variant="outline" className="flex items-center space-x-2">
                   <Plus className="h-4 w-4" />
-                  <span>Add Individual Course</span>
+                  <span>Add Course Topic</span>
                 </Button>
               </div>
             </div>
@@ -1521,6 +1523,72 @@ function AdminPageContent() {
                   <CardDescription>Standalone courses not organized in folders</CardDescription>
                 </CardHeader>
                 <CardContent>
+                  {/* Course filter */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-medium">Filter Topics by Course</h3>
+                      <select value={courseFilter} onChange={(e) => setCourseFilter(e.target.value)} className="px-2 py-1 border rounded">
+                        <option value="all">All Courses</option>
+                        {courses.map((c: any) => (
+                          <option key={c.id} value={c.id}>{c.title}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="text-sm text-muted-foreground">Showing topics grouped by course</div>
+                  </div>
+
+                  {/* Topics grouped by course (filterable) */}
+                  <div className="mb-6">
+                    {(() => {
+                      const grouped: Record<string, any[]> = {};
+                      topics.forEach((t: any) => {
+                        const cid = t.courseId || 'ungrouped';
+                        if (!grouped[cid]) grouped[cid] = [];
+                        grouped[cid].push(t);
+                      });
+
+                      const courseEntries = Object.entries(grouped)
+                        .filter(([cid]) => courseFilter === 'all' ? true : cid === courseFilter)
+                        .sort((a, b) => (a[0] > b[0] ? 1 : -1));
+
+                      if (courseEntries.length === 0) {
+                        return <p className="text-sm text-muted-foreground">No topics found for the selected course.</p>;
+                      }
+
+                      return (
+                        <div className="space-y-4">
+                          {courseEntries.map(([cid, list]) => {
+                            const courseMeta = courses.find(c => c.id === cid);
+                            return (
+                              <div key={cid} className="border rounded-md p-3">
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center space-x-2">
+                                    <Video className="h-4 w-4 text-muted-foreground" />
+                                    <h4 className="font-medium">{courseMeta ? courseMeta.title : 'Ungrouped'}</h4>
+                                    <span className="text-xs text-muted-foreground">{list.length} topics</span>
+                                  </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                  {list.sort((a,b) => a.order - b.order).map((topic: any) => (
+                                    <div key={topic.id} className="p-2 bg-muted/5 rounded flex items-center justify-between">
+                                      <div className="flex items-center space-x-2">
+                                        <FileText className="h-4 w-4 text-green-500" />
+                                        <div>
+                                          <div className="text-sm font-medium">{topic.title}</div>
+                                          <div className="text-xs text-muted-foreground">Order: {topic.order}</div>
+                                        </div>
+                                      </div>
+                                      <div className="text-xs text-muted-foreground">{topic.createdAt ? new Date(topic.createdAt).toLocaleDateString() : ''}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {courses.map((course: any) => (
                       <div key={course.id} className="border rounded-lg p-4">
@@ -1554,13 +1622,13 @@ function AdminPageContent() {
                       Start by creating your first course folder or individual course.
                     </p>
                     <div className="flex justify-center space-x-3">
-                      <Button onClick={() => setIsAddCourseFolderModalOpen(true)} variant="outline">
+                      <Button onClick={() => setIsAddCourseFolderModalOpen(true)} variant="outline" className={cn(!isDark && "bg-primary/10 text-primary hover:bg-primary/20")}>
                         <FolderPlus className="h-4 w-4 mr-2" />
                         Add Course Folder
                       </Button>
-                      <Button onClick={() => setIsAddCourseModalOpen(true)}>
+                      <Button onClick={() => { setSelectedFolderForTopic(null); setIsAddTopicModalOpen(true); }}>
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Course
+                        Add Course Topic
                       </Button>
                     </div>
                   </div>
@@ -1577,7 +1645,7 @@ function AdminPageContent() {
                 <h1 className="text-3xl font-bold text-foreground">Course Folders</h1>
                 <p className="text-muted-foreground">Organize courses into structured learning paths</p>
               </div>
-              <Button onClick={() => setIsAddCourseFolderModalOpen(true)} className="flex items-center space-x-2">
+              <Button onClick={() => setIsAddCourseFolderModalOpen(true)} className={cn("flex items-center space-x-2", !isDark && "bg-primary/10 text-primary hover:bg-primary/20")}>
                 <FolderPlus className="h-4 w-4" />
                 <span>Add Course Folder</span>
               </Button>
@@ -1623,7 +1691,7 @@ function AdminPageContent() {
                     <p className="text-muted-foreground mb-4">
                       Create your first course folder to organize learning content.
                     </p>
-                    <Button onClick={() => setIsAddCourseFolderModalOpen(true)}>
+                    <Button onClick={() => setIsAddCourseFolderModalOpen(true)} className={cn(!isDark && "bg-primary/10 text-primary hover:bg-primary/20")}>
                       <FolderPlus className="h-4 w-4 mr-2" />
                       Create Course Folder
                     </Button>
@@ -2595,16 +2663,17 @@ function AdminPageContent() {
         onCourseFolderSaved={handleCourseFolderSaved}
       />
 
-      {selectedFolderForTopic && (
+      {isAddTopicModalOpen && (
         <AddTopicModal
           isOpen={isAddTopicModalOpen}
           onClose={() => {
             setIsAddTopicModalOpen(false);
             setSelectedFolderForTopic(null);
           }}
-          courseFolderId={selectedFolderForTopic.id}
-          courseFolderTitle={selectedFolderForTopic.title}
-          existingTopics={getTopicsForFolder(selectedFolderForTopic.id)}
+          courseFolderId={selectedFolderForTopic?.id}
+          courseFolderTitle={selectedFolderForTopic?.title}
+          courses={courses}
+          existingTopics={selectedFolderForTopic ? getTopicsForFolder(selectedFolderForTopic.id) : topics}
           onTopicSaved={handleTopicSaved}
         />
       )}
