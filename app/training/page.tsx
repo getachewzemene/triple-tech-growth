@@ -506,7 +506,7 @@ export default function TrainingPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="px-4 pt-24 pb-16 sm:px-6 md:px-8 lg:px-16">
+      <div className="px-4 xs:px-6 sm:px-6 md:px-8 lg:px-16 pt-20 xs:pt-22 sm:pt-24 pb-12 xs:pb-14 sm:pb-16">
         <motion.h2
           className="section-title text-center"
           initial={{ opacity: 0, y: -20 }}

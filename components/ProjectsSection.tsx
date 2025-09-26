@@ -84,39 +84,38 @@ const ProjectsSection = () => {
     <section
       id="projects"
       ref={sectionRef}
-      className="py-20 bg-background from-slate-50 via-white to-gray-50 relative overflow-hidden"
-    >
-      {/* Background decorative elements */}
+      className="py-12 xs:py-16 sm:py-20 bg-background from-slate-50 via-white to-gray-50 relative overflow-hidden">
+      {/* Background decorative elements - responsive sizing */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-yellow/20 to-light-blue/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-light-blue/20 to-yellow/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-20 xs:-top-30 sm:-top-40 -right-20 xs:-right-30 sm:-right-40 w-40 xs:w-60 sm:w-80 h-40 xs:h-60 sm:h-80 bg-gradient-to-br from-yellow/20 to-light-blue/20 rounded-full blur-2xl xs:blur-3xl"></div>
+        <div className="absolute -bottom-20 xs:-bottom-30 sm:-bottom-40 -left-20 xs:-left-30 sm:-left-40 w-40 xs:w-60 sm:w-80 h-40 xs:h-60 sm:h-80 bg-gradient-to-tr from-light-blue/20 to-yellow/20 rounded-full blur-2xl xs:blur-3xl"></div>
       </div>
 
-      <div className="container mx-auto px-8 relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
-            <Sparkles className="w-4 h-4 text-light-blue" />
-            <span className="text-sm font-medium text-gray-600">
+      <div className="container mx-auto px-4 xs:px-6 sm:px-8 relative z-10">
+        <div className="text-center mb-8 xs:mb-12 sm:mb-16">
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-3 xs:px-4 py-1.5 xs:py-2 rounded-full mb-3 xs:mb-4">
+            <Sparkles className="w-3 xs:w-4 h-3 xs:h-4 text-light-blue" />
+            <span className="text-xs xs:text-sm font-medium text-gray-600">
               Our Projects We worked on
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 xs:mb-4">
             Our{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
               Projects
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm xs:text-base sm:text-lg md:text-xl text-gray-600 max-w-xs xs:max-w-sm sm:max-w-2xl mx-auto leading-relaxed">
             Showcasing our expertise through innovative solutions that drive
             real business results
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4 xs:gap-6 sm:gap-8 mt-6 xs:mt-8 sm:mt-12">
           {projects.map((project, index) => (
             <div
               key={project.title}
-              className={`group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 shadow-lg hover:shadow-2xl cursor-pointer ${
+              className={`group relative overflow-hidden rounded-2xl xs:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-2 xs:hover:-translate-y-4 md:hover:-translate-y-6 hover:scale-105 shadow-lg hover:shadow-xl xs:hover:shadow-2xl cursor-pointer ${
                 isVisible ? "animate-scale-in" : "opacity-0"
               }`}
               style={{
@@ -138,30 +137,30 @@ const ProjectsSection = () => {
                 <div className="w-full h-full bg-card rounded-3xl"></div>
               </div>
 
-              {/* Content */}
-              <div className="relative z-20 p-8">
-                {/* Icon + Title (centered) */}
-                <div className="flex flex-col items-center text-center gap-4 mb-6">
+              {/* Content - responsive padding */}
+              <div className="relative z-20 p-4 xs:p-6 sm:p-8">
+                {/* Icon + Title (centered) - responsive sizing */}
+                <div className="flex flex-col items-center text-center gap-3 xs:gap-4 mb-4 xs:mb-6">
                   <div
-                    className={`p-4 rounded-2xl bg-gradient-to-br ${project.color} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg card-icon`}
+                    className={`p-3 xs:p-4 rounded-xl xs:rounded-2xl bg-gradient-to-br ${project.color} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg card-icon`}
                   >
-                    <project.icon className="w-8 h-8 text-white dark:group-hover:text-[#e2a70f]" />
+                    <project.icon className="w-6 xs:w-7 sm:w-8 h-6 xs:h-7 sm:h-8 text-white dark:group-hover:text-[#e2a70f]" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-card-foreground mb-2 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
+                    <h3 className="text-lg xs:text-xl sm:text-2xl font-bold text-gray-900 dark:text-card-foreground mb-2 transition-all duration-300 group-hover:text-black dark:group-hover:text-white leading-tight">
                       {project.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-card-foreground leading-relaxed group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
+                    <p className="text-sm xs:text-base text-gray-600 dark:text-card-foreground leading-relaxed group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                       {project.description}
                     </p>
                   </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 absolute top-6 right-6">
-                    <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-light-blue dark:group-hover:text-[#e2a70f] transition-colors duration-300" />
+                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 absolute top-3 xs:top-4 sm:top-6 right-3 xs:right-4 sm:right-6">
+                    <ExternalLink className="w-4 xs:w-5 h-4 xs:h-5 text-gray-400 group-hover:text-light-blue dark:group-hover:text-[#e2a70f] transition-colors duration-300" />
                   </div>
                 </div>
 
-                {/* Features */}
-                <div className="space-y-2">
+                {/* Features - responsive spacing */}
+                <div className="space-y-1.5 xs:space-y-2">
                   {project.features.map((feature, idx) => (
                     <div
                       key={idx}

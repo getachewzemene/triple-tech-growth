@@ -108,9 +108,9 @@ const Header = () => {
             : "bg-transparent"
         }`}
       >
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center">
           <div
-            className={`flex items-center space-x-3 text-2xl font-bold transition-all duration-500 transform hover:scale-105 ${
+            className={`flex items-center space-x-2 sm:space-x-3 text-xl sm:text-2xl font-bold transition-all duration-500 transform hover:scale-105 ${
               isScrolled ? "text-white" : "text-white"
             }`}
           >
@@ -118,14 +118,17 @@ const Header = () => {
               <Image
                 src="/logo.png"
                 alt="Triple Technologies Logo"
-                width={32}
-                height={32}
-                className="transition-all duration-300 hover:rotate-12 hover:scale-110"
+                width={28}
+                height={28}
+                className="sm:w-8 sm:h-8 transition-all duration-300 hover:rotate-12 hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-light-blue/20 rounded-full blur-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
             </div>
-            <span className="bg-gradient-to-r from-white to-gray-100 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white to-gray-100 bg-clip-text text-transparent hidden xs:block sm:block">
               Triple Technologies
+            </span>
+            <span className="bg-gradient-to-r from-white to-gray-100 bg-clip-text text-transparent xs:hidden">
+              Triple Tech
             </span>
           </div>
 
@@ -264,17 +267,18 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`md:hidden transition-colors duration-300 ${
+            className={`md:hidden transition-all duration-300 p-2 rounded-lg hover:bg-white/10 ${
               isScrolled ? "text-white" : "text-white"
             }`}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
           {/* Mobile Navigation Modal */}
           {isMobileMenuOpen && (
-            <div className="absolute top-full left-0 w-full bg-light-blue shadow-lg md:hidden z-40">
-              <nav className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+            <div className="absolute top-full left-0 w-full bg-light-blue shadow-xl md:hidden z-40 border-t border-white/10">
+              <nav className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col space-y-3">
                 {[
                   { name: "Home", id: "hero" },
                   { name: "Services", id: "services" },
@@ -288,12 +292,12 @@ const Header = () => {
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className={`transition-colors duration-300 font-medium text-left py-2 ${
+                    className={`transition-all duration-300 font-medium text-left py-3 px-2 rounded-lg hover:bg-white/10 ${
                       (activeSection === item.id && pathname === "/") ||
                       (item.id === "training" && pathname === "/training") ||
                       (item.id === "courses" && pathname === "/courses")
-                        ? "text-yellow border-l-2 border-yellow pl-4"
-                        : "text-white hover:text-yellow"
+                        ? "text-yellow border-l-4 border-yellow pl-4 bg-white/5"
+                        : "text-white hover:text-yellow hover:pl-4"
                     }`}
                   >
                     {item.name}
