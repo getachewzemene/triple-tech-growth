@@ -84,38 +84,37 @@ const WhyChooseUsSection = () => {
     <section
       id="why-choose-us"
       ref={sectionRef}
-      className="py-20 bg-background from-gray-50 via-white to-slate-50 relative overflow-hidden"
-    >
-      {/* Background decoration */}
+      className="py-12 xs:py-16 sm:py-20 bg-background from-gray-50 via-white to-slate-50 relative overflow-hidden">
+      {/* Background decoration - responsive sizing */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-light-blue/10 to-yellow/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/4 left-1/4 w-48 xs:w-72 sm:w-96 h-48 xs:h-72 sm:h-96 bg-gradient-to-r from-light-blue/10 to-yellow/10 rounded-full blur-2xl xs:blur-3xl animate-pulse"></div>
         <div
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-yellow/10 to-light-blue/10 rounded-full blur-3xl animate-pulse"
+          className="absolute bottom-1/4 right-1/4 w-48 xs:w-72 sm:w-96 h-48 xs:h-72 sm:h-96 bg-gradient-to-r from-yellow/10 to-light-blue/10 rounded-full blur-2xl xs:blur-3xl animate-pulse"
           style={{ animationDelay: "1s" }}
         ></div>
       </div>
 
-      <div className="container mx-auto px-8 relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-4 py-2 rounded-full mb-4">
-            <Sparkles className="w-4 h-4 text-light-blue" />
-            <span className="text-sm font-medium text-gray-600">
+      <div className="container mx-auto px-4 xs:px-6 sm:px-8 relative z-10">
+        <div className="text-center mb-8 xs:mb-12 sm:mb-16">
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-light-blue/10 to-yellow/10 px-3 xs:px-4 py-1.5 xs:py-2 rounded-full mb-3 xs:mb-4">
+            <Sparkles className="w-3 xs:w-4 h-3 xs:h-4 text-light-blue" />
+            <span className="text-xs xs:text-sm font-medium text-gray-600">
               Why Choose Triple Technologies
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 xs:mb-4">
             Why{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
               Choose Us
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm xs:text-base sm:text-lg md:text-xl text-gray-600 max-w-xs xs:max-w-sm sm:max-w-2xl mx-auto leading-relaxed">
             We combine innovation, expertise, and dedication to deliver
             exceptional results that exceed expectations
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-4 xs:gap-6 sm:gap-8 mt-6 xs:mt-8 sm:mt-12">
           {benefits.map((benefit, index) => (
             <div
               key={benefit.title}
