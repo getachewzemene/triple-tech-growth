@@ -1,21 +1,24 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import ThemeProviderClient from '@/components/ThemeProviderClient';
+import ThemeProviderClient from "@/components/ThemeProviderClient";
 import { AuthProvider } from "./providers/AuthProvider";
 import { LanguageProvider } from "./providers/LanguageProvider";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tripletechnologies.com';
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://tripletechnologies.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Triple Technologies | Software Development, Digital Marketing & IT Training",
-    template: "%s | Triple Technologies"
+    default:
+      "Triple Technologies | Software Development, Digital Marketing & IT Training",
+    template: "%s | Triple Technologies",
   },
-  description: "Triple Technologies offers professional software development, IT training, CCTV installation, and social media management services in Ethiopia. Expert solutions for your digital transformation.",
+  description:
+    "Triple Technologies offers professional software development, IT training, CCTV installation, and social media management services in Ethiopia. Expert solutions for your digital transformation.",
   keywords: [
     "Triple Technologies",
     "Software development Ethiopia",
@@ -25,7 +28,7 @@ export const metadata: Metadata = {
     "Digital marketing services",
     "Web development",
     "Social media management",
-    "Tech solutions Ethiopia"
+    "Tech solutions Ethiopia",
   ],
   authors: [{ name: "Getachew Zemene" }],
   creator: "Getachew Zemene",
@@ -36,17 +39,19 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: baseUrl,
-    title: "Triple Technologies | Software Development, Digital Marketing & IT Training",
-    description: "Triple Technologies offers professional software development, IT training, CCTV installation, and social media management services in Ethiopia.",
+    title:
+      "Triple Technologies | Software Development, Digital Marketing & IT Training",
+    description:
+      "Triple Technologies offers professional software development, IT training, CCTV installation, and social media management services in Ethiopia.",
     siteName: "Triple Technologies",
     images: [
       {
@@ -60,7 +65,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Triple Technologies | Software Development & Digital Marketing",
-    description: "Professional tech solutions in Ethiopia. Software development, IT training, CCTV installation, and digital marketing services.",
+    description:
+      "Professional tech solutions in Ethiopia. Software development, IT training, CCTV installation, and digital marketing services.",
     site: "@GetachewZemene",
     creator: "@GetachewZemene",
     images: ["/og-image.jpg"],
@@ -98,7 +104,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
         <ThemeProviderClient>

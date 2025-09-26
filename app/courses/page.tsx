@@ -1,10 +1,29 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaVideo, FaRobot, FaMobileAlt, FaChartLine, FaCode, FaPaintBrush, FaClock, FaUser, FaDollarSign, FaStar, FaPlay, FaCheckCircle } from "react-icons/fa";
+import {
+  FaVideo,
+  FaRobot,
+  FaMobileAlt,
+  FaChartLine,
+  FaCode,
+  FaPaintBrush,
+  FaClock,
+  FaUser,
+  FaDollarSign,
+  FaStar,
+  FaPlay,
+  FaCheckCircle,
+} from "react-icons/fa";
 import Header from "@/components/Header";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,7 +38,8 @@ const featuredCourses = [
     title: "AI Automation",
     description: "Get started with artificial intelligence.",
     icon: <FaRobot size={24} />,
-    detailedDescription: "Explore the world of artificial intelligence and automation. Learn machine learning basics, Python programming, AI tools integration, and how to automate business processes.",
+    detailedDescription:
+      "Explore the world of artificial intelligence and automation. Learn machine learning basics, Python programming, AI tools integration, and how to automate business processes.",
     duration: "8 weeks",
     level: "Beginner to Intermediate",
     price: "$499",
@@ -28,19 +48,20 @@ const featuredCourses = [
       "Machine learning fundamentals",
       "AI tool integration skills",
       "Business automation projects",
-      "Future-ready career skills"
+      "Future-ready career skills",
     ],
     instructor: "Dr. James Wilson - AI Research Scientist",
     prerequisites: "Basic math and logic skills",
-    featured: true
+    featured: true,
   },
   {
     id: 7,
     title: "CapCut Video Editing with Mobile",
     description: "Master mobile video editing with CapCut.",
     icon: <FaMobileAlt size={24} />,
-    detailedDescription: "Learn professional mobile video editing using CapCut. Create stunning videos directly on your phone with advanced editing techniques, effects, and transitions specifically designed for mobile content creation.",
-    duration: "6 weeks", 
+    detailedDescription:
+      "Learn professional mobile video editing using CapCut. Create stunning videos directly on your phone with advanced editing techniques, effects, and transitions specifically designed for mobile content creation.",
+    duration: "6 weeks",
     level: "Beginner to Intermediate",
     price: "$199",
     benefits: [
@@ -48,18 +69,19 @@ const featuredCourses = [
       "CapCut advanced features and effects",
       "Social media content optimization",
       "Transitions and animations",
-      "Mobile video monetization strategies"
+      "Mobile video monetization strategies",
     ],
     instructor: "Lisa Chang - Mobile Content Creator",
     prerequisites: "Smartphone and CapCut app",
-    featured: true
+    featured: true,
   },
   {
     id: 1,
     title: "Video Editing",
     description: "Master video editing techniques.",
     icon: <FaVideo size={24} />,
-    detailedDescription: "Learn professional video editing with industry-standard tools like Adobe Premiere Pro, DaVinci Resolve, and Final Cut Pro. Master cutting, transitions, color correction, audio mixing, and visual effects.",
+    detailedDescription:
+      "Learn professional video editing with industry-standard tools like Adobe Premiere Pro, DaVinci Resolve, and Final Cut Pro. Master cutting, transitions, color correction, audio mixing, and visual effects.",
     duration: "8 weeks",
     level: "Beginner to Advanced",
     price: "$299",
@@ -68,12 +90,12 @@ const featuredCourses = [
       "Portfolio development with real projects",
       "Certificate of completion",
       "Job placement assistance",
-      "Lifetime access to course materials"
+      "Lifetime access to course materials",
     ],
     instructor: "Sarah Johnson - 10+ years industry experience",
     prerequisites: "Basic computer skills",
-    featured: true
-  }
+    featured: true,
+  },
 ];
 
 // All available courses
@@ -84,7 +106,8 @@ const allCourses = [
     title: "Digital Marketing",
     description: "Learn SEO and social media marketing.",
     icon: <FaChartLine size={24} />,
-    detailedDescription: "Comprehensive digital marketing course covering SEO, SEM, social media marketing, content marketing, email marketing, and analytics. Learn to create effective campaigns that drive results.",
+    detailedDescription:
+      "Comprehensive digital marketing course covering SEO, SEM, social media marketing, content marketing, email marketing, and analytics. Learn to create effective campaigns that drive results.",
     duration: "10 weeks",
     level: "Beginner to Intermediate",
     price: "$399",
@@ -93,17 +116,18 @@ const allCourses = [
       "Real campaign management experience",
       "Social media strategy development",
       "ROI measurement and optimization",
-      "Industry networking opportunities"
+      "Industry networking opportunities",
     ],
     instructor: "Mike Chen - Digital Marketing Expert",
-    prerequisites: "None"
+    prerequisites: "None",
   },
   {
     id: 3,
     title: "Web Development",
     description: "Build modern websites with React.",
     icon: <FaCode size={24} />,
-    detailedDescription: "Full-stack web development course covering HTML, CSS, JavaScript, React, Node.js, and database management. Build responsive, interactive web applications from scratch.",
+    detailedDescription:
+      "Full-stack web development course covering HTML, CSS, JavaScript, React, Node.js, and database management. Build responsive, interactive web applications from scratch.",
     duration: "12 weeks",
     level: "Beginner to Advanced",
     price: "$599",
@@ -112,17 +136,18 @@ const allCourses = [
       "Learn latest web technologies",
       "Responsive design mastery",
       "Deployment and hosting skills",
-      "Career transition support"
+      "Career transition support",
     ],
     instructor: "Alex Thompson - Senior Full-Stack Developer",
-    prerequisites: "Basic computer literacy"
+    prerequisites: "Basic computer literacy",
   },
   {
     id: 5,
     title: "Graphic Design",
     description: "Create stunning visuals with design tools.",
     icon: <FaPaintBrush size={24} />,
-    detailedDescription: "Master graphic design principles and tools including Adobe Creative Suite (Photoshop, Illustrator, InDesign), typography, color theory, and brand identity design.",
+    detailedDescription:
+      "Master graphic design principles and tools including Adobe Creative Suite (Photoshop, Illustrator, InDesign), typography, color theory, and brand identity design.",
     duration: "6 weeks",
     level: "Beginner to Intermediate",
     price: "$349",
@@ -131,11 +156,11 @@ const allCourses = [
       "Professional portfolio creation",
       "Brand identity design skills",
       "Print and digital design expertise",
-      "Freelancing guidance"
+      "Freelancing guidance",
     ],
     instructor: "David Kim - Creative Director",
-    prerequisites: "Design interest and creativity"
-  }
+    prerequisites: "Design interest and creativity",
+  },
 ];
 
 export default function CoursesPage() {
@@ -145,7 +170,7 @@ export default function CoursesPage() {
 
   useEffect(() => {
     // Load enrolled courses from localStorage
-    const courses = safeLocalStorage.getItem('enrolledCourses', []);
+    const courses = safeLocalStorage.getItem("enrolledCourses", []);
     setEnrolledCourses(courses);
   }, []);
 
@@ -157,8 +182,10 @@ export default function CoursesPage() {
           <Card className="w-96">
             <CardContent className="p-6 text-center">
               <h2 className="text-xl font-semibold mb-4">Please Log In</h2>
-              <p className="text-muted-foreground mb-4">You need to be logged in to access the course module.</p>
-              <Button onClick={() => router.push('/admin/login')}>
+              <p className="text-muted-foreground mb-4">
+                You need to be logged in to access the course module.
+              </p>
+              <Button onClick={() => router.push("/admin/login")}>
                 Go to Login
               </Button>
             </CardContent>
@@ -174,25 +201,33 @@ export default function CoursesPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'approved': return <FaCheckCircle className="text-green-600" />;
-      case 'payment_submitted': return <FaClock className="text-yellow-600" />;
-      case 'pending_payment': return <FaClock className="text-red-600" />;
-      default: return null;
+      case "approved":
+        return <FaCheckCircle className="text-green-600" />;
+      case "payment_submitted":
+        return <FaClock className="text-yellow-600" />;
+      case "pending_payment":
+        return <FaClock className="text-red-600" />;
+      default:
+        return null;
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'approved': return 'Enrolled';
-      case 'payment_submitted': return 'Payment Under Review';
-      case 'pending_payment': return 'Payment Required';
-      default: return 'Not Enrolled';
+      case "approved":
+        return "Enrolled";
+      case "payment_submitted":
+        return "Payment Under Review";
+      case "pending_payment":
+        return "Payment Required";
+      default:
+        return "Not Enrolled";
     }
   };
 
   const handleEnrollment = (course: any) => {
     // Redirect to training page for enrollment
-    router.push('/training');
+    router.push("/training");
   };
 
   return (
@@ -206,7 +241,9 @@ export default function CoursesPage() {
         >
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Course Module</h1>
-            <p className="text-muted-foreground">Explore available courses and manage your enrolled courses</p>
+            <p className="text-muted-foreground">
+              Explore available courses and manage your enrolled courses
+            </p>
           </div>
 
           <Tabs defaultValue="courses" className="space-y-6">
@@ -220,8 +257,15 @@ export default function CoursesPage() {
                 {/* Featured Bonus Courses */}
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-blue-600">Bonus Courses</h2>
-                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Featured</Badge>
+                    <h2 className="text-2xl font-bold text-blue-600">
+                      Bonus Courses
+                    </h2>
+                    <Badge
+                      variant="secondary"
+                      className="bg-yellow-100 text-yellow-800"
+                    >
+                      Featured
+                    </Badge>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {featuredCourses.map((course, index) => {
@@ -247,10 +291,15 @@ export default function CoursesPage() {
                                   {course.icon}
                                 </div>
                                 <div className="flex-1">
-                                  <CardTitle className="text-lg">{course.title}</CardTitle>
-                                  <CardDescription className="mt-1">{course.description}</CardDescription>
+                                  <CardTitle className="text-lg">
+                                    {course.title}
+                                  </CardTitle>
+                                  <CardDescription className="mt-1">
+                                    {course.description}
+                                  </CardDescription>
                                 </div>
-                                {enrollmentStatus && getStatusIcon(enrollmentStatus.status)}
+                                {enrollmentStatus &&
+                                  getStatusIcon(enrollmentStatus.status)}
                               </div>
                               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                                 <div className="flex items-center gap-1">
@@ -270,18 +319,28 @@ export default function CoursesPage() {
                                 </p>
                                 <div className="flex items-center gap-2 text-sm">
                                   <FaUser className="w-4 h-4 text-muted-foreground" />
-                                  <span className="text-muted-foreground">{course.instructor}</span>
+                                  <span className="text-muted-foreground">
+                                    {course.instructor}
+                                  </span>
                                 </div>
                                 {enrollmentStatus ? (
                                   <div className="space-y-2">
-                                    <Badge variant={enrollmentStatus.status === 'approved' ? 'default' : 'secondary'}>
+                                    <Badge
+                                      variant={
+                                        enrollmentStatus.status === "approved"
+                                          ? "default"
+                                          : "secondary"
+                                      }
+                                    >
                                       {getStatusText(enrollmentStatus.status)}
                                     </Badge>
-                                    {enrollmentStatus.status === 'approved' && (
+                                    {enrollmentStatus.status === "approved" && (
                                       <Button
                                         size="sm"
                                         className="w-full bg-green-600 hover:bg-green-700"
-                                        onClick={() => router.push(`/course/${course.id}`)}
+                                        onClick={() =>
+                                          router.push(`/course/${course.id}`)
+                                        }
                                       >
                                         <FaPlay className="w-4 h-4 mr-2" />
                                         Access Course
@@ -317,7 +376,9 @@ export default function CoursesPage() {
                           key={course.id}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: (index + featuredCourses.length) * 0.1 }}
+                          transition={{
+                            delay: (index + featuredCourses.length) * 0.1,
+                          }}
                           whileHover={{ scale: 1.02 }}
                         >
                           <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg">
@@ -327,10 +388,15 @@ export default function CoursesPage() {
                                   {course.icon}
                                 </div>
                                 <div className="flex-1">
-                                  <CardTitle className="text-lg">{course.title}</CardTitle>
-                                  <CardDescription className="mt-1">{course.description}</CardDescription>
+                                  <CardTitle className="text-lg">
+                                    {course.title}
+                                  </CardTitle>
+                                  <CardDescription className="mt-1">
+                                    {course.description}
+                                  </CardDescription>
                                 </div>
-                                {enrollmentStatus && getStatusIcon(enrollmentStatus.status)}
+                                {enrollmentStatus &&
+                                  getStatusIcon(enrollmentStatus.status)}
                               </div>
                               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                                 <div className="flex items-center gap-1">
@@ -350,18 +416,28 @@ export default function CoursesPage() {
                                 </p>
                                 <div className="flex items-center gap-2 text-sm">
                                   <FaUser className="w-4 h-4 text-muted-foreground" />
-                                  <span className="text-muted-foreground">{course.instructor}</span>
+                                  <span className="text-muted-foreground">
+                                    {course.instructor}
+                                  </span>
                                 </div>
                                 {enrollmentStatus ? (
                                   <div className="space-y-2">
-                                    <Badge variant={enrollmentStatus.status === 'approved' ? 'default' : 'secondary'}>
+                                    <Badge
+                                      variant={
+                                        enrollmentStatus.status === "approved"
+                                          ? "default"
+                                          : "secondary"
+                                      }
+                                    >
                                       {getStatusText(enrollmentStatus.status)}
                                     </Badge>
-                                    {enrollmentStatus.status === 'approved' && (
+                                    {enrollmentStatus.status === "approved" && (
                                       <Button
                                         size="sm"
                                         className="w-full bg-green-600 hover:bg-green-700"
-                                        onClick={() => router.push(`/course/${course.id}`)}
+                                        onClick={() =>
+                                          router.push(`/course/${course.id}`)
+                                        }
                                       >
                                         <FaPlay className="w-4 h-4 mr-2" />
                                         Access Course
@@ -391,8 +467,13 @@ export default function CoursesPage() {
             <TabsContent value="enrolled">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold">My Enrolled Courses</h2>
-                  <Button onClick={() => router.push('/training')} variant="outline">
+                  <h2 className="text-2xl font-semibold">
+                    My Enrolled Courses
+                  </h2>
+                  <Button
+                    onClick={() => router.push("/training")}
+                    variant="outline"
+                  >
                     Browse More Courses
                   </Button>
                 </div>
@@ -400,13 +481,21 @@ export default function CoursesPage() {
                 {enrolledCourses.length === 0 ? (
                   <Card>
                     <CardContent className="p-8 text-center">
-                      <h3 className="text-lg font-semibold mb-2">Not enrolled yet</h3>
-                      <p className="text-muted-foreground mb-4">Enroll in the Courses tab</p>
-                      <Button onClick={() => {
-                        // Switch to courses tab
-                        const coursesTab = document.querySelector('[value="courses"]') as HTMLElement;
-                        if (coursesTab) coursesTab.click();
-                      }}>
+                      <h3 className="text-lg font-semibold mb-2">
+                        Not enrolled yet
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        Enroll in the Courses tab
+                      </p>
+                      <Button
+                        onClick={() => {
+                          // Switch to courses tab
+                          const coursesTab = document.querySelector(
+                            '[value="courses"]',
+                          ) as HTMLElement;
+                          if (coursesTab) coursesTab.click();
+                        }}
+                      >
                         View Courses
                       </Button>
                     </CardContent>
@@ -423,38 +512,53 @@ export default function CoursesPage() {
                         <Card className="h-full">
                           <CardHeader>
                             <div className="flex items-center justify-between">
-                              <CardTitle className="text-lg">{course.courseTitle}</CardTitle>
+                              <CardTitle className="text-lg">
+                                {course.courseTitle}
+                              </CardTitle>
                               {getStatusIcon(course.status)}
                             </div>
                             <CardDescription>
-                              Enrolled on {new Date(course.enrolledAt).toLocaleDateString()}
+                              Enrolled on{" "}
+                              {new Date(course.enrolledAt).toLocaleDateString()}
                             </CardDescription>
                           </CardHeader>
                           <CardContent className="space-y-4">
-                            <Badge variant={course.status === 'approved' ? 'default' : 'secondary'}>
+                            <Badge
+                              variant={
+                                course.status === "approved"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                            >
                               {getStatusText(course.status)}
                             </Badge>
-                            
+
                             <div className="text-sm space-y-1">
-                              <div><strong>Name:</strong> {course.fullName}</div>
-                              <div><strong>Email:</strong> {course.email}</div>
+                              <div>
+                                <strong>Name:</strong> {course.fullName}
+                              </div>
+                              <div>
+                                <strong>Email:</strong> {course.email}
+                              </div>
                             </div>
 
-                            {course.status === 'pending_payment' && (
-                              <Button 
-                                size="sm" 
+                            {course.status === "pending_payment" && (
+                              <Button
+                                size="sm"
                                 className="w-full"
-                                onClick={() => router.push('/training')}
+                                onClick={() => router.push("/training")}
                               >
                                 Complete Payment
                               </Button>
                             )}
 
-                            {course.status === 'approved' && (
-                              <Button 
-                                size="sm" 
+                            {course.status === "approved" && (
+                              <Button
+                                size="sm"
                                 className="w-full bg-green-600 hover:bg-green-700"
-                                onClick={() => router.push(`/course/${course.courseId}`)}
+                                onClick={() =>
+                                  router.push(`/course/${course.courseId}`)
+                                }
                               >
                                 <FaPlay className="w-4 h-4 mr-2" />
                                 Access Course

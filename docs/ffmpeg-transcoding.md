@@ -43,14 +43,14 @@ ffmpeg -i "$INPUT_VIDEO" \
     [0:v]scale=1280:720[v720p];
     [0:v]scale=854:480[v480p];
     [0:v]scale=640:360[v360p];
-    
+
     movie=$LOGO_PATH,scale=60:60[logo];
-    
+
     [v1080p][logo]overlay=W-w-10:10[v1080p_logo];
     [v720p][logo]overlay=W-w-10:10[v720p_logo];
     [v480p][logo]overlay=W-w-10:10[v480p_logo];
     [v360p][logo]overlay=W-w-10:10[v360p_logo];
-    
+
     [v1080p_logo]drawtext=fontfile=/path/to/arial.ttf:text='TripleAcademy ${USER_ID} ${SESSION_ID} ${TIMESTAMP}':fontcolor=white@0.7:fontsize=14:x=10:y=h-th-10[v1080p_final];
     [v720p_logo]drawtext=fontfile=/path/to/arial.ttf:text='TripleAcademy ${USER_ID} ${SESSION_ID} ${TIMESTAMP}':fontcolor=white@0.7:fontsize=12:x=10:y=h-th-10[v720p_final];
     [v480p_logo]drawtext=fontfile=/path/to/arial.ttf:text='TripleAcademy ${USER_ID} ${SESSION_ID} ${TIMESTAMP}':fontcolor=white@0.7:fontsize=10:x=10:y=h-th-10[v480p_final];
@@ -98,13 +98,13 @@ ffmpeg -i "$INPUT_VIDEO" \
     [0:v]scale=1920:1080[v1080p];
     [0:v]scale=1280:720[v720p];
     [0:v]scale=854:480[v480p];
-    
+
     movie=$LOGO_PATH,scale=60:60[logo];
-    
+
     [v1080p][logo]overlay=W-w-10:10[v1080p_logo];
     [v720p][logo]overlay=W-w-10:10[v720p_logo];
     [v480p][logo]overlay=W-w-10:10[v480p_logo];
-    
+
     [v1080p_logo]drawtext=fontfile=/path/to/arial.ttf:text='TripleAcademy ${USER_ID} ${SESSION_ID} ${TIMESTAMP}':fontcolor=white@0.7:fontsize=14:x=10:y=h-th-10[v1080p_final];
     [v720p_logo]drawtext=fontfile=/path/to/arial.ttf:text='TripleAcademy ${USER_ID} ${SESSION_ID} ${TIMESTAMP}':fontcolor=white@0.7:fontsize=12:x=10:y=h-th-10[v720p_final];
     [v480p_logo]drawtext=fontfile=/path/to/arial.ttf:text='TripleAcademy ${USER_ID} ${SESSION_ID} ${TIMESTAMP}':fontcolor=white@0.7:fontsize=10:x=10:y=h-th-10[v480p_final]
@@ -141,21 +141,21 @@ mkdir -p "$OUTPUT_DIR"
 ffmpeg -i "$INPUT_VIDEO" \
   -filter_complex "
     [0:v]scale=1280:720[v720p];
-    
+
     movie=$LOGO_PATH,scale=40:40[logo];
-    
+
     [v720p][logo]overlay=
-      'if(between(mod(t,120),0,30), 10, 
+      'if(between(mod(t,120),0,30), 10,
         if(between(mod(t,120),30,60), W-w-10,
           if(between(mod(t,120),60,90), 10, W-w-10)))':
       'if(between(mod(t,120),0,30), 10,
         if(between(mod(t,120),30,60), 10,
           if(between(mod(t,120),60,90), H-h-10, H-h-10)))'[v720p_logo];
-    
+
     [v720p_logo]drawtext=fontfile=/path/to/arial.ttf:
       text='TripleAcademy ${USER_ID} ${SESSION_ID} ${TIMESTAMP}':
       fontcolor=white@0.6:fontsize=12:
-      x='if(between(mod(t,120),0,30), 10, 
+      x='if(between(mod(t,120),0,30), 10,
         if(between(mod(t,120),30,60), W-tw-10,
           if(between(mod(t,120),60,90), 10, W-tw-10)))':
       y='if(between(mod(t,120),0,30), h-th-50,
@@ -214,15 +214,15 @@ ffmpeg -i "$INPUT_VIDEO" \
 
 ```javascript
 // transcode.js - Node.js script for automated transcoding
-const { spawn } = require('child_process');
-const path = require('path');
-const fs = require('fs').promises;
+const { spawn } = require("child_process");
+const path = require("path");
+const fs = require("fs").promises;
 
 class VideoTranscoder {
   constructor(options = {}) {
-    this.ffmpegPath = options.ffmpegPath || 'ffmpeg';
-    this.logoPath = options.logoPath || '/path/to/tripleacademy-logo.png';
-    this.fontPath = options.fontPath || '/path/to/arial.ttf';
+    this.ffmpegPath = options.ffmpegPath || "ffmpeg";
+    this.logoPath = options.logoPath || "/path/to/tripleacademy-logo.png";
+    this.fontPath = options.fontPath || "/path/to/arial.ttf";
   }
 
   async transcodeWithWatermark({
@@ -231,49 +231,48 @@ class VideoTranscoder {
     userId,
     sessionId,
     timestamp = new Date().toISOString(),
-    format = 'hls' // 'hls' or 'dash'
+    format = "hls", // 'hls' or 'dash'
   }) {
     try {
       // Ensure output directory exists
       await fs.mkdir(outputDir, { recursive: true });
 
       const watermarkText = `TripleAcademy ${userId} ${sessionId} ${timestamp}`;
-      
+
       const args = this.buildFFmpegArgs({
         inputPath,
         outputDir,
         watermarkText,
-        format
+        format,
       });
 
       return new Promise((resolve, reject) => {
         const ffmpeg = spawn(this.ffmpegPath, args);
-        
-        let stderr = '';
-        
-        ffmpeg.stderr.on('data', (data) => {
+
+        let stderr = "";
+
+        ffmpeg.stderr.on("data", (data) => {
           stderr += data.toString();
           // Parse progress from stderr if needed
-          console.log('FFmpeg:', data.toString());
+          console.log("FFmpeg:", data.toString());
         });
 
-        ffmpeg.on('close', (code) => {
+        ffmpeg.on("close", (code) => {
           if (code === 0) {
             resolve({
               success: true,
               outputDir,
-              manifest: format === 'hls' ? 'master.m3u8' : 'manifest.mpd'
+              manifest: format === "hls" ? "master.m3u8" : "manifest.mpd",
             });
           } else {
             reject(new Error(`FFmpeg failed with code ${code}: ${stderr}`));
           }
         });
 
-        ffmpeg.on('error', (err) => {
+        ffmpeg.on("error", (err) => {
           reject(new Error(`Failed to start FFmpeg: ${err.message}`));
         });
       });
-
     } catch (error) {
       throw new Error(`Transcoding failed: ${error.message}`);
     }
@@ -281,38 +280,93 @@ class VideoTranscoder {
 
   buildFFmpegArgs({ inputPath, outputDir, watermarkText, format }) {
     const baseArgs = [
-      '-i', inputPath,
-      '-filter_complex', this.buildFilterComplex(watermarkText),
-      '-map', '[v1080p_final]', '-c:v:0', 'libx264', '-b:v:0', '5000k', '-preset', 'medium',
-      '-map', '[v720p_final]', '-c:v:1', 'libx264', '-b:v:1', '2800k', '-preset', 'medium',
-      '-map', '[v480p_final]', '-c:v:2', 'libx264', '-b:v:2', '1400k', '-preset', 'medium',
-      '-map', 'a:0', '-c:a:0', 'aac', '-b:a:0', '128k',
-      '-map', 'a:0', '-c:a:1', 'aac', '-b:a:1', '128k',
-      '-map', 'a:0', '-c:a:2', 'aac', '-b:a:2', '96k',
-      '-g', '48', '-keyint_min', '48'
+      "-i",
+      inputPath,
+      "-filter_complex",
+      this.buildFilterComplex(watermarkText),
+      "-map",
+      "[v1080p_final]",
+      "-c:v:0",
+      "libx264",
+      "-b:v:0",
+      "5000k",
+      "-preset",
+      "medium",
+      "-map",
+      "[v720p_final]",
+      "-c:v:1",
+      "libx264",
+      "-b:v:1",
+      "2800k",
+      "-preset",
+      "medium",
+      "-map",
+      "[v480p_final]",
+      "-c:v:2",
+      "libx264",
+      "-b:v:2",
+      "1400k",
+      "-preset",
+      "medium",
+      "-map",
+      "a:0",
+      "-c:a:0",
+      "aac",
+      "-b:a:0",
+      "128k",
+      "-map",
+      "a:0",
+      "-c:a:1",
+      "aac",
+      "-b:a:1",
+      "128k",
+      "-map",
+      "a:0",
+      "-c:a:2",
+      "aac",
+      "-b:a:2",
+      "96k",
+      "-g",
+      "48",
+      "-keyint_min",
+      "48",
     ];
 
-    if (format === 'hls') {
+    if (format === "hls") {
       return baseArgs.concat([
-        '-f', 'hls',
-        '-hls_time', '6',
-        '-hls_playlist_type', 'vod',
-        '-hls_flags', 'independent_segments',
-        '-hls_segment_type', 'mpegts',
-        '-hls_segment_filename', `${outputDir}/stream_%v/segment_%03d.ts`,
-        '-master_pl_name', 'master.m3u8',
-        '-var_stream_map', 'v:0,a:0 v:1,a:1 v:2,a:2',
-        `${outputDir}/stream_%v/playlist.m3u8`
+        "-f",
+        "hls",
+        "-hls_time",
+        "6",
+        "-hls_playlist_type",
+        "vod",
+        "-hls_flags",
+        "independent_segments",
+        "-hls_segment_type",
+        "mpegts",
+        "-hls_segment_filename",
+        `${outputDir}/stream_%v/segment_%03d.ts`,
+        "-master_pl_name",
+        "master.m3u8",
+        "-var_stream_map",
+        "v:0,a:0 v:1,a:1 v:2,a:2",
+        `${outputDir}/stream_%v/playlist.m3u8`,
       ]);
     } else {
       return baseArgs.concat([
-        '-f', 'dash',
-        '-seg_duration', '4',
-        '-use_template', '1',
-        '-use_timeline', '1',
-        '-init_seg_name', 'init-$RepresentationID$.m4s',
-        '-media_seg_name', 'chunk-$RepresentationID$-$Number%05d$.m4s',
-        `${outputDir}/manifest.mpd`
+        "-f",
+        "dash",
+        "-seg_duration",
+        "4",
+        "-use_template",
+        "1",
+        "-use_timeline",
+        "1",
+        "-init_seg_name",
+        "init-$RepresentationID$.m4s",
+        "-media_seg_name",
+        "chunk-$RepresentationID$-$Number%05d$.m4s",
+        `${outputDir}/manifest.mpd`,
       ]);
     }
   }
@@ -332,29 +386,31 @@ class VideoTranscoder {
       [v1080p_logo]drawtext=fontfile=${this.fontPath}:text='${watermarkText}':fontcolor=white@0.7:fontsize=14:x=10:y=h-th-10[v1080p_final];
       [v720p_logo]drawtext=fontfile=${this.fontPath}:text='${watermarkText}':fontcolor=white@0.7:fontsize=12:x=10:y=h-th-10[v720p_final];
       [v480p_logo]drawtext=fontfile=${this.fontPath}:text='${watermarkText}':fontcolor=white@0.7:fontsize=10:x=10:y=h-th-10[v480p_final]
-    `.replace(/\s+/g, ' ').trim();
+    `
+      .replace(/\s+/g, " ")
+      .trim();
   }
 }
 
 // Usage example
 async function transcodeVideo() {
   const transcoder = new VideoTranscoder({
-    logoPath: '/path/to/tripleacademy-logo.png',
-    fontPath: '/path/to/arial.ttf'
+    logoPath: "/path/to/tripleacademy-logo.png",
+    fontPath: "/path/to/arial.ttf",
   });
 
   try {
     const result = await transcoder.transcodeWithWatermark({
-      inputPath: './input/video.mp4',
-      outputDir: './output/course123',
-      userId: 'user456',
-      sessionId: 'session789',
-      format: 'hls'
+      inputPath: "./input/video.mp4",
+      outputDir: "./output/course123",
+      userId: "user456",
+      sessionId: "session789",
+      format: "hls",
     });
 
-    console.log('Transcoding completed:', result);
+    console.log("Transcoding completed:", result);
   } catch (error) {
-    console.error('Transcoding failed:', error);
+    console.error("Transcoding failed:", error);
   }
 }
 

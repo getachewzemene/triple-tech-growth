@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 /**
  * Custom hook for safely using localStorage in NextJS with SSR
@@ -37,11 +37,12 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   const setValue = (value: T | ((val: T) => T)) => {
     try {
       // Allow value to be a function so we have the same API as useState
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
+
       // Save state
       setStoredValue(valueToStore);
-      
+
       // Save to local storage only on client side
       if (isClient) {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
@@ -59,7 +60,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
  */
 export const safeLocalStorage = {
   getItem: (key: string, defaultValue: any = null) => {
-    if (typeof window === 'undefined') return defaultValue;
+    if (typeof window === "undefined") return defaultValue;
     try {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : defaultValue;
@@ -70,7 +71,7 @@ export const safeLocalStorage = {
   },
 
   setItem: (key: string, value: any) => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
@@ -79,11 +80,11 @@ export const safeLocalStorage = {
   },
 
   removeItem: (key: string) => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     try {
       window.localStorage.removeItem(key);
     } catch (error) {
       console.warn(`Error removing localStorage key "${key}":`, error);
     }
-  }
+  },
 };

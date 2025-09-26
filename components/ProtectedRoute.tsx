@@ -1,15 +1,18 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/app/providers/AuthProvider';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useAuth } from "@/app/providers/AuthProvider";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin = false }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  requireAdmin = false,
+}) => {
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
 

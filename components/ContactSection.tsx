@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   FaFacebookF,
@@ -10,30 +10,32 @@ import {
   FaTelegramPlane,
   FaInstagram,
 } from "react-icons/fa";
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
+    name: "",
+    email: "",
+    message: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission here
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     // Reset form
-    setFormData({ name: '', email: '', message: '' });
+    setFormData({ name: "", email: "", message: "" });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -52,16 +54,18 @@ const ContactSection = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <FaMapMarkerAlt className="w-5 h-5" />
-                <span>Megenagna, Shola Trafic Light, Fenasi Bldg 4<sup>th</sup> floor</span>
+                <span>
+                  Megenagna, Shola Trafic Light, Fenasi Bldg 4<sup>th</sup>{" "}
+                  floor
+                </span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaEnvelope className="w-5 h-5" />
                 <span>
                   <a href="mailto:info@tripletech.com">info@tripletech.com</a>
                 </span>
-                </div>
-          
               </div>
+            </div>
 
             {/* Social Media */}
             <div className="space-y-4">
@@ -73,7 +77,6 @@ const ContactSection = () => {
                 <FaInstagram className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
                 <FaTelegramPlane className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
                 <FaEnvelope className="w-6 h-6 hover:text-yellow transition-colors cursor-pointer" />
-
               </div>
             </div>
 

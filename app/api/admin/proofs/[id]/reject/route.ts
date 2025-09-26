@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 // import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
+import { z } from "zod";
 
 // const prisma = new PrismaClient();
 
@@ -17,23 +17,26 @@ const reviewProofSchema = z.object({
  * Updates PaymentProof.status to "rejected"
  * Sends notification email to student with reason
  */
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
     // Check authentication and admin privileges
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user) {
       return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
+        { error: "Authentication required" },
+        { status: 401 },
       );
     }
 
     // Verify admin role - only admins can approve/reject proofs
     if (!(session.user as any).isAdmin) {
       return NextResponse.json(
-        { error: 'Admin privileges required' },
-        { status: 403 }
+        { error: "Admin privileges required" },
+        { status: 403 },
       );
     }
 
@@ -44,11 +47,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const validationResult = reviewProofSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
-        { 
-          error: 'Invalid review data',
-          details: validationResult.error.issues
+        {
+          error: "Invalid review data",
+          details: validationResult.error.issues,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -59,10 +62,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     // In production, query database
     const paymentProof = {
       id: proofId,
-      userId: 'user_123',
-      courseId: 'course_456',
-      s3Key: 'proof.jpg',
-      status: 'pending',
+      userId: "user_123",
+      courseId: "course_456",
+      s3Key: "proof.jpg",
+      status: "pending",
       comment: null,
       uploadedAt: new Date().toISOString(),
       reviewedAt: null,
@@ -70,15 +73,15 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     if (!paymentProof) {
       return NextResponse.json(
-        { error: 'Payment proof not found' },
-        { status: 404 }
+        { error: "Payment proof not found" },
+        { status: 404 },
       );
     }
 
-    if (paymentProof.status !== 'pending') {
+    if (paymentProof.status !== "pending") {
       return NextResponse.json(
-        { error: 'Payment proof has already been reviewed' },
-        { status: 409 }
+        { error: "Payment proof has already been reviewed" },
+        { status: 409 },
       );
     }
 
@@ -87,7 +90,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     // In production, update database
     const updatedProof = {
       ...paymentProof,
-      status: 'rejected',
+      status: "rejected",
       comment: comment || null,
       reviewedAt: new Date().toISOString(),
     };
@@ -96,39 +99,38 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     // For demo purposes, create mock data
     // In production, enrollment remains unchanged
     const enrollment = {
-      id: 'enrollment_123',
+      id: "enrollment_123",
       userId: paymentProof.userId,
       courseId: paymentProof.courseId,
-      status: 'pending',
+      status: "pending",
       createdAt: new Date().toISOString(),
       approvedAt: null,
     };
 
     // Send email notification to student
     await sendStudentNotificationEmail({
-      type: 'proof_rejected',
+      type: "proof_rejected",
       userId: paymentProof.userId,
       courseId: paymentProof.courseId,
       proofId: proofId,
       comment: comment,
     });
 
-    console.log('Payment proof rejected:', { updatedProof, enrollment });
+    console.log("Payment proof rejected:", { updatedProof, enrollment });
 
     return NextResponse.json({
       success: true,
-      message: 'Payment proof rejected',
+      message: "Payment proof rejected",
       proofId: proofId,
-      enrollmentStatus: 'pending',
+      enrollmentStatus: "pending",
       rejectedAt: updatedProof.reviewedAt,
       comment: comment,
     });
-
   } catch (error) {
-    console.error('Error rejecting payment proof:', error);
+    console.error("Error rejecting payment proof:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
@@ -138,7 +140,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
  * In production, integrate with SendGrid, Postmark, or SMTP
  */
 async function sendStudentNotificationEmail(data: {
-  type: 'proof_approved' | 'proof_rejected';
+  type: "proof_approved" | "proof_rejected";
   userId: string;
   courseId: string;
   proofId: string;
@@ -148,9 +150,9 @@ async function sendStudentNotificationEmail(data: {
     // TODO: Get user email from database
     // const user = await prisma.user.findUnique({ where: { id: data.userId } });
     // const course = await prisma.course.findUnique({ where: { id: data.courseId } });
-    
-    const userEmail = 'student@example.com'; // Mock email
-    const courseName = 'Demo Course'; // Mock course name
+
+    const userEmail = "student@example.com"; // Mock email
+    const courseName = "Demo Course"; // Mock course name
 
     // TODO: Implement actual email sending
     // Example using SendGrid:
@@ -179,10 +181,10 @@ async function sendStudentNotificationEmail(data: {
     
     await sgMail.send(msg);
     */
-    
-    console.log('Student email notification sent (stub):', data);
+
+    console.log("Student email notification sent (stub):", data);
   } catch (error) {
-    console.error('Error sending student notification email:', error);
+    console.error("Error sending student notification email:", error);
     // Don't throw - email failure shouldn't fail the rejection process
   }
 }

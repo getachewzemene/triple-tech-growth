@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
-  VolumeX, 
-  Maximize, 
+import React, { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize,
   Download,
   FileText,
   Video as VideoIcon,
   AlertCircle,
-  Loader2
-} from 'lucide-react';
-import { Slider } from '@/components/ui/slider';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+  Loader2,
+} from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface Topic {
   id: string;
@@ -32,7 +32,7 @@ interface Topic {
   pdfS3Key?: string;
   pdfSize?: number;
   createdAt: string;
-  type: 'topic';
+  type: "topic";
 }
 
 interface ContentDisplayProps {
@@ -41,9 +41,9 @@ interface ContentDisplayProps {
   isCompleted?: boolean;
 }
 
-const OptimizedVideoPlayer: React.FC<{ 
-  src: string; 
-  title: string; 
+const OptimizedVideoPlayer: React.FC<{
+  src: string;
+  title: string;
   onComplete?: () => void;
   duration?: number;
 }> = ({ src, title, onComplete, duration }) => {
@@ -71,7 +71,7 @@ const OptimizedVideoPlayer: React.FC<{
       setCurrentTime(video.currentTime);
       const progress = (video.currentTime / video.duration) * 100;
       setWatchProgress(progress);
-      
+
       // Auto-complete when user watches 90% of the video
       if (progress > 90 && onComplete) {
         onComplete();
@@ -80,7 +80,7 @@ const OptimizedVideoPlayer: React.FC<{
 
     const handleError = () => {
       setLoading(false);
-      setError('Failed to load video. Please try again.');
+      setError("Failed to load video. Please try again.");
     };
 
     const handleEnded = () => {
@@ -90,16 +90,16 @@ const OptimizedVideoPlayer: React.FC<{
       }
     };
 
-    video.addEventListener('loadeddata', handleLoadedData);
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('error', handleError);
-    video.addEventListener('ended', handleEnded);
+    video.addEventListener("loadeddata", handleLoadedData);
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("error", handleError);
+    video.addEventListener("ended", handleEnded);
 
     return () => {
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('error', handleError);
-      video.removeEventListener('ended', handleEnded);
+      video.removeEventListener("loadeddata", handleLoadedData);
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("error", handleError);
+      video.removeEventListener("ended", handleEnded);
     };
   }, [onComplete]);
 
@@ -118,7 +118,7 @@ const OptimizedVideoPlayer: React.FC<{
   const handleSeek = (value: number[]) => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     const newTime = (value[0] / 100) * videoLength;
     video.currentTime = newTime;
     setCurrentTime(newTime);
@@ -127,7 +127,7 @@ const OptimizedVideoPlayer: React.FC<{
   const handleVolumeChange = (value: number[]) => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     const newVolume = value[0] / 100;
     video.volume = newVolume;
     setVolume(newVolume);
@@ -137,7 +137,7 @@ const OptimizedVideoPlayer: React.FC<{
   const toggleMute = () => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     video.muted = !isMuted;
     setIsMuted(!isMuted);
   };
@@ -161,7 +161,7 @@ const OptimizedVideoPlayer: React.FC<{
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   if (error) {
@@ -185,7 +185,7 @@ const OptimizedVideoPlayer: React.FC<{
           </div>
         </div>
       )}
-      
+
       <video
         ref={videoRef}
         className="w-full h-full object-contain"
@@ -225,9 +225,13 @@ const OptimizedVideoPlayer: React.FC<{
                 onClick={togglePlay}
                 className="text-white hover:bg-white/20"
               >
-                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                {isPlaying ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
               </Button>
-              
+
               <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
@@ -235,7 +239,11 @@ const OptimizedVideoPlayer: React.FC<{
                   onClick={toggleMute}
                   className="text-white hover:bg-white/20"
                 >
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
                 </Button>
                 <Slider
                   value={[isMuted ? 0 : volume * 100]}
@@ -268,8 +276,8 @@ const OptimizedVideoPlayer: React.FC<{
   );
 };
 
-const OptimizedPDFViewer: React.FC<{ 
-  src: string; 
+const OptimizedPDFViewer: React.FC<{
+  src: string;
   title: string;
   onComplete?: () => void;
 }> = ({ src, title, onComplete }) => {
@@ -284,7 +292,7 @@ const OptimizedPDFViewer: React.FC<{
 
   const handleError = () => {
     setLoading(false);
-    setError('Failed to load PDF. Please try again or download the file.');
+    setError("Failed to load PDF. Please try again or download the file.");
   };
 
   const markAsRead = () => {
@@ -302,7 +310,12 @@ const OptimizedPDFViewer: React.FC<{
             <h3 className="text-lg font-semibold mb-2">PDF Load Error</h3>
             <p className="text-muted-foreground mb-4">{error}</p>
             <Button asChild>
-              <a href={src} download={title} target="_blank" rel="noopener noreferrer">
+              <a
+                href={src}
+                download={title}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Download PDF
               </a>
@@ -331,7 +344,7 @@ const OptimizedPDFViewer: React.FC<{
           <span className="font-medium truncate">{title}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
+          <Button
             size="sm"
             onClick={markAsRead}
             className="bg-green-600 hover:bg-green-700"
@@ -340,7 +353,12 @@ const OptimizedPDFViewer: React.FC<{
             Mark as Read
           </Button>
           <Button variant="outline" size="sm" asChild>
-            <a href={src} download={title} target="_blank" rel="noopener noreferrer">
+            <a
+              href={src}
+              download={title}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Download className="h-4 w-4 mr-2" />
               Download
             </a>
@@ -362,24 +380,28 @@ const OptimizedPDFViewer: React.FC<{
   );
 };
 
-export default function ContentDisplay({ topic, onComplete, isCompleted }: ContentDisplayProps) {
+export default function ContentDisplay({
+  topic,
+  onComplete,
+  isCompleted,
+}: ContentDisplayProps) {
   const [hasContentError, setHasContentError] = useState(false);
 
   // For demo purposes, we'll create placeholder content URLs
   // In production, these would be actual S3 URLs or CDN URLs
-  const getContentUrl = (key?: string, type: 'video' | 'pdf' = 'video') => {
+  const getContentUrl = (key?: string, type: "video" | "pdf" = "video") => {
     if (!key) return null;
-    
+
     // Demo URLs - in production these would be actual S3/CDN URLs
-    if (type === 'video') {
-      return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+    if (type === "video") {
+      return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
     } else {
-      return 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+      return "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
     }
   };
 
-  const videoUrl = getContentUrl(topic.videoS3Key, 'video');
-  const pdfUrl = getContentUrl(topic.pdfS3Key, 'pdf');
+  const videoUrl = getContentUrl(topic.videoS3Key, "video");
+  const pdfUrl = getContentUrl(topic.pdfS3Key, "pdf");
 
   if (!videoUrl && !pdfUrl) {
     return (
@@ -390,9 +412,7 @@ export default function ContentDisplay({ topic, onComplete, isCompleted }: Conte
           <p className="text-muted-foreground mb-4">
             This topic doesn't have any content yet. Please check back later.
           </p>
-          <Badge variant="outline">
-            Content coming soon
-          </Badge>
+          <Badge variant="outline">Content coming soon</Badge>
         </div>
       </div>
     );
@@ -413,7 +433,7 @@ export default function ContentDisplay({ topic, onComplete, isCompleted }: Conte
           duration={topic.videoDuration}
         />
       )}
-      
+
       {!videoUrl && pdfUrl && (
         <OptimizedPDFViewer
           src={pdfUrl}

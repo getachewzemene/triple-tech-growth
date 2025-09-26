@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 // import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
+import { z } from "zod";
 
 // const prisma = new PrismaClient();
 
@@ -23,11 +23,11 @@ export async function POST(request: NextRequest) {
   try {
     // Check authentication - any authenticated user can submit proof
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user) {
       return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
+        { error: "Authentication required" },
+        { status: 401 },
       );
     }
 
@@ -37,11 +37,11 @@ export async function POST(request: NextRequest) {
     const validationResult = submitProofSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
-        { 
-          error: 'Invalid proof data',
-          details: validationResult.error.issues
+        {
+          error: "Invalid proof data",
+          details: validationResult.error.issues,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -52,8 +52,11 @@ export async function POST(request: NextRequest) {
     // In production, you would check the actual file metadata from S3
     if (!isValidProofFile(s3Key)) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only images (jpg, png, gif) and PDF files are allowed.' },
-        { status: 400 }
+        {
+          error:
+            "Invalid file type. Only images (jpg, png, gif) and PDF files are allowed.",
+        },
+        { status: 400 },
       );
     }
 
@@ -61,11 +64,11 @@ export async function POST(request: NextRequest) {
     // For demo purposes, create mock data
     // In production, check database for existing proofs
     const existingProof = null; // await prisma.paymentProof.findFirst({...})
-    
-    if (existingProof && existingProof.status !== 'rejected') {
+
+    if (existingProof && existingProof.status !== "rejected") {
       return NextResponse.json(
-        { error: 'You already have a payment proof submitted for this course' },
-        { status: 409 }
+        { error: "You already have a payment proof submitted for this course" },
+        { status: 409 },
       );
     }
 
@@ -77,7 +80,7 @@ export async function POST(request: NextRequest) {
       userId,
       courseId,
       s3Key,
-      status: 'pending',
+      status: "pending",
       comment: comment || null,
       uploadedAt: new Date().toISOString(),
       reviewedAt: null,
@@ -90,7 +93,7 @@ export async function POST(request: NextRequest) {
       id: `enrollment_${Date.now()}_${Math.random().toString(36).substring(7)}`,
       userId,
       courseId,
-      status: 'pending',
+      status: "pending",
       createdAt: new Date().toISOString(),
       approvedAt: null,
     };
@@ -100,7 +103,7 @@ export async function POST(request: NextRequest) {
     // In production, save to database and/or send email
     const adminNotification = {
       id: `notif_${Date.now()}_${Math.random().toString(36).substring(7)}`,
-      type: 'payment_proof_submitted',
+      type: "payment_proof_submitted",
       payload: JSON.stringify({
         userId,
         courseId,
@@ -114,28 +117,32 @@ export async function POST(request: NextRequest) {
 
     // Send email notification to admin (stub implementation)
     await sendAdminNotificationEmail({
-      type: 'payment_proof_submitted',
+      type: "payment_proof_submitted",
       userEmail: session.user.email!,
-      userName: session.user.name || 'Unknown User',
+      userName: session.user.name || "Unknown User",
       courseId,
       paymentProofId: paymentProof.id,
     });
 
-    console.log('Payment proof submitted:', { paymentProof, enrollment, adminNotification });
+    console.log("Payment proof submitted:", {
+      paymentProof,
+      enrollment,
+      adminNotification,
+    });
 
     return NextResponse.json({
       success: true,
-      message: 'Payment proof submitted successfully. Admin will verify within 24 hours.',
+      message:
+        "Payment proof submitted successfully. Admin will verify within 24 hours.",
       paymentProofId: paymentProof.id,
       enrollmentId: enrollment.id,
-      estimatedReviewTime: '24 hours',
+      estimatedReviewTime: "24 hours",
     });
-
   } catch (error) {
-    console.error('Error submitting payment proof:', error);
+    console.error("Error submitting payment proof:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
@@ -145,9 +152,9 @@ export async function POST(request: NextRequest) {
  * Security: Check file extension and MIME type validation
  */
 function isValidProofFile(s3Key: string): boolean {
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.pdf'];
-  const extension = s3Key.toLowerCase().substring(s3Key.lastIndexOf('.'));
-  
+  const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".pdf"];
+  const extension = s3Key.toLowerCase().substring(s3Key.lastIndexOf("."));
+
   return allowedExtensions.includes(extension);
 }
 
@@ -184,10 +191,10 @@ async function sendAdminNotificationEmail(data: {
     
     await sgMail.send(msg);
     */
-    
-    console.log('Admin email notification sent (stub):', data);
+
+    console.log("Admin email notification sent (stub):", data);
   } catch (error) {
-    console.error('Error sending admin notification email:', error);
+    console.error("Error sending admin notification email:", error);
     // Don't throw - email failure shouldn't fail the proof submission
   }
 }

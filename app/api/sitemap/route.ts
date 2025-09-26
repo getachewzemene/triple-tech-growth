@@ -1,12 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tripletechnologies.com';
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://tripletechnologies.com";
 
-const staticPages = [
-  '',
-  '/training',
-  '/profile',
-];
+const staticPages = ["", "/training", "/profile"];
 
 function generateSitemap() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -18,10 +15,10 @@ function generateSitemap() {
     <loc>${baseUrl}${page}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${page === '' ? '1.0' : '0.8'}</priority>
-  </url>`
+    <priority>${page === "" ? "1.0" : "0.8"}</priority>
+  </url>`,
     )
-    .join('')}
+    .join("")}
 </urlset>`;
 
   return sitemap;
@@ -29,12 +26,12 @@ function generateSitemap() {
 
 export async function GET() {
   const sitemap = generateSitemap();
-  
+
   return new NextResponse(sitemap, {
     status: 200,
     headers: {
-      'Content-Type': 'application/xml',
-      'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate',
+      "Content-Type": "application/xml",
+      "Cache-Control": "public, s-maxage=86400, stale-while-revalidate",
     },
   });
 }

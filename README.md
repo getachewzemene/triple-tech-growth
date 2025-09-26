@@ -1,4 +1,5 @@
 # Welcome to Triple Technologies
+
 ## Project info
 
 Triple Technologies is a one-stop tech solutions provider offering software development, IT training, digital marketing, maintenance, and networking services—driven by innovation, speed, and expert support.
@@ -8,11 +9,12 @@ Triple Technologies is a one-stop tech solutions provider offering software deve
 **No system can fully prevent determined screen recording attempts.** This platform implements defense-in-depth strategies to deter casual piracy and provide forensic evidence:
 
 - **Physical cameras** can always record screens
-- **OS-level screen recorders** may bypass browser protections  
+- **OS-level screen recorders** may bypass browser protections
 - **Hardware capture cards** can intercept video signals
 - **Rooted/jailbroken devices** may circumvent app-level protections
 
 This platform provides:
+
 - ✅ **Strong deterrence** against casual downloading/sharing
 - ✅ **Forensic watermarking** for leak tracing and legal enforcement
 - ✅ **Access control** and session management
@@ -22,6 +24,7 @@ This platform provides:
 ## 🚀 Features
 
 ### Core Security Features
+
 - **Short-lived playback tokens** (90 seconds) with JWT validation
 - **Dynamic visible watermarks** with TripleAcademy branding + user info
 - **Burned-in forensic watermarks** during video transcoding
@@ -32,6 +35,7 @@ This platform provides:
 - **Screen recording detection** (browser-level)
 
 ### Video Platform Features
+
 - **Admin course upload** with drag & drop, pause/resume
 - **Multi-format support** (MP4, WebM, MOV, AVI up to 1.5GB)
 - **Adaptive bitrate streaming** (HLS/DASH ready)
@@ -40,8 +44,9 @@ This platform provides:
 - **Multipart upload** for large files with resume capability
 
 ### Enterprise Features (Optional)
+
 - **Widevine/PlayReady/FairPlay DRM** integration
-- **Hardware-level video protection** 
+- **Hardware-level video protection**
 - **Advanced forensic watermarking**
 - **Professional transcoding pipelines**
 
@@ -77,10 +82,10 @@ npm run dev
 
 Visit `http://localhost:3000` to access the application.
 
-
 ## 🔒 Security Configuration
 
 See the complete README documentation in the docs folder for:
+
 - AWS S3 and CloudFront setup
 - Database configuration with Prisma
 - Environment variables configuration
@@ -110,6 +115,7 @@ npm run build
 ## 📞 Support
 
 For technical support or security questions:
+
 - Email: support@tripletechnologies.com
 - Security Issues: security@tripletechnologies.com
 
@@ -135,5 +141,3 @@ This project is built with:
 - **Radix UI** - Accessible component primitives
 - **Framer Motion** - Animation library
 - **React Query** - Data fetching and caching
-
-

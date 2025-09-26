@@ -1,8 +1,8 @@
-import { getServerSession } from 'next-auth';
-import { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import { getServerSession } from "next-auth";
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 // import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
 // const prisma = new PrismaClient();
 
@@ -13,10 +13,10 @@ import bcrypt from 'bcryptjs';
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: 'credentials',
+      name: "credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -26,25 +26,28 @@ export const authOptions: NextAuthOptions = {
         try {
           // For demo purposes, use hardcoded admin credentials
           // In production, check against database
-          if (credentials.email === 'admin' && credentials.password === 'triple123') {
+          if (
+            credentials.email === "admin" &&
+            credentials.password === "triple123"
+          ) {
             return {
-              id: 'admin_001',
-              email: 'admin@tripleacademy.com',
-              name: 'Admin User',
+              id: "admin_001",
+              email: "admin@tripleacademy.com",
+              name: "Admin User",
               isAdmin: true,
             };
           }
 
           return null;
         } catch (error) {
-          console.error('Auth error:', error);
+          console.error("Auth error:", error);
           return null;
         }
       },
     }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
@@ -65,7 +68,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/admin/login',
+    signIn: "/admin/login",
   },
 };
 
@@ -75,13 +78,13 @@ export const authOptions: NextAuthOptions = {
  */
 export async function requireAdmin() {
   const session = await getServerSession(authOptions);
-  
+
   if (!session?.user) {
-    throw new Error('Authentication required');
+    throw new Error("Authentication required");
   }
 
   if (!(session.user as any).isAdmin) {
-    throw new Error('Admin privileges required');
+    throw new Error("Admin privileges required");
   }
 
   return session.user;
@@ -93,9 +96,9 @@ export async function requireAdmin() {
  */
 export async function requireAuth() {
   const session = await getServerSession(authOptions);
-  
+
   if (!session?.user) {
-    throw new Error('Authentication required');
+    throw new Error("Authentication required");
   }
 
   return session.user;
@@ -105,13 +108,16 @@ export async function requireAuth() {
  * Check if user has access to a specific course
  * Admins have access to all courses, regular users need enrollment
  */
-export async function checkCourseAccess(userId: string, courseId: string): Promise<boolean> {
+export async function checkCourseAccess(
+  userId: string,
+  courseId: string,
+): Promise<boolean> {
   try {
     // For demo purposes, allow admin access to all courses
     // In production, check database for enrollment status
     return true;
   } catch (error) {
-    console.error('Error checking course access:', error);
+    console.error("Error checking course access:", error);
     return false;
   }
 }
@@ -119,13 +125,15 @@ export async function checkCourseAccess(userId: string, courseId: string): Promi
 /**
  * Get user's active playback sessions for concurrent stream limiting
  */
-export async function getActivePlaybackSessions(userId: string): Promise<number> {
+export async function getActivePlaybackSessions(
+  userId: string,
+): Promise<number> {
   try {
     // For demo purposes, return 0
     // In production, query database for active sessions
     return 0;
   } catch (error) {
-    console.error('Error getting active sessions:', error);
+    console.error("Error getting active sessions:", error);
     return 0;
   }
 }
@@ -149,23 +157,25 @@ export async function createPlaybackSession({
   try {
     // For demo purposes, just log the session creation
     // In production, save to database
-    console.log('Creating playback session:', { userId, courseId, sessionId });
+    console.log("Creating playback session:", { userId, courseId, sessionId });
   } catch (error) {
-    console.error('Error creating playback session:', error);
-    throw new Error('Failed to create playback session');
+    console.error("Error creating playback session:", error);
+    throw new Error("Failed to create playback session");
   }
 }
 
 /**
  * Deactivate a playback session
  */
-export async function deactivatePlaybackSession(sessionId: string): Promise<void> {
+export async function deactivatePlaybackSession(
+  sessionId: string,
+): Promise<void> {
   try {
     // For demo purposes, just log the deactivation
     // In production, update database
-    console.log('Deactivating playback session:', sessionId);
+    console.log("Deactivating playback session:", sessionId);
   } catch (error) {
-    console.error('Error deactivating session:', error);
+    console.error("Error deactivating session:", error);
     // Don't throw as this is cleanup
   }
 }
@@ -178,9 +188,9 @@ export async function cleanupOldSessions(): Promise<void> {
   try {
     // For demo purposes, just log the cleanup
     // In production, delete old sessions from database
-    console.log('Cleaning up old sessions');
+    console.log("Cleaning up old sessions");
   } catch (error) {
-    console.error('Error cleaning up sessions:', error);
+    console.error("Error cleaning up sessions:", error);
   }
 }
 
@@ -195,6 +205,9 @@ export async function hashPassword(password: string): Promise<string> {
 /**
  * Verify password against hash
  */
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+export async function verifyPassword(
+  password: string,
+  hash: string,
+): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }

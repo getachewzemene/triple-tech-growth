@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {
@@ -13,14 +13,14 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           // Use design tokens for focus rings and borders so all inputs are consistent
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring)/0.6)] focus-visible:border-[hsl(var(--ring))]",
           "[&:not(:placeholder-shown)]:border-[hsl(var(--ring))] [&:not(:placeholder-shown)]:bg-gradient-to-r [&:not(:placeholder-shown)]:from-[hsl(var(--ring)/0.06)] [&:not(:placeholder-shown)]:to-[hsl(var(--ring)/0.02)]",
-          className
+          className,
         )}
         ref={ref}
         {...props}
       />
-    )
-  }
-)
-Input.displayName = "Input"
+    );
+  },
+);
+Input.displayName = "Input";
 
-export { Input }
+export { Input };

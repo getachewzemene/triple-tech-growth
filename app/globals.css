@@ -18,35 +18,35 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
 
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 0 0% 0%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 0 0% 0%;
 
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 0 0% 0%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 0 0% 0%;
 
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 0 0% 0%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 0 0% 0%;
 
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 0 0% 0%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 0 0% 0%;
 
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 0%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 0%;
 
-  --border: 214.3 31.8% 91.4%;
-  /* Make inputs more visible by default (slightly darker than the very light background) */
-  --input: 214.3 31.8% 85%;
-  /* Focus / ring color: use the gold CTA color (#e2a70f) to match CTAs */
-  /* #e2a70f -> HSL ~ 43.3 87.5% 47.3% */
-  --ring: 43.3 87.5% 47.3%;
+    --border: 214.3 31.8% 91.4%;
+    /* Make inputs more visible by default (slightly darker than the very light background) */
+    --input: 214.3 31.8% 85%;
+    /* Focus / ring color: use the gold CTA color (#e2a70f) to match CTAs */
+    /* #e2a70f -> HSL ~ 43.3 87.5% 47.3% */
+    --ring: 43.3 87.5% 47.3%;
 
     /* Custom Triple Technologies Colors */
-  --light-blue: 210 100% 20%;
-  --light-blue-foreground: 0 0% 0%;
-  --yellow: 48 100% 50%; /* #ffd700 */
-  --yellow-foreground: 0 0% 0%;
-  --light-gray: 0 0% 96%;
-  --light-gray-foreground: 0 0% 0%;
+    --light-blue: 210 100% 20%;
+    --light-blue-foreground: 0 0% 0%;
+    --yellow: 48 100% 50%; /* #ffd700 */
+    --yellow-foreground: 0 0% 0%;
+    --light-gray: 0 0% 96%;
+    --light-gray-foreground: 0 0% 0%;
 
     --radius: 0.5rem;
 
@@ -99,8 +99,8 @@ All colors MUST be HSL.
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%; /* white for destructive text */
 
-  /* Make borders slightly brighter than the background so they show up in dark mode */
-  --border: 222.9 84% 12%; /* slightly brighter than bg (#020817) */
+    /* Make borders slightly brighter than the background so they show up in dark mode */
+    --border: 222.9 84% 12%; /* slightly brighter than bg (#020817) */
     /* Inputs should be slightly lighter than the background so borders are visible */
     --input: 222.9 84% 12%; /* slightly lighter than background for contrast */
     /* Use gold for focus rings in dark mode as well so focus matches CTAs */
@@ -113,14 +113,14 @@ All colors MUST be HSL.
     --yellow-foreground: 222.9 84% 4.9%; /* #020817 text on yellow */
     --light-gray: 222.9 84% 4.9%; /* #020817 for dark theme gray */
     --light-gray-foreground: 0 0% 100%; /* white text on gray */
-    
+
     /* Chart color variables for dark mode */
     --chart-1: 220 70% 60%;
     --chart-2: 160 60% 55%;
     --chart-3: 30 80% 65%;
     --chart-4: 280 65% 70%;
     --chart-5: 340 75% 65%;
-    
+
     --sidebar-background: 222.9 84% 4.9%; /* #020817 for sidebar */
     --sidebar-foreground: 0 0% 100%; /* white for sidebar text */
     --sidebar-primary: 224.3 76.3% 48%;
@@ -197,7 +197,7 @@ All colors MUST be HSL.
   }
 
   .section-title::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -8px;
     left: 50%;
@@ -210,7 +210,11 @@ All colors MUST be HSL.
 
   .service-card {
     @apply p-8 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-110;
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card-foreground)/0.02) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--card-foreground) / 0.02) 100%
+    );
     color: hsl(var(--card-foreground));
     border: 1px solid hsl(var(--border));
     text-align: center;
@@ -220,13 +224,18 @@ All colors MUST be HSL.
   }
 
   .service-card::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 120%;
-    background: linear-gradient(90deg, transparent, hsl(var(--primary)/0.1), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.1),
+      transparent
+    );
     transition: left 0.6s ease;
   }
 
@@ -235,10 +244,14 @@ All colors MUST be HSL.
   }
 
   .service-card:hover {
-    background: linear-gradient(135deg, hsl(var(--light-blue)) 0%, hsl(var(--light-blue)/0.9) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--light-blue)) 0%,
+      hsl(var(--light-blue) / 0.9) 100%
+    );
     color: #fff;
     @apply shadow-2xl;
-    border-color: hsl(var(--yellow)/0.3);
+    border-color: hsl(var(--yellow) / 0.3);
     transform: translateY(-8px) scale(1.05);
   }
 
@@ -250,7 +263,9 @@ All colors MUST be HSL.
   .card-description {
     color: #000;
     opacity: 0.7;
-    transition: color 0.3s ease, opacity 0.3s ease;
+    transition:
+      color 0.3s ease,
+      opacity 0.3s ease;
     text-align: justify;
     text-justify: inter-word;
     hyphens: auto;
@@ -277,9 +292,13 @@ All colors MUST be HSL.
   .dark .team-card:hover,
   .dark .card:hover {
     /* Keep the dark card background but make the foreground white for contrast */
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card)) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card)) 0%,
+      hsl(var(--card)) 100%
+    );
     color: #ffffff;
-    border-color: rgba(255,255,255,0.06);
+    border-color: rgba(255, 255, 255, 0.06);
   }
 
   .dark .service-card:hover .card-icon,
@@ -294,7 +313,7 @@ All colors MUST be HSL.
   .dark .project-card:hover .card-description,
   .dark .team-card:hover .card-description,
   .dark .card:hover .card-description {
-    color: rgba(255,255,255,0.85);
+    color: rgba(255, 255, 255, 0.85);
     opacity: 1;
   }
 
@@ -313,7 +332,11 @@ All colors MUST be HSL.
 
   /* Advanced gradient text */
   .gradient-text {
-    background: linear-gradient(135deg, hsl(var(--light-blue)), hsl(var(--yellow)));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--light-blue)),
+      hsl(var(--yellow))
+    );
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -327,7 +350,7 @@ All colors MUST be HSL.
 
   .particles::before,
   .particles::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 2px;
     height: 2px;
@@ -405,7 +428,8 @@ All colors MUST be HSL.
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -418,7 +442,9 @@ All colors MUST be HSL.
     box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
   }
   to {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
+    box-shadow:
+      0 0 20px rgba(255, 215, 0, 0.8),
+      0 0 30px rgba(255, 215, 0, 0.6);
   }
 }
 
@@ -432,7 +458,8 @@ All colors MUST be HSL.
 }
 
 @keyframes pulse-slow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
   }
   50% {
@@ -458,7 +485,9 @@ All colors MUST be HSL.
 }
 
 /* Modal/button styling in dark mode */
-.dark .dialog-content, .dark .modal, .dark [role="dialog"] {
+.dark .dialog-content,
+.dark .modal,
+.dark [role="dialog"] {
   background: hsl(var(--popover));
   color: hsl(var(--popover-foreground));
 }
@@ -502,16 +531,16 @@ All colors MUST be HSL.
 .dark .card,
 .dark .service-card,
 .dark .rounded-3xl {
-  border-color: rgba(255,255,255,0.06) !important;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .dark .bg-card:hover,
 .dark .card:hover,
 .dark .service-card:hover,
 .dark .rounded-3xl:hover {
-  border-color: rgba(255,255,255,0.10) !important;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
 }
 
 /* Override light-mode 'transparent gradient text' hover effects so text/icons stay readable */

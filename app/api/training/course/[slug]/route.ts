@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 // import { PrismaClient } from '@prisma/client';
 
 // const prisma = new PrismaClient();
@@ -10,7 +10,10 @@ import { authOptions } from '@/lib/auth';
  * Security: Public endpoint but only shows full content links if user has active enrollment
  * Returns course metadata, lessons list, and conditional access to content
  */
-export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { slug: string } },
+) {
   try {
     const slug = params.slug;
     const session = await getServerSession(authOptions);
@@ -20,30 +23,28 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
     // For demo purposes, create mock course data
     // In production, query database: await prisma.course.findUnique({ where: { slug } })
     const course = {
-      id: 'course_123',
+      id: "course_123",
       slug: slug,
-      title: 'Advanced Video Editing Masterclass',
-      description: 'Master professional video editing techniques with industry-standard tools and workflows.',
+      title: "Advanced Video Editing Masterclass",
+      description:
+        "Master professional video editing techniques with industry-standard tools and workflows.",
       priceCents: 29900, // $299.00
-      thumbnailKey: 'thumbnails/video-editing-course.jpg',
+      thumbnailKey: "thumbnails/video-editing-course.jpg",
       isPublished: true,
-      instructor: 'Sarah Johnson',
+      instructor: "Sarah Johnson",
       duration: 8 * 60 * 60, // 8 hours in seconds
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
     if (!course) {
-      return NextResponse.json(
-        { error: 'Course not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
     }
 
     if (!course.isPublished) {
       return NextResponse.json(
-        { error: 'Course not available' },
-        { status: 404 }
+        { error: "Course not available" },
+        { status: 404 },
       );
     }
 
@@ -52,23 +53,23 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
     // In production, query database: await prisma.lesson.findMany({ where: { courseId: course.id } })
     const lessons = [
       {
-        id: 'lesson_1',
-        title: 'Introduction to Video Editing',
-        contentType: 'VIDEO',
+        id: "lesson_1",
+        title: "Introduction to Video Editing",
+        contentType: "VIDEO",
         order: 1,
         duration: 1800, // 30 minutes
       },
       {
-        id: 'lesson_2',
-        title: 'Editing Software Overview',
-        contentType: 'VIDEO',
+        id: "lesson_2",
+        title: "Editing Software Overview",
+        contentType: "VIDEO",
         order: 2,
         duration: 2400, // 40 minutes
       },
       {
-        id: 'lesson_3',
-        title: 'Course Materials PDF',
-        contentType: 'PDF',
+        id: "lesson_3",
+        title: "Course Materials PDF",
+        contentType: "PDF",
         order: 3,
         duration: null,
       },
@@ -82,15 +83,15 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
       // For demo purposes, create mock enrollment check
       // In production, query database: await prisma.enrollment.findUnique({...})
       enrollment = {
-        id: 'enrollment_123',
+        id: "enrollment_123",
         userId: userId,
         courseId: course.id,
-        status: 'active', // This would come from database
+        status: "active", // This would come from database
         createdAt: new Date().toISOString(),
         approvedAt: new Date().toISOString(),
       };
 
-      hasActiveEnrollment = enrollment?.status === 'active';
+      hasActiveEnrollment = enrollment?.status === "active";
     }
 
     // Prepare response data based on enrollment status
@@ -102,14 +103,14 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
         description: course.description,
         price: formatPrice(course.priceCents),
         priceCents: course.priceCents,
-        thumbnailUrl: course.thumbnailKey 
+        thumbnailUrl: course.thumbnailKey
           ? `${process.env.NEXT_PUBLIC_CDN_BASE_URL}/${course.thumbnailKey}`
           : null,
         instructor: course.instructor,
         duration: formatDuration(course.duration),
         isPublished: course.isPublished,
       },
-      lessons: lessons.map(lesson => ({
+      lessons: lessons.map((lesson) => ({
         id: lesson.id,
         title: lesson.title,
         contentType: lesson.contentType,
@@ -122,11 +123,13 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
           contentUrl: generateContentUrl(lesson.id, course.id),
         }),
       })),
-      enrollment: enrollment ? {
-        status: enrollment.status,
-        enrolledAt: enrollment.createdAt,
-        approvedAt: enrollment.approvedAt,
-      } : null,
+      enrollment: enrollment
+        ? {
+            status: enrollment.status,
+            enrolledAt: enrollment.createdAt,
+            approvedAt: enrollment.approvedAt,
+          }
+        : null,
       userAccess: {
         isAuthenticated: !!userId,
         hasActiveEnrollment,
@@ -136,12 +139,11 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
     };
 
     return NextResponse.json(responseData);
-
   } catch (error) {
-    console.error('Error fetching course details:', error);
+    console.error("Error fetching course details:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
@@ -159,7 +161,7 @@ function formatPrice(priceCents: number): string {
 function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  
+
   if (hours > 0) {
     return `${hours}h ${minutes}m`;
   }

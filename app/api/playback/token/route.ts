@@ -1,7 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions, checkCourseAccess, getActivePlaybackSessions, createPlaybackSession } from '@/lib/auth';
-import { createPlaybackToken, generateSessionId, hashIpAddress, checkRateLimit } from '@/lib/playback';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import {
+  authOptions,
+  checkCourseAccess,
+  getActivePlaybackSessions,
+  createPlaybackSession,
+} from "@/lib/auth";
+import {
+  createPlaybackToken,
+  generateSessionId,
+  hashIpAddress,
+  checkRateLimit,
+} from "@/lib/playback";
 // import { PrismaClient } from '@prisma/client';
 
 // const prisma = new PrismaClient();
@@ -14,19 +24,20 @@ import { createPlaybackToken, generateSessionId, hashIpAddress, checkRateLimit }
 export async function POST(request: NextRequest) {
   try {
     // Get client IP for rate limiting and logging
-    const clientIP = request.headers.get('x-forwarded-for') || 
-                    request.headers.get('x-real-ip') || 
-                    'unknown';
-    
-    const userAgent = request.headers.get('user-agent') || '';
+    const clientIP =
+      request.headers.get("x-forwarded-for") ||
+      request.headers.get("x-real-ip") ||
+      "unknown";
+
+    const userAgent = request.headers.get("user-agent") || "";
 
     // Check authentication - any authenticated user can request tokens
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user) {
       return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
+        { error: "Authentication required" },
+        { status: 401 },
       );
     }
 
@@ -36,16 +47,19 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!courseId) {
       return NextResponse.json(
-        { error: 'Course ID is required' },
-        { status: 400 }
+        { error: "Course ID is required" },
+        { status: 400 },
       );
     }
 
     // Rate limiting: prevent token abuse (10 requests per minute per user)
     if (!checkRateLimit(session.user.id!, 10, 1)) {
       return NextResponse.json(
-        { error: 'Too many token requests. Please wait before requesting again.' },
-        { status: 429 }
+        {
+          error:
+            "Too many token requests. Please wait before requesting again.",
+        },
+        { status: 429 },
       );
     }
 
@@ -53,37 +67,35 @@ export async function POST(request: NextRequest) {
     // In production, verify course exists and user has access
     const course = {
       id: courseId,
-      title: 'Demo Course',
-      transcodeStatus: 'completed'
+      title: "Demo Course",
+      transcodeStatus: "completed",
     };
 
     if (!course) {
-      return NextResponse.json(
-        { error: 'Course not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
     }
 
     // Check if user has access to this course (enrollment or admin)
     const hasAccess = await checkCourseAccess(session.user.id!, courseId);
-    
+
     if (!hasAccess) {
       return NextResponse.json(
-        { error: 'Access denied. Please enroll in this course first.' },
-        { status: 403 }
+        { error: "Access denied. Please enroll in this course first." },
+        { status: 403 },
       );
     }
 
     // Check concurrent stream limit (max 2 active sessions per user)
     const activeSessions = await getActivePlaybackSessions(session.user.id!);
-    
+
     if (activeSessions >= 2) {
       return NextResponse.json(
-        { 
-          error: 'Maximum concurrent streams reached. Please close other video sessions.',
-          maxConcurrentStreams: 2
+        {
+          error:
+            "Maximum concurrent streams reached. Please close other video sessions.",
+          maxConcurrentStreams: 2,
         },
-        { status: 429 }
+        { status: 429 },
       );
     }
 
@@ -109,7 +121,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Log playback token generation for security monitoring
-    console.log(`Playback token generated for user ${session.user.id} course ${courseId} session ${sessionId}`);
+    console.log(
+      `Playback token generated for user ${session.user.id} course ${courseId} session ${sessionId}`,
+    );
 
     return NextResponse.json({
       playbackToken,
@@ -117,13 +131,12 @@ export async function POST(request: NextRequest) {
       expiresIn: 90,
       maxConcurrentStreams: 2,
     });
-
   } catch (error) {
-    console.error('Playback token generation error:', error);
-    
+    console.error("Playback token generation error:", error);
+
     return NextResponse.json(
-      { error: 'Failed to generate playback token' },
-      { status: 500 }
+      { error: "Failed to generate playback token" },
+      { status: 500 },
     );
   }
 }
@@ -134,37 +147,36 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user) {
       return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
+        { error: "Authentication required" },
+        { status: 401 },
       );
     }
 
     const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get('sessionId');
+    const sessionId = searchParams.get("sessionId");
 
     if (!sessionId) {
       return NextResponse.json(
-        { error: 'Session ID is required' },
-        { status: 400 }
+        { error: "Session ID is required" },
+        { status: 400 },
       );
     }
 
     // Deactivate the specific session
     // For demo purposes, just log the revocation
     // In production, update database
-    console.log('Revoking session:', sessionId);
+    console.log("Revoking session:", sessionId);
 
     return NextResponse.json({ success: true });
-
   } catch (error) {
-    console.error('Session revocation error:', error);
-    
+    console.error("Session revocation error:", error);
+
     return NextResponse.json(
-      { error: 'Failed to revoke session' },
-      { status: 500 }
+      { error: "Failed to revoke session" },
+      { status: 500 },
     );
   }
 }
@@ -175,11 +187,11 @@ export async function DELETE(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user) {
       return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
+        { error: "Authentication required" },
+        { status: 401 },
       );
     }
 
@@ -193,13 +205,12 @@ export async function GET(request: NextRequest) {
       maxConcurrentStreams: 2,
       sessions: activeSessions,
     });
-
   } catch (error) {
-    console.error('Failed to fetch active sessions:', error);
-    
+    console.error("Failed to fetch active sessions:", error);
+
     return NextResponse.json(
-      { error: 'Failed to fetch active sessions' },
-      { status: 500 }
+      { error: "Failed to fetch active sessions" },
+      { status: 500 },
     );
   }
 }

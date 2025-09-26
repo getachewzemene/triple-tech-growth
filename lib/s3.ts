@@ -1,5 +1,12 @@
-import { S3Client, PutObjectCommand, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand, AbortMultipartUploadCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import {
+  S3Client,
+  PutObjectCommand,
+  CreateMultipartUploadCommand,
+  UploadPartCommand,
+  CompleteMultipartUploadCommand,
+  AbortMultipartUploadCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 // Initialize S3 client with AWS SDK v3
 const s3Client = new S3Client({
@@ -20,29 +27,29 @@ export interface PresignedUrlParams {
  * Generate a presigned PUT URL for direct S3 upload
  * Used for single-file uploads up to 5GB
  */
-export async function getPresignedPutUrl({ 
-  key, 
-  contentType, 
-  expires = parseInt(process.env.PRESIGNED_URL_EXPIRY_SECONDS || '300') 
+export async function getPresignedPutUrl({
+  key,
+  contentType,
+  expires = parseInt(process.env.PRESIGNED_URL_EXPIRY_SECONDS || "300"),
 }: PresignedUrlParams): Promise<string> {
   const command = new PutObjectCommand({
     Bucket: process.env.S3_BUCKET_NAME!,
     Key: key,
     ContentType: contentType,
     // Add server-side encryption
-    ServerSideEncryption: 'AES256',
+    ServerSideEncryption: "AES256",
     // Prevent public access
-    ACL: 'private',
+    ACL: "private",
   });
 
   try {
-    const signedUrl = await getSignedUrl(s3Client, command, { 
-      expiresIn: expires 
+    const signedUrl = await getSignedUrl(s3Client, command, {
+      expiresIn: expires,
     });
     return signedUrl;
   } catch (error) {
-    console.error('Error generating presigned URL:', error);
-    throw new Error('Failed to generate upload URL');
+    console.error("Error generating presigned URL:", error);
+    throw new Error("Failed to generate upload URL");
   }
 }
 
@@ -55,27 +62,27 @@ export interface MultipartUploadParams {
  * Create a multipart upload for large files (>100MB recommended)
  * Returns uploadId for subsequent part uploads
  */
-export async function createMultipartUpload({ 
-  key, 
-  contentType 
+export async function createMultipartUpload({
+  key,
+  contentType,
 }: MultipartUploadParams): Promise<string> {
   const command = new CreateMultipartUploadCommand({
     Bucket: process.env.S3_BUCKET_NAME!,
     Key: key,
     ContentType: contentType,
-    ServerSideEncryption: 'AES256',
-    ACL: 'private',
+    ServerSideEncryption: "AES256",
+    ACL: "private",
   });
 
   try {
     const response = await s3Client.send(command);
     if (!response.UploadId) {
-      throw new Error('Failed to create multipart upload');
+      throw new Error("Failed to create multipart upload");
     }
     return response.UploadId;
   } catch (error) {
-    console.error('Error creating multipart upload:', error);
-    throw new Error('Failed to create multipart upload');
+    console.error("Error creating multipart upload:", error);
+    throw new Error("Failed to create multipart upload");
   }
 }
 
@@ -93,7 +100,7 @@ export async function getPresignedPartUrl({
   key,
   uploadId,
   partNumber,
-  expires = parseInt(process.env.PRESIGNED_URL_EXPIRY_SECONDS || '300')
+  expires = parseInt(process.env.PRESIGNED_URL_EXPIRY_SECONDS || "300"),
 }: PresignedPartUrlParams): Promise<string> {
   const command = new UploadPartCommand({
     Bucket: process.env.S3_BUCKET_NAME!,
@@ -103,13 +110,13 @@ export async function getPresignedPartUrl({
   });
 
   try {
-    const signedUrl = await getSignedUrl(s3Client, command, { 
-      expiresIn: expires 
+    const signedUrl = await getSignedUrl(s3Client, command, {
+      expiresIn: expires,
     });
     return signedUrl;
   } catch (error) {
-    console.error('Error generating presigned part URL:', error);
-    throw new Error('Failed to generate part upload URL');
+    console.error("Error generating presigned part URL:", error);
+    throw new Error("Failed to generate part upload URL");
   }
 }
 
@@ -130,7 +137,7 @@ export interface CompleteMultipartParams {
 export async function completeMultipartUpload({
   key,
   uploadId,
-  parts
+  parts,
 }: CompleteMultipartParams): Promise<void> {
   const command = new CompleteMultipartUploadCommand({
     Bucket: process.env.S3_BUCKET_NAME!,
@@ -144,15 +151,18 @@ export async function completeMultipartUpload({
   try {
     await s3Client.send(command);
   } catch (error) {
-    console.error('Error completing multipart upload:', error);
-    throw new Error('Failed to complete multipart upload');
+    console.error("Error completing multipart upload:", error);
+    throw new Error("Failed to complete multipart upload");
   }
 }
 
 /**
  * Abort multipart upload (cleanup on failure)
  */
-export async function abortMultipartUpload(key: string, uploadId: string): Promise<void> {
+export async function abortMultipartUpload(
+  key: string,
+  uploadId: string,
+): Promise<void> {
   const command = new AbortMultipartUploadCommand({
     Bucket: process.env.S3_BUCKET_NAME!,
     Key: key,
@@ -162,7 +172,7 @@ export async function abortMultipartUpload(key: string, uploadId: string): Promi
   try {
     await s3Client.send(command);
   } catch (error) {
-    console.error('Error aborting multipart upload:', error);
+    console.error("Error aborting multipart upload:", error);
     // Don't throw here as this is cleanup
   }
 }
@@ -173,8 +183,8 @@ export async function abortMultipartUpload(key: string, uploadId: string): Promi
 export function generateVideoS3Key(filename: string, userId: string): string {
   const timestamp = Date.now();
   const randomSuffix = Math.random().toString(36).substring(2, 15);
-  const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, '_');
-  
+  const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, "_");
+
   return `uploads/${userId}/${timestamp}_${randomSuffix}_${sanitizedFilename}`;
 }
 
@@ -183,12 +193,12 @@ export function generateVideoS3Key(filename: string, userId: string): string {
  */
 export function isValidVideoType(contentType: string): boolean {
   const allowedTypes = [
-    'video/mp4',
-    'video/webm',
-    'video/quicktime', // .mov files
-    'video/x-msvideo', // .avi files
+    "video/mp4",
+    "video/webm",
+    "video/quicktime", // .mov files
+    "video/x-msvideo", // .avi files
   ];
-  
+
   return allowedTypes.includes(contentType);
 }
 
@@ -196,6 +206,6 @@ export function isValidVideoType(contentType: string): boolean {
  * Validate file size against maximum allowed
  */
 export function isValidFileSize(size: number): boolean {
-  const maxSize = parseInt(process.env.MAX_VIDEO_UPLOAD_BYTES || '1610612736'); // 1.5GB default
+  const maxSize = parseInt(process.env.MAX_VIDEO_UPLOAD_BYTES || "1610612736"); // 1.5GB default
   return size <= maxSize;
 }

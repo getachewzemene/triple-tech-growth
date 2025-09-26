@@ -1,70 +1,114 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
-import { FolderPlus, Upload, X, AlertTriangle, CheckCircle2, Shield, DollarSign, User, FileText } from 'lucide-react';
-import { SecurityMetrics } from '@/components/ui/security-metrics';
-import { checkRateLimit, generateFormToken } from '@/lib/security';
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  FolderPlus,
+  Upload,
+  X,
+  AlertTriangle,
+  CheckCircle2,
+  Shield,
+  DollarSign,
+  User,
+  FileText,
+} from "lucide-react";
+import { SecurityMetrics } from "@/components/ui/security-metrics";
+import { checkRateLimit, generateFormToken } from "@/lib/security";
 
 // Enhanced validation schema with security checks
 const courseFolderSchema = z.object({
-  title: z.string()
-    .min(1, 'Course folder name is required')
-    .max(200, 'Name too long')
-    .regex(/^[a-zA-Z0-9\s&\-.,()]+$/, 'Name contains invalid characters'),
-  description: z.string()
-    .min(10, 'Description must be at least 10 characters')
-    .max(2000, 'Description too long'),
-  instructorName: z.string()
-    .min(1, 'Instructor full name is required')
-    .max(100, 'Instructor name too long')
-    .regex(/^[a-zA-Z\s.]+$/, 'Name can only contain letters, spaces, and periods'),
-  instructorProfession: z.string()
-    .min(1, 'Instructor profession is required')
-    .max(150, 'Profession too long'),
-  instructorExperience: z.string()
-    .min(20, 'Experience description must be at least 20 characters')
-    .max(1000, 'Experience too long'),
+  title: z
+    .string()
+    .min(1, "Course folder name is required")
+    .max(200, "Name too long")
+    .regex(/^[a-zA-Z0-9\s&\-.,()]+$/, "Name contains invalid characters"),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters")
+    .max(2000, "Description too long"),
+  instructorName: z
+    .string()
+    .min(1, "Instructor full name is required")
+    .max(100, "Instructor name too long")
+    .regex(
+      /^[a-zA-Z\s.]+$/,
+      "Name can only contain letters, spaces, and periods",
+    ),
+  instructorProfession: z
+    .string()
+    .min(1, "Instructor profession is required")
+    .max(150, "Profession too long"),
+  instructorExperience: z
+    .string()
+    .min(20, "Experience description must be at least 20 characters")
+    .max(1000, "Experience too long"),
   instructorProfileImage: z.string().optional(),
-  priceCents: z.number()
-    .min(0, 'Price must be positive')
-    .max(100000, 'Price cannot exceed $1,000'),
+  priceCents: z
+    .number()
+    .min(0, "Price must be positive")
+    .max(100000, "Price cannot exceed $1,000"),
 });
 
 type CourseFolderFormData = z.infer<typeof courseFolderSchema>;
 
 // Security validation utilities
-const validateTitle = (title: string): { isValid: boolean; message: string } => {
-  if (!title) return { isValid: false, message: 'Course name is required' };
-  if (title.length < 1) return { isValid: false, message: 'Course name is too short' };
-  if (title.length > 200) return { isValid: false, message: 'Course name is too long' };
+const validateTitle = (
+  title: string,
+): { isValid: boolean; message: string } => {
+  if (!title) return { isValid: false, message: "Course name is required" };
+  if (title.length < 1)
+    return { isValid: false, message: "Course name is too short" };
+  if (title.length > 200)
+    return { isValid: false, message: "Course name is too long" };
   if (!/^[a-zA-Z0-9\s&\-.,()]+$/.test(title)) {
-    return { isValid: false, message: 'Course name contains invalid characters' };
+    return {
+      isValid: false,
+      message: "Course name contains invalid characters",
+    };
   }
-  return { isValid: true, message: 'Valid course name' };
+  return { isValid: true, message: "Valid course name" };
 };
 
-const validatePrice = (price: number): { isValid: boolean; message: string } => {
-  if (price < 0) return { isValid: false, message: 'Price cannot be negative' };
-  if (price > 100000) return { isValid: false, message: 'Price cannot exceed $1,000' };
-  if (price % 1 !== 0) return { isValid: false, message: 'Price must be a whole number' };
-  return { isValid: true, message: 'Valid price' };
+const validatePrice = (
+  price: number,
+): { isValid: boolean; message: string } => {
+  if (price < 0) return { isValid: false, message: "Price cannot be negative" };
+  if (price > 100000)
+    return { isValid: false, message: "Price cannot exceed $1,000" };
+  if (price % 1 !== 0)
+    return { isValid: false, message: "Price must be a whole number" };
+  return { isValid: true, message: "Valid price" };
 };
 
 // Security indicator component for form validation
-const SecurityIndicator = ({ isValid, message }: { isValid: boolean; message: string }) => {
+const SecurityIndicator = ({
+  isValid,
+  message,
+}: {
+  isValid: boolean;
+  message: string;
+}) => {
   if (!message) return null;
-  
+
   return (
-    <div className={`flex items-center gap-1 mt-1 text-xs ${isValid ? 'text-green-600' : 'text-red-500'}`}>
+    <div
+      className={`flex items-center gap-1 mt-1 text-xs ${isValid ? "text-green-600" : "text-red-500"}`}
+    >
       {isValid ? (
         <CheckCircle2 className="h-3 w-3" />
       ) : (
@@ -85,7 +129,7 @@ interface CourseFolder {
   instructorExperience: string;
   instructorProfileImage?: string;
   priceCents: number;
-  type: 'folder';
+  type: "folder";
   topicsCount: number;
   createdAt: string;
 }
@@ -96,16 +140,22 @@ interface AddCourseFolderModalProps {
   onCourseFolderSaved: (courseFolder: CourseFolder) => void;
 }
 
-export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSaved }: AddCourseFolderModalProps) {
+export default function AddCourseFolderModal({
+  isOpen,
+  onClose,
+  onCourseFolderSaved,
+}: AddCourseFolderModalProps) {
   const { toast } = useToast();
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
-  const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
+  const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
+    null,
+  );
   const [fieldValidations, setFieldValidations] = useState({
-    title: { isValid: true, message: '' },
-    price: { isValid: true, message: '' }
+    title: { isValid: true, message: "" },
+    price: { isValid: true, message: "" },
   });
   const [formToken] = useState(() => generateFormToken());
-  
+
   const {
     register,
     handleSubmit,
@@ -113,7 +163,7 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
     reset,
     watch,
     setValue,
-    trigger
+    trigger,
   } = useForm<CourseFolderFormData>({
     resolver: zodResolver(courseFolderSchema),
     defaultValues: {
@@ -121,16 +171,16 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
     },
   });
 
-  const watchedTitle = watch('title');
-  const watchedPrice = watch('priceCents');
+  const watchedTitle = watch("title");
+  const watchedPrice = watch("priceCents");
 
   // Real-time validation for title
   React.useEffect(() => {
     if (watchedTitle !== undefined) {
       const validation = validateTitle(watchedTitle);
-      setFieldValidations(prev => ({
+      setFieldValidations((prev) => ({
         ...prev,
-        title: validation
+        title: validation,
       }));
     }
   }, [watchedTitle]);
@@ -139,9 +189,9 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
   React.useEffect(() => {
     if (watchedPrice !== undefined) {
       const validation = validatePrice(watchedPrice);
-      setFieldValidations(prev => ({
+      setFieldValidations((prev) => ({
         ...prev,
-        price: validation
+        price: validation,
       }));
     }
   }, [watchedPrice]);
@@ -149,45 +199,47 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
   // Calculate security metrics
   const getValidationCount = () => {
     let passed = 0;
-    const title = watchedTitle || '';
+    const title = watchedTitle || "";
     const price = watchedPrice || 0;
-    
+
     if (title && fieldValidations.title.isValid && !errors.title) passed++;
     if (price && fieldValidations.price.isValid && !errors.priceCents) passed++;
-    if (watch('description') && !errors.description) passed++;
-    if (watch('instructorName') && !errors.instructorName) passed++;
-    if (watch('instructorProfession') && !errors.instructorProfession) passed++;
-    if (watch('instructorExperience') && !errors.instructorExperience) passed++;
-    
+    if (watch("description") && !errors.description) passed++;
+    if (watch("instructorName") && !errors.instructorName) passed++;
+    if (watch("instructorProfession") && !errors.instructorProfession) passed++;
+    if (watch("instructorExperience") && !errors.instructorExperience) passed++;
+
     return { passed, total: 6 };
   };
 
   // Handle profile image file selection
-  const handleProfileImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageSelect = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       // Validate file type
-      if (!file.type.startsWith('image/')) {
+      if (!file.type.startsWith("image/")) {
         toast({
-          title: 'Invalid file type',
-          description: 'Please select an image file (PNG, JPG, etc.)',
-          variant: 'destructive',
+          title: "Invalid file type",
+          description: "Please select an image file (PNG, JPG, etc.)",
+          variant: "destructive",
         });
         return;
       }
-      
+
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast({
-          title: 'File too large',
-          description: 'Profile image must be smaller than 5MB',
-          variant: 'destructive',
+          title: "File too large",
+          description: "Profile image must be smaller than 5MB",
+          variant: "destructive",
         });
         return;
       }
 
       setProfileImageFile(file);
-      
+
       // Create preview URL
       const previewUrl = URL.createObjectURL(file);
       setProfileImagePreview(previewUrl);
@@ -216,7 +268,7 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
         instructorExperience: data.instructorExperience,
         instructorProfileImage: data.instructorProfileImage,
         priceCents: data.priceCents,
-        type: 'folder',
+        type: "folder",
         topicsCount: 0,
         createdAt: new Date().toISOString(),
       };
@@ -225,7 +277,7 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
       onCourseFolderSaved(courseFolder);
 
       toast({
-        title: 'Course folder created',
+        title: "Course folder created",
         description: `${data.title} course folder has been created successfully. You can now add topics to it.`,
       });
 
@@ -234,11 +286,12 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
       removeProfileImage();
       onClose();
     } catch (error: any) {
-      console.error('Error creating course folder:', error);
+      console.error("Error creating course folder:", error);
       toast({
-        title: 'Error',
-        description: error.message || 'Failed to create course folder. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description:
+          error.message || "Failed to create course folder. Please try again.",
+        variant: "destructive",
       });
     }
   };
@@ -262,7 +315,8 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
             <span>Create Course Folder</span>
           </DialogTitle>
           <DialogDescription>
-            Create a main course folder that will contain multiple topics. Each topic can have video content, PDF content, or both.
+            Create a main course folder that will contain multiple topics. Each
+            topic can have video content, PDF content, or both.
           </DialogDescription>
         </DialogHeader>
 
@@ -278,9 +332,14 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
                 <Input
                   id="title"
                   placeholder="e.g., Digital Marketing, Web Development, AI & Machine Learning"
-                  {...register('title')}
-                  className={`${errors.title ? 'border-red-500 focus:border-red-500' : 
-                    fieldValidations.title.isValid && watchedTitle ? 'border-green-500 focus:border-green-500' : ''}`}
+                  {...register("title")}
+                  className={`${
+                    errors.title
+                      ? "border-red-500 focus:border-red-500"
+                      : fieldValidations.title.isValid && watchedTitle
+                        ? "border-green-500 focus:border-green-500"
+                        : ""
+                  }`}
                 />
               </div>
               {errors.title && (
@@ -290,9 +349,9 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
                 </p>
               )}
               {watchedTitle && !errors.title && (
-                <SecurityIndicator 
-                  isValid={fieldValidations.title.isValid} 
-                  message={fieldValidations.title.message} 
+                <SecurityIndicator
+                  isValid={fieldValidations.title.isValid}
+                  message={fieldValidations.title.message}
                 />
               )}
             </div>
@@ -303,11 +362,13 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
                 id="description"
                 placeholder="Provide a comprehensive description of what this course covers, target audience, and learning outcomes..."
                 rows={4}
-                {...register('description')}
-                className={errors.description ? 'border-red-500' : ''}
+                {...register("description")}
+                className={errors.description ? "border-red-500" : ""}
               />
               {errors.description && (
-                <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description.message}
+                </p>
               )}
             </div>
 
@@ -318,17 +379,24 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
                 Instructor Information
                 <Shield className="h-4 w-4 text-green-600 ml-auto" />
               </h3>
-              
+
               <div>
-                <Label htmlFor="instructorName" className="flex items-center gap-2">
+                <Label
+                  htmlFor="instructorName"
+                  className="flex items-center gap-2"
+                >
                   <User className="h-4 w-4" />
                   Instructor Full Name *
                 </Label>
                 <Input
                   id="instructorName"
                   placeholder="e.g., Dr. Sarah Johnson, Alex Thompson"
-                  {...register('instructorName')}
-                  className={errors.instructorName ? 'border-red-500 focus:border-red-500' : 'focus:border-blue-500'}
+                  {...register("instructorName")}
+                  className={
+                    errors.instructorName
+                      ? "border-red-500 focus:border-red-500"
+                      : "focus:border-blue-500"
+                  }
                 />
                 {errors.instructorName && (
                   <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
@@ -343,25 +411,35 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
                 <Input
                   id="instructorProfession"
                   placeholder="e.g., Senior Full-Stack Developer, Digital Marketing Expert, AI Research Scientist"
-                  {...register('instructorProfession')}
-                  className={errors.instructorProfession ? 'border-red-500' : ''}
+                  {...register("instructorProfession")}
+                  className={
+                    errors.instructorProfession ? "border-red-500" : ""
+                  }
                 />
                 {errors.instructorProfession && (
-                  <p className="text-red-500 text-sm mt-1">{errors.instructorProfession.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.instructorProfession.message}
+                  </p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="instructorExperience">Experience & Background *</Label>
+                <Label htmlFor="instructorExperience">
+                  Experience & Background *
+                </Label>
                 <Textarea
                   id="instructorExperience"
                   placeholder="Describe the instructor's experience, qualifications, achievements, and relevant background..."
                   rows={3}
-                  {...register('instructorExperience')}
-                  className={errors.instructorExperience ? 'border-red-500' : ''}
+                  {...register("instructorExperience")}
+                  className={
+                    errors.instructorExperience ? "border-red-500" : ""
+                  }
                 />
                 {errors.instructorExperience && (
-                  <p className="text-red-500 text-sm mt-1">{errors.instructorExperience.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.instructorExperience.message}
+                  </p>
                 )}
               </div>
 
@@ -396,7 +474,8 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
                           {profileImageFile?.name}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {profileImageFile && `${(profileImageFile.size / 1024 / 1024).toFixed(2)} MB`}
+                          {profileImageFile &&
+                            `${(profileImageFile.size / 1024 / 1024).toFixed(2)} MB`}
                         </p>
                       </div>
                       <Button
@@ -428,12 +507,17 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
                   max="1000"
                   step="0.01"
                   placeholder="99.00"
-                  {...register('priceCents', { 
+                  {...register("priceCents", {
                     valueAsNumber: true,
-                    setValueAs: (value) => Math.round(value * 100) // Convert to cents
+                    setValueAs: (value) => Math.round(value * 100), // Convert to cents
                   })}
-                  className={`${errors.priceCents ? 'border-red-500 focus:border-red-500' : 
-                    fieldValidations.price.isValid && watchedPrice ? 'border-green-500 focus:border-green-500' : ''}`}
+                  className={`${
+                    errors.priceCents
+                      ? "border-red-500 focus:border-red-500"
+                      : fieldValidations.price.isValid && watchedPrice
+                        ? "border-green-500 focus:border-green-500"
+                        : ""
+                  }`}
                 />
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600 font-medium">
@@ -451,17 +535,17 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
                 </p>
               )}
               {watchedPrice !== undefined && !errors.priceCents && (
-                <SecurityIndicator 
-                  isValid={fieldValidations.price.isValid} 
-                  message={fieldValidations.price.message} 
+                <SecurityIndicator
+                  isValid={fieldValidations.price.isValid}
+                  message={fieldValidations.price.message}
                 />
               )}
             </div>
           </div>
 
           {/* Security Metrics */}
-          <SecurityMetrics 
-            formType="course-creation" 
+          <SecurityMetrics
+            formType="course-creation"
             validationsPassed={getValidationCount().passed}
             totalValidations={getValidationCount().total}
             showDetails={true}
@@ -469,11 +553,16 @@ export default function AddCourseFolderModal({ isOpen, onClose, onCourseFolderSa
 
           {/* Submit Button */}
           <div className="flex justify-end space-x-3 pt-6 border-t">
-            <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="gold" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Course Folder'}
+              {isSubmitting ? "Creating..." : "Create Course Folder"}
             </Button>
           </div>
         </form>

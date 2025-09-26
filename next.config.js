@@ -3,10 +3,10 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  
+
   images: {
-    domains: ['localhost'],
-    formats: ['image/webp', 'image/avif'],
+    domains: ["localhost"],
+    formats: ["image/webp", "image/avif"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
@@ -15,23 +15,23 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'DENY',
+            key: "X-Frame-Options",
+            value: "DENY",
           },
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
           {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
           },
           {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
           },
         ],
       },
@@ -42,18 +42,18 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/sitemap.xml',
-        destination: '/api/sitemap',
+        source: "/sitemap.xml",
+        destination: "/api/sitemap",
       },
     ];
   },
-  
+
   eslint: {
     // Only run ESLint on these files during build
-    dirs: ['app', 'components', 'lib'],
+    dirs: ["app", "components", "lib"],
     ignoreDuringBuilds: true,
   },
-  
+
   typescript: {
     // Temporarily disable type checking during build for demo purposes
     ignoreBuildErrors: true,
@@ -61,8 +61,8 @@ const nextConfig = {
 
   // Experimental features for better performance
   experimental: {
-    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+    optimizePackageImports: ["@radix-ui/react-icons", "lucide-react"],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
