@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile-First CSS System Example</title>
+  <link rel="stylesheet" href="/mobile-first.css">
+  <style>
+    /* Demo-specific styles */
+    .demo-nav { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      background: #2563eb; 
+      color: white; 
+      padding: 1rem; 
+      z-index: 100; 
+    }
+    .demo-content { 
+      padding-top: 80px; 
+    }
+    .demo-highlight {
+      background: linear-gradient(135deg, #f59e0b20, #ef444420);
+      padding: 2rem;
+      border-left: 4px solid #f59e0b;
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed Demo Navigation -->
+  <div class="demo-nav">
+    <div class="fluid-container">
+      <h1 style="margin: 0; font-size: 1.5rem;">Mobile-First CSS Demo</h1>
+      <p style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.9rem;">
+        Resize browser to see responsive behavior
+      </p>
+    </div>
+  </div>
+
+  <div class="demo-content">
+    <!-- Hero Section -->
+    <section style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 4rem 0;">
+      <div class="fluid-container text-center-mobile">
+        <h1 style="color: white;">Mobile-First Responsive Design</h1>
+        <p class="text-mobile" style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 2rem;">
+          This example demonstrates a complete mobile-first CSS system with progressive enhancement.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+          <button class="mobile-button mobile-button--primary" style="background: #f59e0b; color: #000;">
+            Primary Action
+          </button>
+          <button class="mobile-button mobile-button--secondary" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+            Secondary Action
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid Demo -->
+    <section style="padding: 4rem 0; background: #f8fafc;">
+      <div class="fluid-container">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Responsive Grid System</h2>
+        <p class="text-mobile" style="text-align: center; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+          This grid automatically adapts from 1 column on mobile to 4 columns on large screens.
+        </p>
+        
+        <div class="mobile-grid">
+          <div class="mobile-card" style="text-align: center;">
+            <div style="width: 4rem; height: 4rem; margin: 0 auto 1rem; background: #3b82f620; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 1.5rem; font-weight: bold; color: #3b82f6;">1</span>
+            </div>
+            <h3>Mobile First</h3>
+            <p class="text-mobile">Designed for mobile devices from the ground up with progressive enhancement.</p>
+            <button class="mobile-button mobile-button--primary">Learn More</button>
+          </div>
+          
+          <div class="mobile-card" style="text-align: center;">
+            <div style="width: 4rem; height: 4rem; margin: 0 auto 1rem; background: #10b98120; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 1.5rem; font-weight: bold; color: #10b981;">2</span>
+            </div>
+            <h3>Touch Friendly</h3>
+            <p class="text-mobile">All interactive elements meet the 44px minimum touch target size for accessibility.</p>
+            <button class="mobile-button mobile-button--primary">Learn More</button>
+          </div>
+          
+          <div class="mobile-card" style="text-align: center;">
+            <div style="width: 4rem; height: 4rem; margin: 0 auto 1rem; background: #f59e0b20; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;">3</span>
+            </div>
+            <h3>Responsive</h3>
+            <p class="text-mobile">Automatically adapts to any screen size using modern CSS techniques and media queries.</p>
+            <button class="mobile-button mobile-button--primary">Learn More</button>
+          </div>
+          
+          <div class="mobile-card" style="text-align: center;">
+            <div style="width: 4rem; height: 4rem; margin: 0 auto 1rem; background: #ef444420; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 1.5rem; font-weight: bold; color: #ef4444;">4</span>
+            </div>
+            <h3>Accessible</h3>
+            <p class="text-mobile">Built with accessibility in mind, including proper focus states and keyboard navigation.</p>
+            <button class="mobile-button mobile-button--primary">Learn More</button>
+          </div>
+          
+          <div class="mobile-card" style="text-align: center;">
+            <div style="width: 4rem; height: 4rem; margin: 0 auto 1rem; background: #8b5cf620; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 1.5rem; font-weight: bold; color: #8b5cf6;">5</span>
+            </div>
+            <h3>Performance</h3>
+            <p class="text-mobile">Optimized for fast loading and smooth interactions across all devices and connections.</p>
+            <button class="mobile-button mobile-button--primary">Learn More</button>
+          </div>
+          
+          <div class="mobile-card" style="text-align: center;">
+            <div style="width: 4rem; height: 4rem; margin: 0 auto 1rem; background: #06b6d420; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 1.5rem; font-weight: bold; color: #06b6d4;">6</span>
+            </div>
+            <h3>Modern</h3>
+            <p class="text-mobile">Uses the latest CSS features and follows current best practices for web development.</p>
+            <button class="mobile-button mobile-button--primary">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form Demo -->
+    <section style="padding: 4rem 0;">
+      <div class="fluid-container" style="max-width: 800px;">
+        <div class="mobile-card">
+          <h2 style="text-align: center; margin-bottom: 2rem;">Mobile-Optimized Contact Form</h2>
+          <p class="text-mobile" style="text-align: center; margin-bottom: 2rem;">
+            All form elements are touch-friendly with proper sizing and spacing.
+          </p>
+          
+          <form>
+            <div class="mb-mobile">
+              <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">
+                Full Name *
+              </label>
+              <input 
+                type="text" 
+                id="name" 
+                class="mobile-input" 
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+            
+            <div class="mb-mobile">
+              <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">
+                Email Address *
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                class="mobile-input" 
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            
+            <div class="mb-mobile">
+              <label for="subject" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">
+                Subject
+              </label>
+              <select id="subject" class="mobile-input">
+                <option value="">Select a subject</option>
+                <option value="general">General Inquiry</option>
+                <option value="support">Support Request</option>
+                <option value="sales">Sales Question</option>
+                <option value="feedback">Feedback</option>
+              </select>
+            </div>
+            
+            <div class="mb-mobile">
+              <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">
+                Message *
+              </label>
+              <textarea 
+                id="message" 
+                rows="5"
+                class="mobile-input" 
+                style="resize: vertical;"
+                placeholder="Tell us about your project or question..."
+                required
+              ></textarea>
+            </div>
+            
+            <div class="mb-mobile">
+              <label style="display: flex; align-items: center; gap: 0.75rem;">
+                <input 
+                  type="checkbox" 
+                  style="min-width: 1.25rem; min-height: 1.25rem;"
+                  required
+                />
+                <span style="font-size: 0.9rem;">
+                  I agree to the terms and conditions and privacy policy. *
+                </span>
+              </label>
+            </div>
+            
+            <button 
+              type="submit" 
+              class="mobile-button mobile-button--primary" 
+              style="width: 100%;"
+            >
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image & Media Demo -->
+    <section style="padding: 4rem 0; background: #f1f5f9;">
+      <div class="fluid-container">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Responsive Media Examples</h2>
+        
+        <div class="mobile-grid">
+          <div class="mobile-card">
+            <h3 style="margin-bottom: 1rem;">Square Aspect Ratio</h3>
+            <div class="aspect-square" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+              <span style="color: white; font-weight: bold; font-size: 1.2rem;">1:1</span>
+            </div>
+            <p class="text-mobile">Perfect for profile pictures, logos, and Instagram-style posts.</p>
+          </div>
+          
+          <div class="mobile-card">
+            <h3 style="margin-bottom: 1rem;">Video Aspect Ratio</h3>
+            <div class="aspect-video" style="background: linear-gradient(135deg, #10b981, #059669); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+              <span style="color: white; font-weight: bold; font-size: 1.2rem;">16:9</span>
+            </div>
+            <p class="text-mobile">Standard video format, perfect for YouTube embeds and video content.</p>
+          </div>
+          
+          <div class="mobile-card">
+            <h3 style="margin-bottom: 1rem;">Portrait Aspect Ratio</h3>
+            <div class="aspect-portrait" style="background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+              <span style="color: white; font-weight: bold; font-size: 1.2rem;">3:4</span>
+            </div>
+            <p class="text-mobile">Great for mobile photography and portrait-oriented content.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Breakpoint Demo -->
+    <section style="padding: 4rem 0;">
+      <div class="fluid-container">
+        <div class="mobile-card">
+          <h2 style="text-align: center; margin-bottom: 2rem;">Responsive Behavior Demo</h2>
+          
+          <div class="demo-highlight">
+            <h3>Current Breakpoint</h3>
+            <p id="breakpoint-indicator" style="font-size: 1.2rem; font-weight: bold; color: #2563eb;">
+              Loading...
+            </p>
+            <p style="margin-top: 1rem;">
+              Resize your browser window to see how the layout adapts at different breakpoints.
+            </p>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <h4>Breakpoint Information:</h4>
+            <ul style="margin-top: 1rem; line-height: 1.8;">
+              <li><strong>Mobile:</strong> 320px - 767px (1 column layout)</li>
+              <li><strong>Tablet:</strong> 768px - 1023px (2 column layout)</li>
+              <li><strong>Desktop:</strong> 1024px - 1439px (3 column layout)</li>
+              <li><strong>Large Desktop:</strong> 1440px+ (4 column layout)</li>
+            </ul>
+          </div>
+
+          <!-- Visibility Demo -->
+          <div style="margin-top: 2rem;">
+            <h4>Responsive Visibility:</h4>
+            <div style="margin-top: 1rem;">
+              <div class="hide-mobile" style="padding: 1rem; background: #10b98120; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                <strong>Tablet+ Only:</strong> This content is hidden on mobile devices
+              </div>
+              <div class="show-tablet hide-desktop" style="padding: 1rem; background: #f59e0b20; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                <strong>Tablet Only:</strong> This content only shows on tablet screens
+              </div>
+              <div class="show-desktop" style="padding: 1rem; background: #8b5cf620; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                <strong>Desktop+ Only:</strong> This content only shows on desktop screens
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: #1e293b; color: white; padding: 3rem 0;">
+      <div class="fluid-container text-center-mobile">
+        <h3 style="color: white; margin-bottom: 1rem;">Mobile-First CSS System</h3>
+        <p style="opacity: 0.8; margin-bottom: 2rem;">
+          A comprehensive responsive design system built with progressive enhancement principles.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-bottom: 2rem;">
+          <div>
+            <strong>✓ Mobile-First</strong><br>
+            <small style="opacity: 0.7;">Optimized for mobile devices</small>
+          </div>
+          <div>
+            <strong>✓ Progressive Enhancement</strong><br>
+            <small style="opacity: 0.7;">Enhanced for larger screens</small>
+          </div>
+          <div>
+            <strong>✓ Touch-Friendly</strong><br>
+            <small style="opacity: 0.7;">44px minimum touch targets</small>
+          </div>
+          <div>
+            <strong>✓ Accessible</strong><br>
+            <small style="opacity: 0.7;">WCAG compliant design</small>
+          </div>
+        </div>
+        <p style="opacity: 0.6; font-size: 0.9rem;">
+          © 2025 Triple Technologies - Mobile-First CSS Demo
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Breakpoint indicator script
+    function updateBreakpointIndicator() {
+      const width = window.innerWidth;
+      const indicator = document.getElementById('breakpoint-indicator');
+      
+      if (width < 768) {
+        indicator.textContent = `Mobile (${width}px) - Single Column`;
+        indicator.style.color = '#ef4444';
+      } else if (width < 1024) {
+        indicator.textContent = `Tablet (${width}px) - Two Columns`;
+        indicator.style.color = '#f59e0b';
+      } else if (width < 1440) {
+        indicator.textContent = `Desktop (${width}px) - Three Columns`;  
+        indicator.style.color = '#10b981';
+      } else {
+        indicator.textContent = `Large Desktop (${width}px) - Four Columns`;
+        indicator.style.color = '#8b5cf6';
+      }
+    }
+
+    // Update on load and resize
+    updateBreakpointIndicator();
+    window.addEventListener('resize', updateBreakpointIndicator);
+  </script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+/**
+ * Tailwind CSS Mobile-First Enhancement
+ * Triple Technologies - Extended Tailwind Configuration
+ * 
+ * This file provides additional mobile-first utilities that extend
+ * Tailwind CSS for better responsive design patterns.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   ENHANCED MOBILE-FIRST COMPONENTS
+   ============================================================================= */
+
+@layer components {
+  /* Mobile-first container system */
+  .container-mobile {
+    @apply w-full px-4 mx-auto;
+  }
+  
+  .container-fluid {
+    @apply w-full px-4 mx-auto max-w-none;
+    
+    @screen sm {
+      @apply px-6;
+    }
+    
+    @screen md {
+      @apply px-8 max-w-3xl;
+    }
+    
+    @screen lg {
+      @apply px-12 max-w-4xl;
+    }
+    
+    @screen xl {
+      @apply px-16 max-w-6xl;
+    }
+    
+    @screen 2xl {
+      @apply max-w-7xl;
+    }
+  }
+
+  /* Touch-friendly interactive elements */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] inline-flex items-center justify-center;
+  }
+  
+  .btn-mobile {
+    @apply touch-target px-6 py-3 rounded-lg font-medium transition-all duration-200 ease-in-out;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply active:scale-95 hover:scale-105;
+    
+    @screen md {
+      @apply px-8 py-4;
+    }
+  }
+  
+  .btn-primary-mobile {
+    @apply btn-mobile bg-primary text-primary-foreground;
+    @apply hover:bg-primary/90 focus-visible:ring-primary;
+  }
+  
+  .btn-secondary-mobile {
+    @apply btn-mobile bg-secondary text-secondary-foreground border border-border;
+    @apply hover:bg-secondary/80 focus-visible:ring-secondary;
+  }
+
+  /* Mobile-optimized form elements */
+  .input-mobile {
+    @apply w-full min-h-[44px] px-4 py-3 rounded-lg border border-border;
+    @apply bg-background text-foreground placeholder:text-muted-foreground;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    
+    @screen md {
+      @apply text-base;
+    }
+  }
+
+  /* Mobile navigation components */
+  .nav-mobile {
+    @apply fixed top-0 inset-x-0 bg-background/95 backdrop-blur-sm border-b border-border z-50;
+    @apply px-4 py-4;
+    
+    @screen md {
+      @apply px-8 py-6;
+    }
+  }
+  
+  .nav-item-mobile {
+    @apply touch-target px-4 py-2 rounded-lg text-foreground;
+    @apply hover:bg-accent hover:text-accent-foreground;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+    @apply transition-colors duration-200;
+  }
+
+  /* Responsive card component */
+  .card-mobile {
+    @apply bg-card text-card-foreground border border-border rounded-lg p-6;
+    @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+    
+    @screen md {
+      @apply p-8;
+    }
+    
+    @screen lg {
+      @apply p-12;
+    }
+  }
+
+  /* Mobile-first grid systems */
+  .grid-mobile {
+    @apply grid grid-cols-1 gap-4;
+    
+    @screen sm {
+      @apply gap-6;
+    }
+    
+    @screen md {
+      @apply grid-cols-2 gap-8;
+    }
+    
+    @screen lg {
+      @apply grid-cols-3;
+    }
+    
+    @screen xl {
+      @apply grid-cols-4;
+    }
+  }
+  
+  .grid-mobile-2 {
+    @apply grid grid-cols-1 gap-4;
+    
+    @screen sm {
+      @apply grid-cols-2 gap-6;
+    }
+    
+    @screen lg {
+      @apply gap-8;
+    }
+  }
+  
+  .grid-mobile-auto {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    
+    @screen sm {
+      @apply gap-6;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    
+    @screen lg {
+      @apply gap-8;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+  }
+
+  /* Responsive typography */
+  .heading-mobile {
+    @apply text-2xl font-bold leading-tight mb-4;
+    
+    @screen sm {
+      @apply text-3xl mb-6;
+    }
+    
+    @screen lg {
+      @apply text-4xl mb-8;
+    }
+  }
+  
+  .heading-mobile-xl {
+    @apply text-3xl font-bold leading-tight mb-6;
+    
+    @screen sm {
+      @apply text-4xl mb-8;
+    }
+    
+    @screen lg {
+      @apply text-5xl mb-12;
+    }
+    
+    @screen xl {
+      @apply text-6xl;
+    }
+  }
+  
+  .text-mobile {
+    @apply text-base leading-relaxed mb-4;
+    
+    @screen lg {
+      @apply text-lg mb-6;
+    }
+  }
+
+  /* Mobile-optimized spacing */
+  .section-mobile {
+    @apply py-12 px-4;
+    
+    @screen sm {
+      @apply py-16 px-6;
+    }
+    
+    @screen md {
+      @apply py-20 px-8;
+    }
+    
+    @screen lg {
+      @apply py-24 px-12;
+    }
+    
+    @screen xl {
+      @apply py-32 px-16;
+    }
+  }
+}
+
+@layer utilities {
+  /* Mobile-first spacing utilities */
+  .space-mobile > * + * {
+    @apply mt-4;
+    
+    @screen md {
+      @apply mt-6;
+    }
+    
+    @screen lg {
+      @apply mt-8;
+    }
+  }
+
+  /* Responsive aspect ratios */
+  .aspect-mobile-square {
+    aspect-ratio: 1/1;
+  }
+  
+  .aspect-mobile-video {
+    aspect-ratio: 16/9;
+    
+    @screen md {
+      aspect-ratio: 21/9;
+    }
+  }
+  
+  .aspect-mobile-portrait {
+    aspect-ratio: 3/4;
+    
+    @screen md {
+      aspect-ratio: 4/5;
+    }
+  }
+
+  /* Mobile-first display utilities */
+  .hidden-mobile {
+    @apply hidden;
+    
+    @screen md {
+      @apply block;
+    }
+  }
+  
+  .visible-mobile {
+    @apply block;
+    
+    @screen md {
+      @apply hidden;
+    }
+  }
+  
+  .hidden-tablet {
+    @screen md {
+      @apply hidden;
+    }
+    
+    @screen lg {
+      @apply block;
+    }
+  }
+
+  /* Touch-optimized sizing */
+  .size-touch {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .size-touch-lg {
+    @apply min-h-[48px] min-w-[48px];
+  }
+
+  /* Mobile-first text sizing */
+  .text-fluid-sm {
+    font-size: clamp(0.875rem, 2vw, 1rem);
+  }
+  
+  .text-fluid-base {
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
+  }
+  
+  .text-fluid-lg {
+    font-size: clamp(1.125rem, 3vw, 1.25rem);
+  }
+  
+  .text-fluid-xl {
+    font-size: clamp(1.25rem, 3.5vw, 1.5rem);
+  }
+  
+  .text-fluid-2xl {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+  
+  .text-fluid-3xl {
+    font-size: clamp(1.875rem, 5vw, 3rem);
+  }
+  
+  .text-fluid-4xl {
+    font-size: clamp(2.25rem, 6vw, 4rem);
+  }
+
+  /* Safe area utilities for mobile devices */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .p-safe {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Mobile-first positioning */
+  .sticky-mobile-top {
+    @apply sticky top-0 z-40;
+  }
+  
+  .fixed-mobile-bottom {
+    @apply fixed bottom-0 inset-x-0 z-40;
+  }
+}
+
+/* =============================================================================
+   RESPONSIVE IMAGE AND MEDIA UTILITIES
+   ============================================================================= */
+
+@layer utilities {
+  /* Responsive images with srcset support guidance */
+  .img-responsive {
+    @apply w-full h-auto object-cover;
+  }
+  
+  .img-responsive-contain {
+    @apply w-full h-auto object-contain;
+  }
+  
+  /* Video responsiveness */
+  .video-responsive {
+    @apply w-full h-auto aspect-video;
+  }
+  
+  /* Iframe responsiveness for embedded content */
+  .iframe-responsive {
+    @apply w-full h-auto border-0;
+    min-height: 200px;
+    
+    @screen sm {
+      min-height: 300px;
+    }
+    
+    @screen lg {
+      min-height: 400px;
+    }
+  }
+}
+
+/* =============================================================================
+   MOBILE-FIRST ACCESSIBILITY ENHANCEMENTS
+   ============================================================================= */
+
+@layer base {
+  /* Enhanced focus states for mobile */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2;
+  }
+  
+  /* Ensure minimum touch targets */
+  button, 
+  [role="button"], 
+  input[type="button"], 
+  input[type="submit"], 
+  input[type="reset"] {
+    @apply touch-target;
+  }
+  
+  /* Better mobile typography */
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  /* Smooth scrolling for mobile */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+/* =============================================================================
+   HIGH CONTRAST AND ACCESSIBILITY
+   ============================================================================= */
+
+@media (prefers-contrast: high) {
+  .btn-mobile {
+    @apply border-2 border-current;
+  }
+  
+  .input-mobile {
+    @apply border-2 border-current;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-mobile,
+  .nav-item-mobile,
+  .card-mobile {
+    @apply transition-none;
+  }
+}
+
+/* =============================================================================
+   PRINT STYLES
+   ============================================================================= */
+
+@media print {
+  .nav-mobile,
+  .btn-mobile,
+  [class*="hidden-print"] {
+    @apply hidden;
+  }
+  
+  .card-mobile {
+    @apply border border-gray-300 break-inside-avoid;
+  }
+  
+  .section-mobile {
+    @apply py-8 px-0;
+  }
+}
