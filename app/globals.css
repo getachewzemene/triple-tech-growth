@@ -565,3 +565,84 @@ All colors MUST be HSL.
   color: hsl(var(--card-foreground)) !important;
   fill: currentColor !important;
 }
+
+/*
+  Modal & admin/auth form controls: enforce a single 1px border and remove
+  any focus box-shadows or rings that create a double-border appearance.
+  Targets common modal/dialog containers and keeps an accessible focus style.
+*/
+@layer utilities {
+  /* containers likely used for dialogs/modals */
+  [role="dialog"],
+  .dialog-content,
+  .modal,
+  .admin-modal,
+  .auth-modal,
+  [data-dialog-content],
+  [data-modal] {
+    --ft-border-color: hsl(var(--border));
+  }
+
+  /* form controls inside those containers */
+  [role="dialog"] input,
+  [role="dialog"] textarea,
+  [role="dialog"] select,
+  .dialog-content input,
+  .dialog-content textarea,
+  .dialog-content select,
+  .modal input,
+  .modal textarea,
+  .modal select,
+  .admin-modal input,
+  .admin-modal textarea,
+  .admin-modal select,
+  .auth-modal input,
+  .auth-modal textarea,
+  .auth-modal select,
+  [data-dialog-content] input,
+  [data-dialog-content] textarea,
+  [data-dialog-content] select,
+  [data-modal] input,
+  [data-modal] textarea,
+  [data-modal] select {
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: var(--ft-border-color) !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background-clip: padding-box; /* prevent outer glow showing through */
+  }
+
+  /* Remove any box-shadow/ring on focus, use outline for accessibility instead */
+  [role="dialog"] input:focus-visible,
+  [role="dialog"] textarea:focus-visible,
+  [role="dialog"] select:focus-visible,
+  .dialog-content input:focus-visible,
+  .dialog-content textarea:focus-visible,
+  .dialog-content select:focus-visible,
+  .modal input:focus-visible,
+  .modal textarea:focus-visible,
+  .modal select:focus-visible,
+  .admin-modal input:focus-visible,
+  .admin-modal textarea:focus-visible,
+  .admin-modal select:focus-visible,
+  .auth-modal input:focus-visible,
+  .auth-modal textarea:focus-visible,
+  .auth-modal select:focus-visible,
+  [data-dialog-content] input:focus-visible,
+  [data-dialog-content] textarea:focus-visible,
+  [data-dialog-content] select:focus-visible,
+  [data-modal] input:focus-visible,
+  [data-modal] textarea:focus-visible,
+  [data-modal] select:focus-visible {
+    box-shadow: none !important;
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Small tweak: ensure inputs don't inherit heavy shadows from utility classes */
+  .shadow-*,
+  .ring-* {
+    box-shadow: none !important;
+  }
+}
