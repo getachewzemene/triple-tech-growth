@@ -2,44 +2,28 @@
 
 ## Project info
 
-Triple Technologies is a one-stop tech solutions provider offering software development, IT training, digital marketing, maintenance, and networking services—driven by innovation, speed, and expert support.
-
 ## ⚠️ Important Security Notice
-
 **No system can fully prevent determined screen recording attempts.** This platform implements defense-in-depth strategies to deter casual piracy and provide forensic evidence:
 
 - **Physical cameras** can always record screens
 - **OS-level screen recorders** may bypass browser protections
 - **Hardware capture cards** can intercept video signals
-- **Rooted/jailbroken devices** may circumvent app-level protections
 
-This platform provides:
 
 - ✅ **Strong deterrence** against casual downloading/sharing
-- ✅ **Forensic watermarking** for leak tracing and legal enforcement
-- ✅ **Access control** and session management
-- ✅ **Enterprise DRM integration** (optional)
 - ✅ **Native app protections** for mobile platforms
 
-## 🚀 Features
 
 ### Core Security Features
-
 - **Short-lived playback tokens** (90 seconds) with JWT validation
 - **Dynamic visible watermarks** with TripleAcademy branding + user info
-- **Burned-in forensic watermarks** during video transcoding
 - **CloudFront signed URLs** with 5-minute expiry
 - **User agent binding** and IP tracking
-- **Concurrent stream limiting** (max 2 sessions per user)
 - **Rate limiting** on token requests
-- **Screen recording detection** (browser-level)
 
 ### Video Platform Features
 
 - **Admin course upload** with drag & drop, pause/resume
-- **Multi-format support** (MP4, WebM, MOV, AVI up to 1.5GB)
-- **Adaptive bitrate streaming** (HLS/DASH ready)
-- **Shaka Player integration** with EME for DRM
 - **Encrypted HLS** fallback (AES-128)
 - **Multipart upload** for large files with resume capability
 
