@@ -1,0 +1,132 @@
+﻿.next/types/validator.ts(153,31): error TS2344: Type 'typeof import("D:/triple-website-nextjs/triple-tech-growth/app/api/admin/proofs/[id]/approve/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/proofs/[id]/approve">'.
+  Types of property 'POST' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ success: boolean; message: string; proofId: string; enrollmentStatus: string; approvedAt: string; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/types/validator.ts(162,31): error TS2344: Type 'typeof import("D:/triple-website-nextjs/triple-tech-growth/app/api/admin/proofs/[id]/reject/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/proofs/[id]/reject">'.
+  Types of property 'POST' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ success: boolean; message: string; proofId: string; enrollmentStatus: string; rejectedAt: string; comment: string | undefined; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/types/validator.ts(216,31): error TS2344: Type 'typeof import("D:/triple-website-nextjs/triple-tech-growth/app/api/training/course/[slug]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/training/course/[slug]">'.
+  Types of property 'GET' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { slug: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ course: { id: string; slug: string; title: string; description: string; ... 5 more ...; isPublished: true; }; lessons: { ...; }[]; enrollment: { ...; } | null; userAccess: { ...; }; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ slug: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ slug: string; }>; }' is not assignable to type '{ params: { slug: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'slug' is missing in type 'Promise<{ slug: string; }>' but required in type '{ slug: string; }'.
+app/admin/page-backup.tsx(214,16): error TS2345: Argument of type 'any[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
+  Type 'any[]' is not assignable to type 'never[]'.
+    Type 'any' is not assignable to type 'never'.
+app/admin/page-backup.tsx(225,22): error TS2345: Argument of type 'any[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
+  Type 'any[]' is not assignable to type 'never[]'.
+    Type 'any' is not assignable to type 'never'.
+app/admin/page-backup.tsx(233,15): error TS2345: Argument of type 'any[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
+  Type 'any[]' is not assignable to type 'never[]'.
+    Type 'any' is not assignable to type 'never'.
+app/admin/page-backup.tsx(237,14): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(238,13): error TS2698: Spread types may only be created from object types.
+app/admin/page-backup.tsx(238,45): error TS2339: Property 'topicsCount' does not exist on type 'never'.
+app/admin/page-backup.tsx(241,22): error TS2345: Argument of type 'any[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
+  Type 'any[]' is not assignable to type 'never[]'.
+    Type 'any' is not assignable to type 'never'.
+app/admin/page-backup.tsx(262,32): error TS2339: Property 'courseFolderId' does not exist on type 'never'.
+app/admin/page-backup.tsx(263,25): error TS2339: Property 'order' does not exist on type 'never'.
+app/admin/page-backup.tsx(263,35): error TS2339: Property 'order' does not exist on type 'never'.
+app/admin/page-backup.tsx(523,62): error TS2339: Property 'size' does not exist on type 'never'.
+app/admin/page-backup.tsx(529,36): error TS2339: Property 'videoSize' does not exist on type 'never'.
+app/admin/page-backup.tsx(530,36): error TS2339: Property 'pdfSize' does not exist on type 'never'.
+app/admin/page-backup.tsx(584,37): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(593,77): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(596,61): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(604,41): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/page-backup.tsx(608,39): error TS2339: Property 'description' does not exist on type 'never'.
+app/admin/page-backup.tsx(611,57): error TS2339: Property 'instructor' does not exist on type 'never'.
+app/admin/page-backup.tsx(612,53): error TS2339: Property 'topicsCount' does not exist on type 'never'.
+app/admin/page-backup.tsx(614,50): error TS2339: Property 'priceCents' does not exist on type 'never'.
+app/admin/page-backup.tsx(634,53): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(636,56): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(639,46): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(646,51): error TS2339: Property 'order' does not exist on type 'never'.
+app/admin/page-backup.tsx(649,50): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/page-backup.tsx(652,50): error TS2339: Property 'videoS3Key' does not exist on type 'never'.
+app/admin/page-backup.tsx(655,47): error TS2322: Type '{ className: string; title: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+app/admin/page-backup.tsx(658,50): error TS2339: Property 'pdfS3Key' does not exist on type 'never'.
+app/admin/page-backup.tsx(661,47): error TS2322: Type '{ className: string; title: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+app/admin/page-backup.tsx(667,48): error TS2339: Property 'description' does not exist on type 'never'.
+app/admin/page-backup.tsx(670,48): error TS2339: Property 'videoDuration' does not exist on type 'never'.
+app/admin/page-backup.tsx(674,53): error TS2339: Property 'videoDuration' does not exist on type 'never'.
+app/admin/page-backup.tsx(676,54): error TS2339: Property 'videoDuration' does not exist on type 'never'.
+app/admin/page-backup.tsx(679,48): error TS2339: Property 'videoSize' does not exist on type 'never'.
+app/admin/page-backup.tsx(683,53): error TS2339: Property 'videoSize' does not exist on type 'never'.
+app/admin/page-backup.tsx(689,48): error TS2339: Property 'pdfSize' does not exist on type 'never'.
+app/admin/page-backup.tsx(693,53): error TS2339: Property 'pdfSize' does not exist on type 'never'.
+app/admin/page-backup.tsx(713,56): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(735,37): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page-backup.tsx(743,41): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/page-backup.tsx(747,39): error TS2339: Property 'detail' does not exist on type 'never'.
+app/admin/page-backup.tsx(750,57): error TS2339: Property 'instructor' does not exist on type 'never'.
+app/admin/page-backup.tsx(751,39): error TS2339: Property 'duration' does not exist on type 'never'.
+app/admin/page-backup.tsx(753,64): error TS2339: Property 'duration' does not exist on type 'never'.
+app/admin/page-backup.tsx(754,43): error TS2339: Property 'duration' does not exist on type 'never'.
+app/admin/page-backup.tsx(757,39): error TS2339: Property 'size' does not exist on type 'never'.
+app/admin/page-backup.tsx(760,44): error TS2339: Property 'size' does not exist on type 'never'.
+app/admin/page-backup.tsx(767,42): error TS2339: Property 'transcodeStatus' does not exist on type 'never'.
+app/admin/page-backup.tsx(769,46): error TS2339: Property 'transcodeStatus' does not exist on type 'never'.
+app/admin/page-backup.tsx(771,48): error TS2339: Property 'transcodeStatus' does not exist on type 'never'.
+app/admin/page-backup.tsx(776,41): error TS2339: Property 'transcodeStatus' does not exist on type 'never'.
+app/admin/page-backup.tsx(778,44): error TS2339: Property 'transcodeStatus' does not exist on type 'never'.
+app/admin/page-backup.tsx(780,46): error TS2339: Property 'transcodeStatus' does not exist on type 'never'.
+app/admin/page-backup.tsx(784,39): error TS2339: Property 'isProtected' does not exist on type 'never'.
+app/admin/page-backup.tsx(827,43): error TS2339: Property 'courseTitle' does not exist on type 'never'.
+app/admin/page-backup.tsx(830,56): error TS2339: Property 'fullName' does not exist on type 'never'.
+app/admin/page-backup.tsx(831,43): error TS2339: Property 'email' does not exist on type 'never'.
+app/admin/page-backup.tsx(836,44): error TS2339: Property 'enrolledAt' does not exist on type 'never'.
+app/admin/page-backup.tsx(842,42): error TS2339: Property 'status' does not exist on type 'never'.
+app/admin/page-backup.tsx(844,46): error TS2339: Property 'status' does not exist on type 'never'.
+app/admin/page-backup.tsx(849,41): error TS2339: Property 'status' does not exist on type 'never'.
+app/admin/page-backup.tsx(851,44): error TS2339: Property 'status' does not exist on type 'never'.
+app/admin/page-backup.tsx(859,65): error TS2339: Property 'phone' does not exist on type 'never'.
+app/admin/page-backup.tsx(862,63): error TS2339: Property 'age' does not exist on type 'never'.
+app/admin/page-backup.tsx(865,67): error TS2339: Property 'address' does not exist on type 'never'.
+app/admin/page-backup.tsx(867,39): error TS2339: Property 'paymentProof' does not exist on type 'never'.
+app/admin/page-backup.tsx(870,43): error TS2339: Property 'paymentProof' does not exist on type 'never'.
+app/admin/page-backup.tsx(875,37): error TS2339: Property 'status' does not exist on type 'never'.
+app/admin/page-backup.tsx(881,46): error TS2339: Property 'courseId' does not exist on type 'never'.
+app/admin/page-backup.tsx(882,46): error TS2339: Property 'email' does not exist on type 'never'.
+app/admin/page-backup.tsx(895,46): error TS2339: Property 'courseId' does not exist on type 'never'.
+app/admin/page-backup.tsx(896,46): error TS2339: Property 'email' does not exist on type 'never'.
+app/admin/page-backup.tsx(906,37): error TS2339: Property 'status' does not exist on type 'never'.
+app/admin/page-backup.tsx(913,46): error TS2339: Property 'approvedAt' does not exist on type 'never'.
+app/api/admin/courses/route.ts(152,31): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/enrollments/submit-proof/route.ts(49,33): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/enrollments/submit-proof/route.ts(68,40): error TS2339: Property 'status' does not exist on type 'never'.
+app/api/playback/token/route.ts(56,38): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/playback/token/route.ts(79,60): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/playback/token/route.ts(89,73): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/playback/token/route.ts(107,28): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/playback/token/route.ts(116,28): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/playback/token/route.ts(125,57): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/playback/token/route.ts(201,11): error TS7034: Variable 'activeSessions' implicitly has type 'any[]' in some locations where its type cannot be determined.
+app/api/playback/token/route.ts(206,17): error TS7005: Variable 'activeSessions' implicitly has an 'any[]' type.
+app/api/player/manifest/route.ts(158,28): error TS2339: Property 'duration' does not exist on type '{ id: string; title: string; transcodeStatus: string; s3Key: string; }'.
+app/api/player/manifest/route.ts(159,30): error TS2339: Property 'instructor' does not exist on type '{ id: string; title: string; transcodeStatus: string; s3Key: string; }'.
+app/api/player/manifest/route.ts(176,30): error TS2339: Property 'duration' does not exist on type '{ id: string; title: string; transcodeStatus: string; s3Key: string; }'.
+app/api/player/manifest/route.ts(177,32): error TS2339: Property 'instructor' does not exist on type '{ id: string; title: string; transcodeStatus: string; s3Key: string; }'.
+app/api/training/course/[slug]/route.ts(20,35): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/upload-proof-url/route.ts(73,33): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/providers/AuthProvider.tsx(89,13): error TS2345: Argument of type '{ username: unknown; isAdmin: boolean; }' is not assignable to parameter of type 'SetStateAction<{ username: string; isAdmin?: boolean | undefined; } | null>'.
+  Type '{ username: unknown; isAdmin: boolean; }' is not assignable to type '{ username: string; isAdmin?: boolean | undefined; }'.
+    Types of property 'username' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+components/player/SecurePlayer.tsx(255,26): error TS2304: Cannot find name 'shaka'.
+components/player/SecurePlayer.tsx(258,33): error TS2304: Cannot find name 'shaka'.
+components/player/SecurePlayer.tsx(261,33): error TS2304: Cannot find name 'shaka'.
+lib/auth.ts(64,9): error TS18048: 'session.user' is possibly 'undefined'.
+lib/auth.ts(64,22): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.

@@ -109,6 +109,42 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* Preload critical images for faster LCP */}
+        <link rel="preload" as="image" href="/og-image.jpg" />
+        <link rel="preload" as="image" href="/logo.png" />
+
+        {/* theme-color helps browsers paint the address bar on mobile for faster perceived load */}
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#2563eb" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1d4ed8" />
+
+        {/* JSON-LD Organization structured data for better SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Triple Technologies",
+              url: baseUrl,
+              logo: `${baseUrl}/logo.png`,
+              sameAs: [
+                "https://www.facebook.com/",
+                "https://twitter.com/",
+                "https://www.instagram.com/",
+                "https://www.linkedin.com/"
+              ],
+              contactPoint: [
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+251997466952",
+                  contactType: "customer service",
+                  areaServed: "ET",
+                  availableLanguage: ["English", "Amharic"]
+                }
+              ]
+            })
+          }}
+        />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
         <ThemeProviderClient>

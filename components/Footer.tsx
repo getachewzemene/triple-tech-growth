@@ -68,8 +68,8 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-8 sm:py-10 relative z-10">
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-6 items-start">
+      <div className="container mx-auto px-4 py-8 xs:py-8 sm:py-10 relative z-10">
+      <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4 xs:gap-4 sm:gap-6 items-start">
           {/* Enhanced Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3 group">
@@ -79,6 +79,7 @@ const Footer = () => {
                   alt="Triple Technologies Logo"
                   width={32}
                   height={32}
+                  loading="lazy"
                   className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -97,7 +98,7 @@ const Footer = () => {
                   key={index}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-10 h-10 bg-white/10 hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue rounded-full flex items-center justify-center transition-all duration-500 transform hover:scale-110 hover:rotate-12 backdrop-blur-sm border border-white/20 hover:shadow-lg"
+                  className="w-10 h-10 bg-white/10 hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue rounded-full flex items-center justify-center transition-all duration-500 transform hover:scale-110 hover:rotate-12 backdrop-blur-sm border border-white/20 hover:shadow-lg focus-visible-high"
                 >
                   <social.icon size={16} />
                 </a>
@@ -122,7 +123,7 @@ const Footer = () => {
                 <li key={link.id}>
                   <button
                     onClick={() => scrollToSection(link.id)}
-                    className="text-gray-200 hover:text-yellow transition-all duration-300 text-left text-sm group relative overflow-hidden"
+                    className="text-gray-200 hover:text-yellow transition-all duration-300 text-left text-sm group relative overflow-hidden focus-visible-high"
                   >
                     <span className="relative z-10 group-hover:text-black dark:group-hover:text-white">
                       {link.name}

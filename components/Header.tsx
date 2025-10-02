@@ -120,6 +120,7 @@ const Header = () => {
                 alt="Triple Technologies Logo"
                 width={32}
                 height={32}
+                priority
                 className="transition-all duration-300 hover:rotate-12 hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-light-blue/20 rounded-full blur-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
@@ -145,7 +146,7 @@ const Header = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`relative transition-all duration-500 font-medium px-2 py-2 rounded-lg group text-sm ${
+                  className={`relative transition-all duration-500 font-medium px-2 py-2 rounded-lg group text-sm focus-visible-high ${
                     (activeSection === item.id && pathname === "/") ||
                     (item.id === "training" && pathname === "/training") ||
                     (item.id === "courses" && pathname === "/courses")

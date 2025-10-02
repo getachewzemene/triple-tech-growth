@@ -3,9 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  swcMinify: true,
 
   images: {
-    domains: ["localhost"],
+    // Allow next/image optimization for localhost (dev) and production domains
+    domains: ["localhost", "tripletechnologies.com", "www.tripletechnologies.com"],
     formats: ["image/webp", "image/avif"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -62,6 +64,7 @@ const nextConfig = {
   // Experimental features for better performance
   experimental: {
     optimizePackageImports: ["@radix-ui/react-icons", "lucide-react"],
+    scrollRestoration: true,
   },
 };
 

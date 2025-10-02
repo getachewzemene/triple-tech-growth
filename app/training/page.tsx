@@ -537,7 +537,7 @@ export default function TrainingPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-  <div className="px-4 pt-24 pb-16 sm:px-6 md:px-8 lg:px-16 xl:px-24">
+  <div className="px-4 pt-20 pb-12 xs:px-4 xs:pt-20 xs:pb-12 sm:px-6 md:px-8 lg:px-16 xl:px-24">
         <motion.h2
           className="section-title text-center"
           initial={{ opacity: 0, y: -20 }}
@@ -564,7 +564,7 @@ export default function TrainingPage() {
                 >
                   Featured Course Collections
                 </motion.h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-8">
+                <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                   {courseFolders.map((folder, index) => {
                     const enrollmentStatus = checkFolderEnrollmentStatus(
                       folder.id,
@@ -733,7 +733,7 @@ export default function TrainingPage() {
               >
                 Featured Bonus Courses
               </motion.h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-8">
+              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                 {featuredBonusCourses.map((course, index) => {
                   const enrollmentStatus = user
                     ? checkEnrollmentStatus(course.id)
@@ -907,7 +907,7 @@ export default function TrainingPage() {
               >
                 All Available Courses
               </motion.h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-8">
+              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                 {courses.map((course) => {
                   const enrollmentStatus = user
                     ? checkEnrollmentStatus(course.id)
@@ -1059,9 +1059,9 @@ export default function TrainingPage() {
           </div>
         ) : (
           <AnimatePresence>
-            <div className="flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row h-[75vh] mt-10 gap-6">
+            <div className="flex flex-col xs:flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row h-[75vh] mt-8 gap-4 xs:gap-4 sm:gap-6">
               {/* Course Content Section */}
-              <div className="w-full sm:w-full md:w-[35%] lg:w-[35%] xl:w-[35%] bg-card p-6 overflow-y-auto rounded-2xl shadow-elegant">
+              <div className="w-full xs:w-full sm:w-full md:w-[35%] lg:w-[35%] xl:w-[35%] bg-card p-4 md:p-6 overflow-y-auto rounded-2xl shadow-elegant">
                 <h3 className="text-2xl font-bold text-foreground mb-6">
                   Contents
                 </h3>

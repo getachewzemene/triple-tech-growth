@@ -39,6 +39,8 @@ All colors MUST be HSL.
     /* Focus / ring color: use the gold CTA color (#e2a70f) to match CTAs */
     /* #e2a70f -> HSL ~ 43.3 87.5% 47.3% */
     --ring: 43.3 87.5% 47.3%;
+  /* Input focus color (cyan) used for inputs/textarea/select/otp focus and active states */
+  --focus-input: 187 100% 40%; /* cyan */
 
     /* Custom Triple Technologies Colors */
     --light-blue: 210 100% 20%;
@@ -105,6 +107,8 @@ All colors MUST be HSL.
     --input: 222.9 84% 12%; /* slightly lighter than background for contrast */
     /* Use gold for focus rings in dark mode as well so focus matches CTAs */
     --ring: 43.3 87.5% 47.3%;
+  /* Input focus color for dark mode (slightly lighter cyan) */
+  --focus-input: 187 90% 55%; /* cyan lighter for dark */
 
     /* Custom Triple Technologies Colors for Dark Mode */
     --light-blue: 222.9 84% 4.9%; /* #020817 for dark theme blue */
@@ -218,9 +222,43 @@ All colors MUST be HSL.
     color: hsl(var(--card-foreground));
     border: 1px solid hsl(var(--border));
     text-align: center;
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
+
+  }
+
+  /* High-contrast, keyboard-only focus styles */
+  /*
+    - Provides a stronger, visible outline for keyboard users via :focus-visible
+    - Uses the --ring color so it respects light/dark theme definitions
+    - Utility class: .focus-visible-high to opt-in on specific elements
+    - Also applies to common interactive elements (inputs, buttons, links, selects)
+  */
+  :root {
+    --focus-strong-width: 3px;
+    --focus-strong-offset: 3px;
+    --focus-strong-shadow: 6px;
+  }
+
+  .focus-visible-high:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible {
+    outline: var(--focus-strong-width) solid hsl(var(--focus-input));
+    outline-offset: var(--focus-strong-offset);
+    box-shadow: 0 0 0 var(--focus-strong-shadow) rgba(0,255,255,0.12);
+  }
+
+  /* Ensure mouse click (:active) and normal :focus show the same cyan focus for form controls */
+  :is(input, textarea, select):focus,
+  :is(input, textarea, select):focus-visible,
+  :is(input, textarea, select):active,
+  :is(input, textarea, select):focus-within {
+    border-color: hsl(var(--focus-input));
+    box-shadow: 0 0 0 6px hsl(var(--focus-input) / 0.08);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   .service-card::before {
@@ -636,7 +674,8 @@ All colors MUST be HSL.
   [data-modal] textarea:focus-visible,
   [data-modal] select:focus-visible {
     box-shadow: none !important;
-    outline: 2px solid hsl(var(--ring));
+    /* Use the cyan focus color for modal/auth inputs so they match global form focus */
+    outline: 2px solid hsl(var(--focus-input));
     outline-offset: 2px;
   }
 
