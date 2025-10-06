@@ -17,10 +17,9 @@ const reviewProofSchema = z.object({
  * Updates PaymentProof.status to "approved" and Enrollment.status to "active"
  * Sends notification email to student
  */
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function POST(request: NextRequest, context: any) {
+  const params = await (context?.params ?? {});
+  const proofId = params.id as string;
   try {
     // Check authentication and admin privileges
     const session = await getServerSession(authOptions);
@@ -40,7 +39,6 @@ export async function POST(
       );
     }
 
-    const proofId = params.id;
     const body = await request.json();
 
     // Validate request body

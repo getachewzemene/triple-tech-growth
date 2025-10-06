@@ -30,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
+import { useAuthModal } from "@/app/providers/AuthModalProvider";
 
 export default function ProfilePage() {
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
@@ -47,6 +48,8 @@ export default function ProfilePage() {
     loadEnrolledCourses();
   }, []);
 
+  const { openAuthModal } = useAuthModal();
+
   if (!user) {
     return (
       <div className="min-h-screen bg-background">
@@ -58,8 +61,8 @@ export default function ProfilePage() {
               <p className="text-muted-foreground mb-4">
                 You need to be logged in to view your profile.
               </p>
-              <Button onClick={() => router.push("/admin/login")}>
-                Go to Login
+              <Button onClick={() => (openAuthModal ? openAuthModal("login") : router.push("/admin/login"))}>
+                Sign In / Sign Up
               </Button>
             </CardContent>
           </Card>

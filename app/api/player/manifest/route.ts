@@ -107,6 +107,8 @@ export async function GET(request: NextRequest) {
       title: "Demo Course",
       transcodeStatus: "completed",
       s3Key: `demo-course-${courseId}/video.mp4`,
+      duration: 3600, // 1 hour
+      instructor: "Demo Instructor",
     };
 
     if (!course) {

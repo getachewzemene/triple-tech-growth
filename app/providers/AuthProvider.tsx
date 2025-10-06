@@ -84,7 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     safeLocalStorage.setItem("registeredUsers", registeredUsers);
 
     // Auto-login the user
-    const userAuthData = { username: userData.fullName, isAdmin: false };
+    const userAuthData = { username: String((userData as any).fullName ?? ""), isAdmin: false };
     setIsAuthenticated(true);
     setUser(userAuthData);
     safeLocalStorage.setItem("triple-auth", { user: userAuthData });

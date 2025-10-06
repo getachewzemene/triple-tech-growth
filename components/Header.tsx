@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { useThemeToggle } from "@/hooks/use-theme-toggle";
+import { useAuthModal } from "@/app/providers/AuthModalProvider";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,7 +27,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { openAuthModal } = useAuthModal();
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuth();
@@ -251,7 +252,7 @@ const Header = () => {
               </Tooltip>
             ) : (
               <Button
-                onClick={() => setIsAuthModalOpen(true)}
+                onClick={() => openAuthModal("login")}
                 variant="outline"
                 size="sm"
                 className="bg-transparent border-white/30 text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue hover:border-yellow transition-all duration-500 transform hover:scale-105 backdrop-blur-sm hover:shadow-lg"
@@ -368,7 +369,7 @@ const Header = () => {
 
                 {/* Mobile Profile/Login Button */}
                 <div className="pt-4 border-t border-white/20">
-                  {user ? (
+                      {user ? (
                     <Button
                       onClick={() => {
                         router.push("/profile");
@@ -384,7 +385,7 @@ const Header = () => {
                   ) : (
                     <Button
                       onClick={() => {
-                        setIsAuthModalOpen(true);
+                        openAuthModal("login");
                         setIsMobileMenuOpen(false);
                       }}
                       variant="outline"
@@ -413,7 +414,7 @@ const Header = () => {
                   ) : (
                     <Button
                       onClick={() => {
-                        setIsAuthModalOpen(true);
+                        openAuthModal("login");
                         setIsMobileMenuOpen(false);
                       }}
                       variant="outline"
@@ -429,11 +430,7 @@ const Header = () => {
           )}
         </div>
 
-        {/* User Authentication Modal */}
-        <UserAuthModal
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-        />
+        {/* Auth modal is provided globally by AuthModalProvider; Header triggers it via useAuthModal */}
       </header>
     </TooltipProvider>
   );

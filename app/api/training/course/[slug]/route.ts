@@ -10,14 +10,13 @@ import { authOptions } from "@/lib/auth";
  * Security: Public endpoint but only shows full content links if user has active enrollment
  * Returns course metadata, lessons list, and conditional access to content
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { slug: string } },
-) {
+export async function GET(request: NextRequest, context: any) {
+  // context.params may be a Promise in newer Next types; normalize it
+  const params = await (context?.params ?? {});
+  const slug = params.slug as string;
   try {
-    const slug = params.slug;
-    const session = await getServerSession(authOptions);
-    const userId = session?.user?.id;
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
 
     // Get course by slug
     // For demo purposes, create mock course data

@@ -3,6 +3,7 @@
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useAuthModal } from "@/app/providers/AuthModalProvider";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -15,10 +16,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
+  const { openAuthModal } = useAuthModal();
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push(requireAdmin ? "/admin/login" : "/");
+      // Open the global authentication modal instead of redirecting
+      try {
+        openAuthModal("login");
+      } catch (e) {
+        // Fallback to redirect if modal provider is not present
+        router.push(requireAdmin ? "/admin/login" : "/");
+      }
       return;
     }
 
@@ -26,7 +34,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       router.push("/admin/login");
       return;
     }
-  }, [isAuthenticated, user, requireAdmin, router]);
+  }, [isAuthenticated, user, requireAdmin, router, openAuthModal]);
 
   if (!isAuthenticated) {
     return null;

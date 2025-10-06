@@ -195,10 +195,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get user's active sessions
-    // For demo purposes, return mock data
-    // In production, query database
-    const activeSessions = [];
+  // Get user's active sessions
+  // For demo purposes, return mock data
+  // In production, query database
+  const activeSessions: any[] = [];
 
     return NextResponse.json({
       activeSessions: activeSessions.length,

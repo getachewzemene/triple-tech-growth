@@ -60,12 +60,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user already has a pending or approved proof for this course
-    // For demo purposes, create mock data
-    // In production, check database for existing proofs
-    const existingProof = null; // await prisma.paymentProof.findFirst({...})
+  // Check if user already has a pending or approved proof for this course
+  // For demo purposes, create mock data
+  // In production, check database for existing proofs
+  type Proof = { id: string; status: "pending" | "approved" | "rejected" };
+  const existingProof: Proof | null = null; // await prisma.paymentProof.findFirst({...})
 
-    if (existingProof && existingProof.status !== "rejected") {
+  // existingProof may be null in demo mode; cast to any when checking to avoid
+  // a TypeScript narrowing issue in this mock implementation.
+  if (existingProof && (existingProof as any).status !== "rejected") {
       return NextResponse.json(
         { error: "You already have a payment proof submitted for this course" },
         { status: 409 },

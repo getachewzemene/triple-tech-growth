@@ -13,6 +13,8 @@ declare global {
     shaka: any;
   }
 }
+// Use the shipped shaka-player ambient types (the package provides global types)
+/// <reference types="shaka-player" />
 
 interface SecurePlayerProps {
   courseId: string;
@@ -163,10 +165,10 @@ export default function SecurePlayer({
       const shaka = await loadShakaPlayer();
 
       // Install polyfills for older browsers
-      shaka.polyfill.installAll();
+      window.shaka.polyfill.installAll();
 
       // Check for EME support
-      if (!shaka.Player.isBrowserSupported()) {
+      if (!window.shaka.Player.isBrowserSupported()) {
         throw new Error("Browser does not support encrypted media extensions");
       }
 
@@ -252,13 +254,13 @@ export default function SecurePlayer({
 
       let errorMessage = "Video playback error";
 
-      if (error.code === shaka.util.Error.Code.LICENSE_REQUEST_FAILED) {
+      if (error.code === window.shaka.util.Error.Code.LICENSE_REQUEST_FAILED) {
         errorMessage =
           "DRM license request failed. Please check your connection and try again.";
-      } else if (error.code === shaka.util.Error.Code.MANIFEST_REQUEST_FAILED) {
+      } else if (error.code === window.shaka.util.Error.Code.MANIFEST_REQUEST_FAILED) {
         errorMessage =
           "Video manifest request failed. Please refresh and try again.";
-      } else if (error.code === shaka.util.Error.Code.SEGMENT_REQUEST_FAILED) {
+      } else if (error.code === window.shaka.util.Error.Code.SEGMENT_REQUEST_FAILED) {
         errorMessage =
           "Video segment request failed. Please check your connection.";
       }

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import ThemeProviderClient from "@/components/ThemeProviderClient";
 import { AuthProvider } from "./providers/AuthProvider";
 import { LanguageProvider } from "./providers/LanguageProvider";
+import { AuthModalProvider } from "./providers/AuthModalProvider";
 
 const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL || "https://tripletechnologies.com";
@@ -150,11 +151,14 @@ export default function RootLayout({
         <ThemeProviderClient>
           <LanguageProvider>
             <AuthProvider>
+                <AuthModalProvider>
               <TooltipProvider>
-                {children}
-                <Toaster />
-                <Sonner />
-              </TooltipProvider>
+                  {children}
+                  <Toaster />
+                  <Sonner />
+                </TooltipProvider>
+                </AuthModalProvider>
+            
             </AuthProvider>
           </LanguageProvider>
         </ThemeProviderClient>

@@ -38,10 +38,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/app/providers/AuthProvider";
+import { useAuthModal } from "@/app/providers/AuthModalProvider";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
-import UserAuthModal from "@/components/UserAuthModal";
 
 // Types
 type Topic = {
@@ -335,7 +335,7 @@ export default function TrainingPage() {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { openAuthModal } = useAuthModal();
   const [courseFolders, setCourseFolders] = useState<Course[]>([]);
   const [enrollmentData, setEnrollmentData] = useState({
     fullName: "",
@@ -857,7 +857,7 @@ export default function TrainingPage() {
                                     size="sm"
                                     onClick={() => {
                                       setSelectedCourse(course);
-                                      setShowAuthModal(true);
+                                      openAuthModal("login");
                                     }}
                                     className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                   >
@@ -1018,7 +1018,7 @@ export default function TrainingPage() {
                                     size="sm"
                                     onClick={() => {
                                       setSelectedCourse(course);
-                                      setShowAuthModal(true);
+                                      openAuthModal("login");
                                     }}
                                     className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
                                   >
@@ -1511,11 +1511,7 @@ export default function TrainingPage() {
         </DialogContent>
       </Dialog>
 
-      {/* User Authentication Modal */}
-      <UserAuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-      />
+      {/* Authentication is handled globally via AuthModalProvider */}
 
       <Footer />
     </div>

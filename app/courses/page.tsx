@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/app/providers/AuthProvider";
+import { useAuthModal } from "@/app/providers/AuthModalProvider";
 import { useRouter } from "next/navigation";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 
@@ -174,6 +175,8 @@ export default function CoursesPage() {
     setEnrolledCourses(courses);
   }, []);
 
+  const { openAuthModal } = useAuthModal();
+
   if (!user) {
     return (
       <div className="min-h-screen bg-background">
@@ -185,8 +188,8 @@ export default function CoursesPage() {
               <p className="text-muted-foreground mb-4">
                 You need to be logged in to access the course module.
               </p>
-              <Button onClick={() => router.push("/admin/login")}>
-                Go to Login
+              <Button onClick={() => openAuthModal("login")}>
+                Sign In / Sign Up
               </Button>
             </CardContent>
           </Card>
