@@ -15,6 +15,16 @@ dist-ssr
 # Next.js
 .next/
 out/
+build/
+
+# Production
+.vercel
+.env*.local
+.env.production
+
+# PM2
+.pm2/
+pm2.log
 
 # Editor directories and files
 .vscode/*
@@ -26,3 +36,30 @@ out/
 *.njsproj
 *.sln
 *.sw?
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS files
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Build artifacts
+tsconfig.tsbuildinfo
+*.tsbuildinfo
