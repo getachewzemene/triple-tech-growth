@@ -80,11 +80,18 @@ See the complete README documentation in the docs folder for:
 
 ## 📄 Documentation
 
+### Development
 - [Complete Setup Guide](./docs/setup.md)
 - [FFmpeg Transcoding Examples](./docs/ffmpeg-transcoding.md)
 - [Native App Protection](./docs/native-app-protection.md)
 - [API Documentation](./docs/api.md)
 - [Security Best Practices](./docs/security.md)
+
+### Production
+- **[Production Setup Overview](./PRODUCTION-SETUP.md)** ⭐
+- **[Deployment Guide](./DEPLOYMENT.md)** - Complete deployment instructions
+- **[Production Checklist](./PRODUCTION-CHECKLIST.md)** - Pre-deployment checklist
+- [Nginx Configuration](./nginx/README.md)
 
 ## 🧪 Testing
 
@@ -94,7 +101,40 @@ npm run test
 
 # Build for production
 npm run build
+
+# Check application health
+npm run health
 ```
+
+## 🚀 Production Deployment
+
+### Quick Setup
+
+```bash
+# Run automated setup
+./setup.sh
+```
+
+### Deployment Options
+
+**Docker Compose (Recommended)**
+```bash
+npm run docker:build
+npm run docker:up
+```
+
+**PM2 Process Manager**
+```bash
+npm install -g pm2
+npm run pm2:start
+```
+
+**Direct Node.js**
+```bash
+npm run start:prod
+```
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 
 ## 📞 Support
 

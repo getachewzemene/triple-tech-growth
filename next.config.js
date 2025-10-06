@@ -3,7 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  swcMinify: true,
 
   images: {
     // Allow next/image optimization for localhost (dev) and production domains
