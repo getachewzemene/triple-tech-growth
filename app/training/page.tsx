@@ -564,7 +564,7 @@ export default function TrainingPage() {
                 >
                   Featured Course Collections
                 </motion.h3>
-                <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
+                <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                   {courseFolders.map((folder, index) => {
                     const enrollmentStatus = checkFolderEnrollmentStatus(
                       folder.id,
@@ -733,7 +733,7 @@ export default function TrainingPage() {
               >
                 Featured Bonus Courses
               </motion.h3>
-              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
+              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                 {featuredBonusCourses.map((course, index) => {
                   const enrollmentStatus = user
                     ? checkEnrollmentStatus(course.id)
@@ -907,7 +907,7 @@ export default function TrainingPage() {
               >
                 All Available Courses
               </motion.h3>
-              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
+              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                 {courses.map((course) => {
                   const enrollmentStatus = user
                     ? checkEnrollmentStatus(course.id)

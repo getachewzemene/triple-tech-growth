@@ -120,30 +120,30 @@ const HeroSection = () => {
       {/* Enhanced Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-500 backdrop-blur-sm border border-white/30 hover:scale-110 hover:shadow-lg"
+        className="absolute left-4 2xl:left-8 3xl:left-12 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 2xl:p-4 3xl:p-5 rounded-full transition-all duration-500 backdrop-blur-sm border border-white/30 hover:scale-110 hover:shadow-lg"
       >
-        <ChevronLeft size={24} className="text-white" />
+        <ChevronLeft size={24} className="text-white 2xl:w-8 2xl:h-8 3xl:w-10 3xl:h-10" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-500 backdrop-blur-sm border border-white/30 hover:scale-110 hover:shadow-lg"
+        className="absolute right-4 2xl:right-8 3xl:right-12 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 p-3 2xl:p-4 3xl:p-5 rounded-full transition-all duration-500 backdrop-blur-sm border border-white/30 hover:scale-110 hover:shadow-lg"
       >
-        <ChevronRight size={24} className="text-white" />
+        <ChevronRight size={24} className="text-white 2xl:w-8 2xl:h-8 3xl:w-10 3xl:h-10" />
       </button>
 
       {/* Enhanced Content Overlay */}
-      <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
-        <div className="backdrop-blur-sm bg-white/5 rounded-2xl p-8 border border-white/10">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+      <div className="relative z-10 text-center text-white max-w-4xl 2xl:max-w-6xl 3xl:max-w-7xl mx-auto px-4">
+        <div className="backdrop-blur-sm bg-white/5 rounded-2xl p-8 2xl:p-12 3xl:p-16 border border-white/10">
+          <h1 className="text-5xl md:text-7xl 2xl:text-8xl 3xl:text-9xl font-bold mb-6 2xl:mb-8 3xl:mb-10 animate-fade-in bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
             {heroSlides[currentSlide].title}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 animate-slide-up opacity-0 animation-delay-300 text-gray-100">
+          <p className="text-xl md:text-2xl 2xl:text-3xl 3xl:text-4xl mb-8 2xl:mb-10 3xl:mb-12 animate-slide-up opacity-0 animation-delay-300 text-gray-100">
             {heroSlides[currentSlide].subtitle}
           </p>
           <Button
             onClick={handleCTAClick}
             size="lg"
-            className={`${isDark ? "bg-[#e2a70f] hover:bg-[#d69e0b] text-white" : "bg-gradient-to-r from-yellow to-yellow/80 text-yellow-foreground hover:from-yellow/90 hover:to-yellow/70"} text-lg px-8 py-4 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-110 transition-all duration-500 shadow-2xl border border-yellow/30 backdrop-blur-sm`}
+            className={`${isDark ? "bg-[#e2a70f] hover:bg-[#d69e0b] text-white" : "bg-gradient-to-r from-yellow to-yellow/80 text-yellow-foreground hover:from-yellow/90 hover:to-yellow/70"} text-lg 2xl:text-xl 3xl:text-2xl px-8 py-4 2xl:px-10 2xl:py-6 3xl:px-12 3xl:py-8 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-110 transition-all duration-500 shadow-2xl border border-yellow/30 backdrop-blur-sm`}
           >
             <span className="relative z-10">
               {heroSlides[currentSlide].cta}
@@ -154,15 +154,15 @@ const HeroSection = () => {
       </div>
 
       {/* Enhanced Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-4">
+      <div className="absolute bottom-8 2xl:bottom-12 3xl:bottom-16 left-1/2 transform -translate-x-1/2 z-20 flex space-x-4 2xl:space-x-6 3xl:space-x-8">
         {heroSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
             className={`relative transition-all duration-500 ${
               index === currentSlide
-                ? "w-8 h-3 bg-gradient-to-r from-yellow to-yellow/80 scale-125 shadow-lg"
-                : "w-3 h-3 bg-white/50 hover:bg-white/75 hover:scale-110"
+                ? "w-8 h-3 2xl:w-12 2xl:h-4 3xl:w-16 3xl:h-5 bg-gradient-to-r from-yellow to-yellow/80 scale-125 shadow-lg"
+                : "w-3 h-3 2xl:w-4 2xl:h-4 3xl:w-5 3xl:h-5 bg-white/50 hover:bg-white/75 hover:scale-110"
             } rounded-full backdrop-blur-sm border border-white/30`}
           >
             {index === currentSlide && (
