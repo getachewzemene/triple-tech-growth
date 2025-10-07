@@ -270,7 +270,7 @@ export default function CoursesPage() {
                       Featured
                     </Badge>
                   </div>
-                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 xs:gap-4 sm:gap-6">
                     {featuredCourses.map((course, index) => {
                       const enrollmentStatus = checkEnrollmentStatus(course.id);
                       return (
@@ -371,7 +371,7 @@ export default function CoursesPage() {
                 {/* All Available Courses */}
                 <div>
                   <h2 className="text-2xl font-bold mb-6">All Courses</h2>
-                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 xs:gap-4 sm:gap-6">
                     {allCourses.map((course, index) => {
                       const enrollmentStatus = checkEnrollmentStatus(course.id);
                       return (
@@ -504,7 +504,7 @@ export default function CoursesPage() {
                     </CardContent>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 xs:gap-4 sm:gap-6">
                     {enrolledCourses.map((course: any, index: number) => (
                       <motion.div
                         key={index}

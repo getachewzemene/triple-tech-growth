@@ -112,7 +112,7 @@ const ServicesSection = () => {
             business growth
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 sm:mt-12 px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-4 gap-6 mt-8 sm:mt-12 px-4">
           {services.map((service, index) => (
             <div
               key={service.title}

@@ -69,7 +69,7 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-8 xs:py-8 sm:py-10 relative z-10">
-      <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4 xs:gap-4 sm:gap-6 items-start">
+      <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-6 gap-4 xs:gap-4 sm:gap-6 items-start">
           {/* Enhanced Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3 group">
