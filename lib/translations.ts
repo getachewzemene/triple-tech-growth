@@ -2,8 +2,7 @@ import { Language } from "@/app/providers/LanguageProvider";
 
 export type TranslationKey = string;
 
-export const translations: Record<Language, Record<string, string>> = {
-  en: {
+const enTranslations: Record<string, string> = {
     // Header Navigation
     "nav.home": "Home",
     "nav.services": "Services",
@@ -193,8 +192,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "common.previous": "Previous",
     "common.submit": "Submit",
     "common.search": "Search",
-  },
-  am: {
+};
+
+const amTranslations: Record<string, string> = {
     // Header Navigation
     "nav.home": "መነሻ",
     "nav.services": "አገልግሎቶች",
@@ -384,12 +384,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "common.previous": "ቀዳሚ",
     "common.submit": "አስገባ",
     "common.search": "ፈልግ",
-  },
-  or: {
-    // Oromiffa translations - keeping English for now as it's not in the requirement
-    // These would need proper Oromiffa translations but that's not part of the current task
-    ...translations.en,
-  },
+  };
+
+export const translations: Record<Language, Record<string, string>> = {
+  en: enTranslations,
+  am: amTranslations,
+  or: enTranslations, // Using English for Oromiffa as it's not in the current requirement
 };
 
 export function translate(key: string, language: Language = "en"): string {
