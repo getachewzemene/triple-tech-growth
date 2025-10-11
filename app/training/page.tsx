@@ -42,6 +42,7 @@ import { useAuthModal } from "@/app/providers/AuthModalProvider";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
+import { useLanguage } from "@/app/providers/LanguageProvider";
 
 // Types
 type Topic = {
@@ -347,6 +348,7 @@ export default function TrainingPage() {
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const { user, registerUser } = useAuth();
   const router = useRouter();
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Load course folders from admin system
@@ -547,7 +549,7 @@ export default function TrainingPage() {
         >
           {selectedCourse
             ? `${selectedCourse.title} Module`
-            : "Training Modules"}
+            : t("training.page.title")}
         </motion.h2>
 
         {!selectedCourse ? (
@@ -670,7 +672,7 @@ export default function TrainingPage() {
                                       }
                                       className="flex-1"
                                     >
-                                      View Details
+                                      {t("courses.viewDetails")}
                                     </Button>
                                     <Button
                                       size="sm"
@@ -686,7 +688,7 @@ export default function TrainingPage() {
                                       {enrollmentStatus?.status ===
                                       "payment_submitted"
                                         ? "Pending"
-                                        : "Enroll Now"}
+                                        : t("training.enrollNow")}
                                     </Button>
                                   </>
                                 )}
@@ -1359,14 +1361,14 @@ export default function TrainingPage() {
       <Dialog open={showSignupModal} onOpenChange={setShowSignupModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Enroll in {selectedCourse?.title}</DialogTitle>
+            <DialogTitle>{t("training.page.enrollment")} - {selectedCourse?.title}</DialogTitle>
             <DialogDescription>
-              Please fill in your details to enroll in this course.
+              {t("training.page.enrollmentDesc")}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSignupSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName">{t("training.page.fullName")}</Label>
               <Input
                 id="fullName"
                 value={enrollmentData.fullName}
@@ -1380,7 +1382,7 @@ export default function TrainingPage() {
               />
             </div>
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("footer.email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -1395,7 +1397,7 @@ export default function TrainingPage() {
               />
             </div>
             <div>
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone">{t("training.page.phone")}</Label>
               <Input
                 id="phone"
                 type="tel"
@@ -1410,7 +1412,7 @@ export default function TrainingPage() {
               />
             </div>
             <div>
-              <Label htmlFor="age">Age</Label>
+              <Label htmlFor="age">{t("training.page.age")}</Label>
               <Input
                 id="age"
                 type="number"
@@ -1425,7 +1427,7 @@ export default function TrainingPage() {
               />
             </div>
             <div>
-              <Label htmlFor="address">Address</Label>
+              <Label htmlFor="address">{t("training.page.address")}</Label>
               <Textarea
                 id="address"
                 value={enrollmentData.address}
@@ -1445,13 +1447,13 @@ export default function TrainingPage() {
                 onClick={() => setShowSignupModal(false)}
                 className="flex-1"
               >
-                Cancel
+                {t("training.page.cancel")}
               </Button>
               <Button
                 type="submit"
                 className="flex-1 bg-blue-600 hover:bg-blue-700"
               >
-                Continue to Payment
+                {t("training.page.continue")}
               </Button>
             </div>
           </form>
