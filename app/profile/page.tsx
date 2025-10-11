@@ -31,12 +31,14 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 import { useAuthModal } from "@/app/providers/AuthModalProvider";
+import { useLanguage } from "@/app/providers/LanguageProvider";
 
 export default function ProfilePage() {
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const { user, logout } = useAuth();
   const router = useRouter();
+  const { t } = useLanguage();
 
   const loadEnrolledCourses = () => {
     const courses = safeLocalStorage.getItem("enrolledCourses", []);
@@ -57,12 +59,12 @@ export default function ProfilePage() {
         <div className="flex items-center justify-center min-h-[60vh]">
           <Card className="w-96">
             <CardContent className="p-6 text-center">
-              <h2 className="text-xl font-semibold mb-4">Please Log In</h2>
+              <h2 className="text-xl font-semibold mb-4">{t("profile.loginRequired")}</h2>
               <p className="text-muted-foreground mb-4">
-                You need to be logged in to view your profile.
+                {t("profile.loginMessage")}
               </p>
               <Button onClick={() => (openAuthModal ? openAuthModal("login") : router.push("/admin/login"))}>
-                Sign In / Sign Up
+                {t("profile.signIn")}
               </Button>
             </CardContent>
           </Card>
@@ -101,13 +103,13 @@ export default function ProfilePage() {
   const getStatusText = (status: string) => {
     switch (status) {
       case "approved":
-        return "Approved";
+        return t("profile.approved");
       case "payment_submitted":
-        return "Payment Under Review";
+        return t("profile.paymentUnderReview");
       case "pending_payment":
-        return "Payment Required";
+        return t("profile.paymentRequired");
       default:
-        return "Unknown";
+        return t("profile.unknown");
     }
   };
 
@@ -121,16 +123,16 @@ export default function ProfilePage() {
           transition={{ duration: 0.5 }}
         >
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">My Profile</h1>
+            <h1 className="text-3xl font-bold mb-2">{t("profile.title")}</h1>
             <p className="text-muted-foreground">
-              Manage your account and view your enrolled courses
+              {t("profile.subtitle")}
             </p>
           </div>
 
           <Tabs defaultValue="overview" className="space-y-6">
             <TabsList>
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="courses">My Courses</TabsTrigger>
+              <TabsTrigger value="overview">{t("profile.personalInfo")}</TabsTrigger>
+              <TabsTrigger value="courses">{t("profile.enrolledCourses")}</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
@@ -141,7 +143,7 @@ export default function ProfilePage() {
                     <div className="flex items-center justify-between">
                       <CardTitle className="flex items-center gap-2">
                         <FaUser className="text-blue-600" />
-                        Account Information
+                        {t("profile.personalInfo")}
                       </CardTitle>
                       <Button
                         onClick={() => setIsUpdateModalOpen(true)}
@@ -150,7 +152,7 @@ export default function ProfilePage() {
                         className="flex items-center gap-2"
                       >
                         <FaEdit className="w-3 h-3" />
-                        Edit Profile
+                        {t("profile.updateProfile")}
                       </Button>
                     </div>
                   </CardHeader>
@@ -251,12 +253,12 @@ export default function ProfilePage() {
             <TabsContent value="courses">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold">Enrolled Courses</h2>
+                  <h2 className="text-2xl font-semibold">{t("profile.enrolledCourses")}</h2>
                   <Button
                     onClick={() => router.push("/training")}
                     variant="outline"
                   >
-                    Browse More Courses
+                    {t("profile.browseCourses")}
                   </Button>
                 </div>
 
@@ -264,13 +266,13 @@ export default function ProfilePage() {
                   <Card>
                     <CardContent className="p-8 text-center">
                       <h3 className="text-lg font-semibold mb-2">
-                        No Courses Enrolled
+                        {t("profile.noEnrollments")}
                       </h3>
                       <p className="text-muted-foreground mb-4">
-                        Start your learning journey by enrolling in a course!
+                        {t("profile.startLearning")}
                       </p>
                       <Button onClick={() => router.push("/training")}>
-                        Explore Courses
+                        {t("profile.browseCourses")}
                       </Button>
                     </CardContent>
                   </Card>
