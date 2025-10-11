@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
+import { t, translate } from "@/lib/translations";
 
 export type Language = "en" | "am" | "or";
 
@@ -9,6 +10,8 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
   getLanguageDisplayName: (lang: Language) => string;
+  t: (key: string, replacements?: Record<string, string>) => string;
+  translate: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(
@@ -49,9 +52,17 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const translateFn = (key: string, replacements?: Record<string, string>): string => {
+    return t(key, language, replacements);
+  };
+
+  const translateSimple = (key: string): string => {
+    return translate(key, language);
+  };
+
   return (
     <LanguageContext.Provider
-      value={{ language, setLanguage, getLanguageDisplayName }}
+      value={{ language, setLanguage, getLanguageDisplayName, t: translateFn, translate: translateSimple }}
     >
       {children}
     </LanguageContext.Provider>

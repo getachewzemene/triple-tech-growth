@@ -4,34 +4,34 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useLanguage } from "@/app/providers/LanguageProvider";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const router = useRouter();
+  const { t } = useLanguage();
+  
   const heroSlides = [
     {
       background:
         "linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #67e8f9 100%)",
-      title: "Accelerating business growth with smart technologies",
-      subtitle:
-        "Triple Technologies fuels business growth with smart software, training, and digital marketing.",
-      cta: "Contact Us",
+      titleKey: "hero.slide1.title",
+      subtitleKey: "hero.slide1.subtitle",
+      ctaKey: "hero.slide1.cta",
     },
     {
       background:
         "linear-gradient(135deg, #164e63 0%, #0891b2 50%, #06b6d4 100%)",
-      title: "Innovation at the heart of everything we do",
-      subtitle:
-        "From web development to mobile apps, we create solutions that drive success.",
-      cta: "Our Services",
+      titleKey: "hero.slide2.title",
+      subtitleKey: "hero.slide2.subtitle",
+      ctaKey: "hero.slide2.cta",
     },
     {
       background:
         "linear-gradient(135deg, #155e75 0%, #0e7490 50%, #0891b2 100%)",
-      title: "Expert training and consultation services",
-      subtitle:
-        "Upskill your team with our comprehensive IT training programs and expert consultancy.",
-      cta: "Learn More",
+      titleKey: "hero.slide3.title",
+      subtitleKey: "hero.slide3.subtitle",
+      ctaKey: "hero.slide3.cta",
     },
   ];
 
@@ -135,10 +135,10 @@ const HeroSection = () => {
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
         <div className="backdrop-blur-sm bg-white/5 rounded-2xl p-8 border border-white/10">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-            {heroSlides[currentSlide].title}
+            {t(heroSlides[currentSlide].titleKey)}
           </h1>
           <p className="text-xl md:text-2xl mb-8 animate-slide-up opacity-0 animation-delay-300 text-gray-100">
-            {heroSlides[currentSlide].subtitle}
+            {t(heroSlides[currentSlide].subtitleKey)}
           </p>
           <Button
             onClick={handleCTAClick}
@@ -146,7 +146,7 @@ const HeroSection = () => {
             className={`${isDark ? "bg-[#e2a70f] hover:bg-[#d69e0b] text-white" : "bg-gradient-to-r from-yellow to-yellow/80 text-yellow-foreground hover:from-yellow/90 hover:to-yellow/70"} text-lg px-8 py-4 animate-slide-up opacity-0 animation-delay-600 transform hover:scale-110 transition-all duration-500 shadow-2xl border border-yellow/30 backdrop-blur-sm`}
           >
             <span className="relative z-10">
-              {heroSlides[currentSlide].cta}
+              {t(heroSlides[currentSlide].ctaKey)}
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-light-blue/20 to-yellow/20 rounded-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
           </Button>

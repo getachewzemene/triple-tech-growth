@@ -8,11 +8,13 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/app/providers/LanguageProvider";
 
 const ServicesSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -34,47 +36,43 @@ const ServicesSection = () => {
   const services = [
     {
       icon: Code,
-      title: "Web Development",
-      description:
-        "Custom web applications built with modern technologies and best practices for optimal performance.",
-      features: ["React/Next.js", "Node.js", "Cloud Deployment"],
+      titleKey: "services.web.title",
+      descriptionKey: "services.web.description",
+      featureKeys: ["services.web.feature1", "services.web.feature2", "services.web.feature3"],
       gradient: "from-blue-500 to-blue-700",
       shadowColor: "shadow-blue-500/25",
       bgGradient: "from-blue-50 to-indigo-50",
-      stats: "100+ Projects",
+      statsKey: "services.web.stats",
     },
     {
       icon: Smartphone,
-      title: "Mobile App Development",
-      description:
-        "Native and cross-platform mobile apps that provide exceptional user experiences across all devices.",
-      features: ["React Native", "Flutter", "iOS/Android"],
+      titleKey: "services.mobile.title",
+      descriptionKey: "services.mobile.description",
+      featureKeys: ["services.mobile.feature1", "services.mobile.feature2", "services.mobile.feature3"],
       gradient: "from-green-500 to-emerald-700",
       shadowColor: "shadow-green-500/25",
       bgGradient: "from-green-50 to-emerald-50",
-      stats: "50+ Apps",
+      statsKey: "services.mobile.stats",
     },
     {
       icon: TrendingUp,
-      title: "Digital Marketing",
-      description:
-        "Comprehensive digital marketing strategies to boost your online presence and drive business growth.",
-      features: ["SEO", "Social Media", "Content Marketing"],
+      titleKey: "services.marketing.title",
+      descriptionKey: "services.marketing.description",
+      featureKeys: ["services.marketing.feature1", "services.marketing.feature2", "services.marketing.feature3"],
       gradient: "from-purple-500 to-pink-700",
       shadowColor: "shadow-purple-500/25",
       bgGradient: "from-purple-50 to-pink-50",
-      stats: "200% Growth",
+      statsKey: "services.marketing.stats",
     },
     {
       icon: GraduationCap,
-      title: "IT Training and Consultancy",
-      description:
-        "Expert training and consultancy services to upskill your team and optimize your technology stack.",
-      features: ["Technical Training", "Code Review", "Architecture Design"],
+      titleKey: "services.training.title",
+      descriptionKey: "services.training.description",
+      featureKeys: ["services.training.feature1", "services.training.feature2", "services.training.feature3"],
       gradient: "from-orange-500 to-red-700",
       shadowColor: "shadow-orange-500/25",
       bgGradient: "from-orange-50 to-red-50",
-      stats: "500+ Students",
+      statsKey: "services.training.stats",
     },
   ];
 
@@ -102,20 +100,19 @@ const ServicesSection = () => {
             </span>
           </div>
           <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Our{" "}
+            {t("services.title").split(" ")[0]}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
-              Services
+              {t("services.title").split(" ").slice(1).join(" ")}
             </span>
           </h2>
           <p className="text-sm xs:text-base text-gray-600 max-w-2xl mx-auto">
-            We provide comprehensive technology solutions to accelerate your
-            business growth
+            {t("services.subtitle")}
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 sm:mt-12 px-4">
           {services.map((service, index) => (
             <div
-              key={service.title}
+              key={service.titleKey}
               className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 ${service.shadowColor} sm:hover:shadow-2xl cursor-pointer ${
                 isVisible ? "animate-scale-in" : "opacity-0"
               }`}
@@ -145,7 +142,7 @@ const ServicesSection = () => {
                   <div
                     className={`px-3 py-1 rounded-full bg-gradient-to-r ${service.gradient} text-white text-xs font-semibold`}
                   >
-                    {service.stats}
+                    {t(service.statsKey)}
                   </div>
                 </div>
 
@@ -158,17 +155,17 @@ const ServicesSection = () => {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-card-foreground mb-2 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
-                      {service.title}
+                      {t(service.titleKey)}
                     </h3>
                     <p className="text-gray-600 dark:text-card-foreground leading-relaxed group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
-                      {service.description}
+                      {t(service.descriptionKey)}
                     </p>
                   </div>
                 </div>
 
                 {/* Features list */}
                 <div className="space-y-2">
-                  {service.features.map((feature, idx) => (
+                  {service.featureKeys.map((featureKey, idx) => (
                     <div
                       key={idx}
                       className={`flex items-center space-x-3 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0`}
@@ -178,7 +175,7 @@ const ServicesSection = () => {
                         className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.gradient} animate-pulse`}
                       ></div>
                       <span className="text-sm font-medium text-gray-600 dark:text-card-foreground group-hover:text-black dark:group-hover:text-white">
-                        {feature}
+                        {t(featureKey)}
                       </span>
                     </div>
                   ))}
