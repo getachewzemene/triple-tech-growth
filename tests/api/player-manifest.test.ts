@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 // Sample test data for player manifest
 const mockRequest = { query: { id: 'video123' } };
 

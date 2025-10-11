@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 // Sample test data for playback token
 const mockRequest = { body: { videoId: 'video123' } };
 

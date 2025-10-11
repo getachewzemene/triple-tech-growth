@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 // Sample test data for complete multipart
 const mockRequest = { body: { uploadId: 'id123' } };
 

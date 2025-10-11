@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 // Sample test data for submit-proof
 const mockRequest = { body: { enrollmentId: 'enroll123', proofUrl: 'https://example.com/proof.png' } };
 

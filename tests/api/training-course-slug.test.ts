@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 // Sample test data for training course
 const mockRequest = { params: { slug: 'course-abc' } };
 
