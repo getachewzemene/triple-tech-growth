@@ -33,6 +33,7 @@ type Topic = {
   videoS3Key?: string;
   videoSize?: number;
   videoDuration?: number;
+  googleDriveVideoUrl?: string;
   pdfS3Key?: string;
   pdfSize?: number;
   createdAt: string;

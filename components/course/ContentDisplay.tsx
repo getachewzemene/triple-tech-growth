@@ -19,6 +19,10 @@ import {
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  isGoogleDriveUrl,
+  getGoogleDriveEmbedUrl,
+} from "@/lib/utils";
 
 interface Topic {
   id: string;
@@ -29,6 +33,7 @@ interface Topic {
   videoS3Key?: string;
   videoSize?: number;
   videoDuration?: number;
+  googleDriveVideoUrl?: string;
   pdfS3Key?: string;
   pdfSize?: number;
   createdAt: string;
@@ -380,6 +385,133 @@ const OptimizedPDFViewer: React.FC<{
   );
 };
 
+/**
+ * Google Drive Video Player Component
+ * Uses iframe to embed Google Drive videos for playback
+ */
+const GoogleDriveVideoPlayer: React.FC<{
+  googleDriveUrl: string;
+  title: string;
+  onComplete?: () => void;
+}> = ({ googleDriveUrl, title, onComplete }) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const embedUrl = getGoogleDriveEmbedUrl(googleDriveUrl);
+
+  const handleLoad = () => {
+    setLoading(false);
+  };
+
+  const handleError = () => {
+    setLoading(false);
+    setError(
+      "Failed to load Google Drive video. Please ensure the video is shared with 'Anyone with the link' permission."
+    );
+  };
+
+  const markAsWatched = () => {
+    if (onComplete) {
+      onComplete();
+    }
+  };
+
+  const toggleFullscreen = () => {
+    if (containerRef.current) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        containerRef.current.requestFullscreen();
+      }
+    }
+  };
+
+  if (!embedUrl) {
+    return (
+      <div className="h-full flex items-center justify-center p-8">
+        <Card className="max-w-md">
+          <CardContent className="p-6 text-center">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Invalid Video URL</h3>
+            <p className="text-muted-foreground mb-4">
+              The Google Drive video URL is invalid. Please check the URL and try again.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-full flex items-center justify-center p-8">
+        <Card className="max-w-md">
+          <CardContent className="p-6 text-center">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Video Load Error</h3>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <p className="text-sm text-muted-foreground">
+              Please contact your administrator if this issue persists.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full flex flex-col" ref={containerRef}>
+      {/* Video Header/Controls */}
+      <div className="flex items-center justify-between p-4 border-b bg-white">
+        <div className="flex items-center gap-2">
+          <VideoIcon className="h-5 w-5 text-blue-500" />
+          <span className="font-medium truncate">{title}</span>
+          <Badge variant="outline" className="ml-2">
+            Google Drive
+          </Badge>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            onClick={markAsWatched}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <Play className="h-4 w-4 mr-2" />
+            Mark as Watched
+          </Button>
+          <Button variant="outline" size="sm" onClick={toggleFullscreen}>
+            <Maximize className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Video Player */}
+      <div className="flex-1 relative bg-black">
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
+            <div className="text-center text-white">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+              <p>Loading Google Drive video...</p>
+            </div>
+          </div>
+        )}
+
+        <iframe
+          src={embedUrl}
+          title={title}
+          className="w-full h-full border-none"
+          allow="autoplay; encrypted-media; fullscreen"
+          sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
+          allowFullScreen
+          onLoad={handleLoad}
+          onError={handleError}
+        />
+      </div>
+    </div>
+  );
+};
+
 export default function ContentDisplay({
   topic,
   onComplete,
@@ -400,17 +532,23 @@ export default function ContentDisplay({
     }
   };
 
+  // Check if topic has a Google Drive video URL
+  const hasGoogleDriveVideo = topic.googleDriveVideoUrl && isGoogleDriveUrl(topic.googleDriveVideoUrl);
+  
   const videoUrl = getContentUrl(topic.videoS3Key, "video");
   const pdfUrl = getContentUrl(topic.pdfS3Key, "pdf");
 
-  if (!videoUrl && !pdfUrl) {
+  // Check if there's any content available
+  const hasAnyContent = hasGoogleDriveVideo || videoUrl || pdfUrl;
+
+  if (!hasAnyContent) {
     return (
       <div className="h-full flex items-center justify-center bg-gray-50 rounded-lg m-4">
         <div className="text-center">
           <AlertCircle className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
           <h3 className="text-lg font-semibold mb-2">No Content Available</h3>
           <p className="text-muted-foreground mb-4">
-            This topic doesn't have any content yet. Please check back later.
+            This topic doesn&apos;t have any content yet. Please check back later.
           </p>
           <Badge variant="outline">Content coming soon</Badge>
         </div>
@@ -425,7 +563,16 @@ export default function ContentDisplay({
       transition={{ duration: 0.3 }}
       className="h-full"
     >
-      {videoUrl && (
+      {/* Priority: Google Drive video > S3 video > PDF */}
+      {hasGoogleDriveVideo && (
+        <GoogleDriveVideoPlayer
+          googleDriveUrl={topic.googleDriveVideoUrl!}
+          title={topic.title}
+          onComplete={onComplete}
+        />
+      )}
+
+      {!hasGoogleDriveVideo && videoUrl && (
         <OptimizedVideoPlayer
           src={videoUrl}
           title={topic.title}
@@ -434,7 +581,7 @@ export default function ContentDisplay({
         />
       )}
 
-      {!videoUrl && pdfUrl && (
+      {!hasGoogleDriveVideo && !videoUrl && pdfUrl && (
         <OptimizedPDFViewer
           src={pdfUrl}
           title={topic.title}

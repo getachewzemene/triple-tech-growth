@@ -28,9 +28,11 @@ import {
   Video,
   FileText,
   Plus,
+  Link as LinkIcon,
 } from "lucide-react";
 import AddCourseModal from "@/components/admin/AddCourseModal";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
+import { cn, isGoogleDriveUrl, extractGoogleDriveFileId } from "@/lib/utils";
 import Select, {
   components as selectComponents,
   StylesConfig,
@@ -64,11 +66,12 @@ const topicSchema = z
       .max(1000, "Description too long"),
     order: z.number().min(1, "Order must be at least 1"),
     courseId: z.string().optional().nullable(),
+    googleDriveVideoUrl: z.string().optional().nullable(),
     // helper field updated from component state to allow schema-level validation
     fileRequired: z.boolean().optional(),
   })
   .refine((d) => Boolean(d.fileRequired), {
-    message: "Please upload at least one file (video or PDF).",
+    message: "Please upload at least one file (video or PDF) or provide a Google Drive video URL.",
     path: ["fileRequired"],
   });
 
@@ -83,6 +86,7 @@ interface Topic {
   videoS3Key?: string;
   videoSize?: number;
   videoDuration?: number;
+  googleDriveVideoUrl?: string;
   pdfS3Key?: string;
   pdfSize?: number;
   createdAt: string;
@@ -139,6 +143,7 @@ export default function AddTopicModal({
   const [ariaMessage, setAriaMessage] = useState("");
   const [selectedVideoFile, setSelectedVideoFile] = useState<File | null>(null);
   const [selectedPDFFile, setSelectedPDFFile] = useState<File | null>(null);
+  const [googleDriveVideoUrl, setGoogleDriveVideoUrl] = useState<string>("");
   const [videoUploadState, setVideoUploadState] = useState<UploadState>({
     progress: 0,
     status: "idle",
@@ -212,19 +217,25 @@ export default function AddTopicModal({
 
   // Keep form-level indicator in sync with component file state so zod can validate
   useEffect(() => {
-    const hasAnyFile = Boolean(
+    // Check if there's a valid Google Drive URL
+    const hasValidGoogleDriveUrl = googleDriveVideoUrl && isGoogleDriveUrl(googleDriveVideoUrl);
+    
+    const hasAnyContent = Boolean(
       selectedVideoFile ||
         selectedPDFFile ||
         videoUploadState.s3Key ||
-        pdfUploadState.s3Key,
+        pdfUploadState.s3Key ||
+        hasValidGoogleDriveUrl,
     );
-    // update the hidden helper field and trigger validation when files change
-    setValue("fileRequired", hasAnyFile, { shouldValidate: true });
+    // update the hidden helper field and trigger validation when files/URLs change
+    setValue("fileRequired", hasAnyContent, { shouldValidate: true });
+    setValue("googleDriveVideoUrl", googleDriveVideoUrl || undefined);
   }, [
     selectedVideoFile,
     selectedPDFFile,
     videoUploadState.s3Key,
     pdfUploadState.s3Key,
+    googleDriveVideoUrl,
     setValue,
   ]);
 
@@ -325,21 +336,25 @@ export default function AddTopicModal({
 
   const onSubmit = async (data: TopicFormData) => {
     try {
-      // enforce at least one uploaded file (either a selected file or an already completed upload)
-      const hasAnyFile = Boolean(
+      // Check if there's a valid Google Drive URL
+      const hasValidGoogleDriveUrl = googleDriveVideoUrl && isGoogleDriveUrl(googleDriveVideoUrl);
+      
+      // enforce at least one uploaded file or Google Drive URL
+      const hasAnyContent = Boolean(
         selectedVideoFile ||
           selectedPDFFile ||
           videoUploadState.s3Key ||
-          pdfUploadState.s3Key,
+          pdfUploadState.s3Key ||
+          hasValidGoogleDriveUrl,
       );
-      if (!hasAnyFile) {
+      if (!hasAnyContent) {
         // set a form error so UI shows validation message
         // @ts-ignore - react-hook-form setError accepts any registered name; fileRequired is in schema
         // but ensure the user gets a toast as well
         toast({
           title: "Validation required",
           description:
-            "Please upload at least one file (video or PDF) before creating a topic.",
+            "Please upload at least one file (video or PDF) or provide a Google Drive video URL before creating a topic.",
           variant: "destructive",
         });
         return;
@@ -372,6 +387,7 @@ export default function AddTopicModal({
         videoS3Key,
         videoSize: selectedVideoFile?.size,
         videoDuration: videoUploadState.duration,
+        googleDriveVideoUrl: hasValidGoogleDriveUrl ? googleDriveVideoUrl : undefined,
         pdfS3Key,
         pdfSize: selectedPDFFile?.size,
         createdAt: new Date().toISOString(),
@@ -417,6 +433,7 @@ export default function AddTopicModal({
     reset();
     setSelectedVideoFile(null);
     setSelectedPDFFile(null);
+    setGoogleDriveVideoUrl("");
     setVideoUploadState({ progress: 0, status: "idle" });
     setPdfUploadState({ progress: 0, status: "idle" });
     setVideoMultipartState({ partNumber: 1, completedParts: [] });
@@ -627,8 +644,12 @@ export default function AddTopicModal({
             </div>
 
             {/* File Upload Sections */}
-            <Tabs defaultValue={"video"} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+            <Tabs defaultValue={"googledrive"} className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="googledrive">
+                  <LinkIcon className="h-4 w-4 mr-2" />
+                  Google Drive
+                </TabsTrigger>
                 <TabsTrigger value="video">
                   <Video className="h-4 w-4 mr-2" />
                   Video Upload
@@ -638,6 +659,58 @@ export default function AddTopicModal({
                   PDF Upload
                 </TabsTrigger>
               </TabsList>
+
+              {/* Google Drive Video Tab */}
+              <TabsContent value="googledrive" className="space-y-4">
+                <div className="border rounded-lg p-4">
+                  <h3 className="font-medium mb-3">Google Drive Video URL</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Paste a Google Drive video URL to embed the video directly in your course.
+                    Make sure the video is shared with &quot;Anyone with the link&quot; permission.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="googleDriveUrl">Google Drive Video URL</Label>
+                      <Input
+                        id="googleDriveUrl"
+                        placeholder="https://drive.google.com/file/d/YOUR_FILE_ID/view?usp=sharing"
+                        value={googleDriveVideoUrl}
+                        onChange={(e) => setGoogleDriveVideoUrl(e.target.value)}
+                        className={cn(
+                          googleDriveVideoUrl && !isGoogleDriveUrl(googleDriveVideoUrl) && "border-red-500"
+                        )}
+                      />
+                      {googleDriveVideoUrl && !isGoogleDriveUrl(googleDriveVideoUrl) && (
+                        <p className="text-red-500 text-sm mt-1">
+                          Please enter a valid Google Drive URL
+                        </p>
+                      )}
+                      {googleDriveVideoUrl && isGoogleDriveUrl(googleDriveVideoUrl) && (
+                        <div className="flex items-center text-green-600 text-sm mt-2">
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          <span>Valid Google Drive URL detected</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="bg-muted/50 rounded-lg p-4">
+                      <h4 className="font-medium text-sm mb-2">How to get the video URL:</h4>
+                      <ol className="text-xs text-muted-foreground list-decimal list-inside space-y-1">
+                        <li>Upload your video to Google Drive</li>
+                        <li>Right-click the video file and select &quot;Share&quot;</li>
+                        <li>Click &quot;Change to anyone with the link&quot;</li>
+                        <li>Copy the link and paste it above</li>
+                      </ol>
+                      <p className="text-xs text-muted-foreground mt-3">
+                        <strong>Supported URL formats:</strong><br />
+                        • https://drive.google.com/file/d/FILE_ID/view<br />
+                        • https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
 
               {/* Video Upload Tab */}
               <TabsContent value="video" className="space-y-4">
@@ -850,9 +923,10 @@ export default function AddTopicModal({
             {!selectedVideoFile &&
               !selectedPDFFile &&
               !videoUploadState.s3Key &&
-              !pdfUploadState.s3Key && (
+              !pdfUploadState.s3Key &&
+              !(googleDriveVideoUrl && isGoogleDriveUrl(googleDriveVideoUrl)) && (
                 <p className="text-sm text-red-500 mt-2">
-                  Please upload at least one file (video or PDF) before
+                  Please upload at least one file (video or PDF) or provide a Google Drive video URL before
                   submitting.
                 </p>
               )}
