@@ -809,7 +809,7 @@ export default function TrainingPage() {
                       placeholder="Search courses..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 w-full sm:w-48 md:w-56"
+                      className="pl-10 w-full sm:w-64 md:w-80"
                     />
                   </div>
                   
