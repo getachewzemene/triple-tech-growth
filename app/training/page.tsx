@@ -75,6 +75,9 @@ type Course = {
   category?: string;
 };
 
+// Constants
+const BENEFIT_TRUNCATE_LENGTH = 35;
+
 const courses = [
   {
     id: 1,
@@ -343,9 +346,10 @@ export default function TrainingPage() {
 
   // Filter courses based on search and filters
   const filteredCourses = useMemo(() => {
+    const lowerSearchQuery = searchQuery.toLowerCase();
     return courses.filter(course => {
-      const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = course.title.toLowerCase().includes(lowerSearchQuery) ||
+        course.description.toLowerCase().includes(lowerSearchQuery);
       const matchesCategory = selectedCategory === "all" || course.category === selectedCategory;
       const matchesLevel = selectedLevel === "all" || course.level === selectedLevel;
       return matchesSearch && matchesCategory && matchesLevel;
@@ -978,7 +982,7 @@ export default function TrainingPage() {
                               >
                                 <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 animate-pulse"></div>
                                 <span className="text-sm sm:text-base font-medium text-gray-700 dark:group-hover:text-gray-100">
-                                  {benefit.length > 35 ? benefit.substring(0, 35) + '...' : benefit}
+                                  {benefit.length > BENEFIT_TRUNCATE_LENGTH ? benefit.substring(0, BENEFIT_TRUNCATE_LENGTH) + '...' : benefit}
                                 </span>
                               </div>
                             ))}
