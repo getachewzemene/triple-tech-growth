@@ -31,6 +31,7 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { useAuthModal } from "@/app/providers/AuthModalProvider";
 import { useRouter } from "next/navigation";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
+import { useLanguage } from "@/app/providers/LanguageProvider";
 
 // Featured bonus courses as specified in the requirements
 const featuredCourses = [
@@ -168,6 +169,7 @@ export default function CoursesPage() {
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const { user } = useAuth();
   const router = useRouter();
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Load enrolled courses from localStorage
@@ -184,12 +186,12 @@ export default function CoursesPage() {
         <div className="flex items-center justify-center min-h-[60vh]">
           <Card className="w-96">
             <CardContent className="p-6 text-center">
-              <h2 className="text-xl font-semibold mb-4">Please Log In</h2>
+              <h2 className="text-xl font-semibold mb-4">{t("profile.loginRequired")}</h2>
               <p className="text-muted-foreground mb-4">
-                You need to be logged in to access the course module.
+                {t("training.page.loginRequired")}
               </p>
               <Button onClick={() => openAuthModal("login")}>
-                Sign In / Sign Up
+                {t("training.page.loginButton")}
               </Button>
             </CardContent>
           </Card>
@@ -243,16 +245,16 @@ export default function CoursesPage() {
           transition={{ duration: 0.5 }}
         >
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Course Module</h1>
+            <h1 className="text-3xl font-bold mb-2">{t("courses.title")}</h1>
             <p className="text-muted-foreground">
-              Explore available courses and manage your enrolled courses
+              {t("courses.subtitle")}
             </p>
           </div>
 
           <Tabs defaultValue="courses" className="space-y-6">
             <TabsList>
-              <TabsTrigger value="courses">Courses</TabsTrigger>
-              <TabsTrigger value="enrolled">Enrolled Courses</TabsTrigger>
+              <TabsTrigger value="courses">{t("courses.available")}</TabsTrigger>
+              <TabsTrigger value="enrolled">{t("profile.enrolledCourses")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="courses">

@@ -16,9 +16,11 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/app/providers/LanguageProvider";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { t } = useLanguage();
 
   const socialLinks = [
     { icon: Facebook, href: "#", label: "Facebook" },
@@ -89,8 +91,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-200 leading-relaxed text-sm">
-              Accelerating business growth with smart technologies and impactful
-              innovation.
+              {t("footer.companyInfo")}
             </p>
             <div className="flex space-x-3">
               {socialLinks.map((social, index) => (
@@ -109,16 +110,16 @@ const Footer = () => {
           {/* Enhanced Quick Links */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold bg-gradient-to-r from-yellow to-yellow/80 bg-clip-text text-transparent">
-              Quick Links
+              {t("footer.quickLinks")}
             </h3>
             <ul className="space-y-2">
               {[
-                { name: "Home", id: "hero" },
-                { name: "Services", id: "services" },
-                { name: "Projects", id: "projects" },
-                { name: "Why Choose Us", id: "why-choose-us" },
-                { name: "Team", id: "team" },
-                { name: "Contact", id: "contact" },
+                { nameKey: "nav.home", id: "hero" },
+                { nameKey: "nav.services", id: "services" },
+                { nameKey: "nav.projects", id: "projects" },
+                { nameKey: "nav.whyChooseUs", id: "why-choose-us" },
+                { nameKey: "nav.team", id: "team" },
+                { nameKey: "nav.contact", id: "contact" },
               ].map((link) => (
                 <li key={link.id}>
                   <button
@@ -126,7 +127,7 @@ const Footer = () => {
                     className="text-gray-200 hover:text-yellow transition-all duration-300 text-left text-sm group relative overflow-hidden focus-visible-high"
                   >
                     <span className="relative z-10 group-hover:text-black dark:group-hover:text-white">
-                      {link.name}
+                      {t(link.nameKey)}
                     </span>
                     <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow to-yellow/80 group-hover:w-full transition-all duration-300"></div>
                   </button>
@@ -138,18 +139,18 @@ const Footer = () => {
           {/* Enhanced Services */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold bg-gradient-to-r from-yellow to-yellow/80 bg-clip-text text-transparent">
-              Our Services
+              {t("footer.services")}
             </h3>
             <ul className="space-y-2">
               {[
-                "Web Development",
-                "Mobile App Development",
-                "Digital Marketing",
-                "IT Training",
-              ].map((service) => (
-                <li key={service}>
+                "footer.webDev",
+                "footer.mobileDev",
+                "footer.digitalMarketing",
+                "footer.itTraining",
+              ].map((serviceKey) => (
+                <li key={serviceKey}>
                   <span className="text-gray-200 hover:text-yellow transition-all duration-300 cursor-pointer text-sm group relative overflow-hidden">
-                    <span className="relative z-10">{service}</span>
+                    <span className="relative z-10">{t(serviceKey)}</span>
                     <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow to-yellow/80 group-hover:w-full transition-all duration-300"></div>
                   </span>
                 </li>
@@ -160,7 +161,7 @@ const Footer = () => {
           {/* Enhanced Contact Info */}
           <div className="space-y-4" id="contact">
             <h3 className="text-lg font-semibold bg-gradient-to-r from-yellow to-yellow/80 bg-clip-text text-transparent">
-              Contact Info
+              {t("footer.contact")}
             </h3>
             <div className="space-y-3">
               <div className="flex items-start space-x-3 group">
@@ -202,12 +203,12 @@ const Footer = () => {
             </div>
           </div>
           <div className="space-y-3">
-            <h4 className="text-xl font-semibold mb-4">Get in touch</h4>
+            <h4 className="text-xl font-semibold mb-4">{t("footer.contact")}</h4>
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
                 type="text"
                 name="name"
-                placeholder="Your Name"
+                placeholder={t("footer.name")}
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -216,7 +217,7 @@ const Footer = () => {
               <Input
                 type="email"
                 name="email"
-                placeholder="Your Email"
+                placeholder={t("footer.email")}
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -224,7 +225,7 @@ const Footer = () => {
               />
               <Textarea
                 name="message"
-                placeholder="Your Message"
+                placeholder={t("footer.message")}
                 value={formData.message}
                 onChange={handleChange}
                 required
@@ -235,7 +236,7 @@ const Footer = () => {
                 type="submit"
                 className="w-full bg-yellow text-yellow-foreground hover:bg-yellow/90"
               >
-                Send Message
+                {t("footer.sendMessage")}
               </Button>
             </form>
           </div>
@@ -246,26 +247,26 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
             <p className="text-gray-200 text-center md:text-left text-sm">
-              &copy; {currentYear} Triple Technologies. All rights reserved.
+              &copy; {currentYear} Triple Technologies. {t("footer.rights")}
             </p>
             <div className="flex space-x-4">
               <a
                 href="#"
                 className="text-gray-200 hover:text-yellow transition-colors duration-300 text-xs"
               >
-                Privacy Policy
+                {t("footer.privacyPolicy")}
               </a>
               <a
                 href="#"
                 className="text-gray-200 hover:text-yellow transition-colors duration-300 text-xs"
               >
-                Terms of Service
+                {t("footer.termsOfService")}
               </a>
               <a
                 href="#"
                 className="text-gray-200 hover:text-yellow transition-colors duration-300 text-xs"
               >
-                Cookie Policy
+                {t("footer.cookiePolicy")}
               </a>
             </div>
           </div>

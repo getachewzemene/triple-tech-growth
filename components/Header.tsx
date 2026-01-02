@@ -31,7 +31,7 @@ const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuth();
-  const { language, setLanguage, getLanguageDisplayName } = useLanguage();
+  const { language, setLanguage, getLanguageDisplayName, t } = useLanguage();
   const { toggleTheme, isDark } = useThemeToggle();
 
   useEffect(() => {
@@ -135,14 +135,14 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             <nav className="flex space-x-4">
               {[
-                { name: "Home", id: "hero" },
-                { name: "Services", id: "services" },
-                { name: "Projects", id: "projects" },
-                { name: "Why Choose Us", id: "why-choose-us" },
-                { name: "Training", id: "training" },
-                ...(user ? [{ name: "Courses", id: "courses" }] : []),
-                { name: "Team", id: "team" },
-                { name: "Contact Us", id: "contact" },
+                { nameKey: "nav.home", id: "hero" },
+                { nameKey: "nav.services", id: "services" },
+                { nameKey: "nav.projects", id: "projects" },
+                { nameKey: "nav.whyChooseUs", id: "why-choose-us" },
+                { nameKey: "nav.training", id: "training" },
+                ...(user ? [{ nameKey: "nav.courses", id: "courses" }] : []),
+                { nameKey: "nav.team", id: "team" },
+                { nameKey: "nav.contact", id: "contact" },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -163,7 +163,7 @@ const Header = () => {
                       : "after:w-0"
                   } transform hover:scale-105`}
                 >
-                  <span className="relative z-10">{item.name}</span>
+                  <span className="relative z-10">{t(item.nameKey)}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-light-blue/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
               ))}
@@ -188,7 +188,7 @@ const Header = () => {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Toggle {isDark ? "Light" : "Dark"} Mode</p>
+                  <p>{t("header.toggleTheme", { mode: isDark ? t("header.light") : t("header.dark") })}</p>
                 </TooltipContent>
               </Tooltip>
 
@@ -243,11 +243,11 @@ const Header = () => {
                     className="bg-transparent border-white/30 text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue hover:border-yellow transition-all duration-500 transform hover:scale-105 backdrop-blur-sm"
                   >
                     <User className="w-4 h-4 mr-2" />
-                    Profile
+                    {t("header.profile")}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>View Profile</p>
+                  <p>{t("header.profile")}</p>
                 </TooltipContent>
               </Tooltip>
             ) : (
@@ -257,7 +257,7 @@ const Header = () => {
                 size="sm"
                 className="bg-transparent border-white/30 text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue hover:border-yellow transition-all duration-500 transform hover:scale-105 backdrop-blur-sm hover:shadow-lg"
               >
-                <span className="relative z-10">Login</span>
+                <span className="relative z-10">{t("header.login")}</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-light-blue/20 rounded-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
               </Button>
             )}
@@ -280,14 +280,14 @@ const Header = () => {
             <div className="absolute top-0 left-0 w-full h-screen bg-light-blue/95 shadow-lg md:hidden z-50">
               <nav className="container mx-auto px-4 py-8 flex flex-col space-y-4 h-full">
                 {[
-                  { name: "Home", id: "hero" },
-                  { name: "Services", id: "services" },
-                  { name: "Projects", id: "projects" },
-                  { name: "Why Choose Us", id: "why-choose-us" },
-                  { name: "Training", id: "training" },
-                  ...(user ? [{ name: "Courses", id: "courses" }] : []),
-                  { name: "Team", id: "team" },
-                  { name: "Contact Us", id: "contact" },
+                  { nameKey: "nav.home", id: "hero" },
+                  { nameKey: "nav.services", id: "services" },
+                  { nameKey: "nav.projects", id: "projects" },
+                  { nameKey: "nav.whyChooseUs", id: "why-choose-us" },
+                  { nameKey: "nav.training", id: "training" },
+                  ...(user ? [{ nameKey: "nav.courses", id: "courses" }] : []),
+                  { nameKey: "nav.team", id: "team" },
+                  { nameKey: "nav.contact", id: "contact" },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -300,7 +300,7 @@ const Header = () => {
                         : "text-white hover:text-yellow"
                     }`}
                   >
-                    {item.name}
+                    {t(item.nameKey)}
                   </button>
                 ))}
 
@@ -380,7 +380,7 @@ const Header = () => {
                       className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
                     >
                       <User className="w-4 h-4 mr-2" />
-                      Profile
+                      {t("header.profile")}
                     </Button>
                   ) : (
                     <Button
@@ -392,7 +392,7 @@ const Header = () => {
                       size="sm"
                       className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
                     >
-                      Login
+                      {t("header.login")}
                     </Button>
                   )}
                 </div>
@@ -409,7 +409,7 @@ const Header = () => {
                       className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
                     >
                       <User className="w-4 h-4 mr-2" />
-                      Profile
+                      {t("header.profile")}
                     </Button>
                   ) : (
                     <Button
@@ -421,7 +421,7 @@ const Header = () => {
                       size="sm"
                       className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
                     >
-                      Login
+                      {t("header.login")}
                     </Button>
                   )}
                 </div>
