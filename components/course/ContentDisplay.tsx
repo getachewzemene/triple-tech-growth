@@ -16,7 +16,6 @@ import {
   Video as VideoIcon,
   AlertCircle,
   Loader2,
-  ExternalLink,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -452,16 +451,9 @@ const GoogleDriveVideoPlayer: React.FC<{
             <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Video Load Error</h3>
             <p className="text-muted-foreground mb-4">{error}</p>
-            <Button asChild>
-              <a
-                href={googleDriveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Open in Google Drive
-              </a>
-            </Button>
+            <p className="text-sm text-muted-foreground">
+              Please contact your administrator if this issue persists.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -490,15 +482,6 @@ const GoogleDriveVideoPlayer: React.FC<{
           </Button>
           <Button variant="outline" size="sm" onClick={toggleFullscreen}>
             <Maximize className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="sm" asChild>
-            <a
-              href={googleDriveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <ExternalLink className="h-4 w-4" />
-            </a>
           </Button>
         </div>
       </div>
