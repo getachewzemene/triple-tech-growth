@@ -15,15 +15,11 @@ import {
   FaStar,
 } from "react-icons/fa";
 import Header from "@/components/Header";
-import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -32,7 +28,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -71,76 +66,6 @@ type Course = {
   topicsCount?: number;
   prerequisites?: string;
 };
-
-// Featured bonus courses as specified in the requirements
-const featuredBonusCourses = [
-  {
-    id: 6,
-    title: "AI Automation",
-    description: "Get started with artificial intelligence.",
-    icon: <FaRobot size={24} />,
-    detailedDescription:
-      "Explore the world of artificial intelligence and automation. Learn machine learning basics, Python programming, AI tools integration, and how to automate business processes.",
-    duration: "8 weeks",
-    level: "Beginner to Intermediate",
-    price: "$499",
-    benefits: [
-      "Python programming for AI",
-      "Machine learning fundamentals",
-      "AI tool integration skills",
-      "Business automation projects",
-      "Future-ready career skills",
-    ],
-    instructor: "Dr. James Wilson - AI Research Scientist",
-    prerequisites: "Basic math and logic skills",
-    featured: true,
-    thumbnail: "/placeholder.svg",
-  },
-  {
-    id: 7,
-    title: "CapCut Video Editing with Mobile",
-    description: "Master mobile video editing with CapCut.",
-    icon: <FaMobileAlt size={24} />,
-    detailedDescription:
-      "Learn professional mobile video editing using CapCut. Create stunning videos directly on your phone with advanced editing techniques, effects, and transitions specifically designed for mobile content creation.",
-    duration: "6 weeks",
-    level: "Beginner to Intermediate",
-    price: "$199",
-    benefits: [
-      "Mobile-first video editing mastery",
-      "CapCut advanced features and effects",
-      "Social media content optimization",
-      "Transitions and animations",
-      "Mobile video monetization strategies",
-    ],
-    instructor: "Lisa Chang - Mobile Content Creator",
-    prerequisites: "Smartphone and CapCut app",
-    featured: true,
-    thumbnail: "/placeholder.svg",
-  },
-  {
-    id: 1,
-    title: "Video Editing",
-    description: "Master video editing techniques.",
-    icon: <FaVideo size={24} />,
-    detailedDescription:
-      "Learn professional video editing with industry-standard tools like Adobe Premiere Pro, DaVinci Resolve, and Final Cut Pro. Master cutting, transitions, color correction, audio mixing, and visual effects.",
-    duration: "8 weeks",
-    level: "Beginner to Advanced",
-    price: "$299",
-    benefits: [
-      "Hands-on experience with professional editing software",
-      "Portfolio development with real projects",
-      "Certificate of completion",
-      "Job placement assistance",
-      "Lifetime access to course materials",
-    ],
-    instructor: "Sarah Johnson - 10+ years industry experience",
-    prerequisites: "Basic computer skills",
-    featured: true,
-    thumbnail: "/placeholder.svg",
-  },
-];
 
 const courses = [
   {
@@ -660,14 +585,14 @@ export default function TrainingPage() {
                             </div>
 
                             {/* Action buttons */}
-                            <div className="space-y-2">
+                            <div className={enrollmentStatus?.status === "approved" ? "" : "grid grid-cols-2 gap-3"}>
                               {enrollmentStatus?.status === "approved" ? (
                                 <Button
                                   size="sm"
                                   onClick={() =>
                                     router.push(`/course/${folder.id}`)
                                   }
-                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                                 >
                                   Access Course
                                 </Button>
@@ -706,16 +631,16 @@ export default function TrainingPage() {
                                         isFolder: true,
                                       })
                                     }
-                                    className="w-full border-gray-300 hover:border-green-500 hover:bg-green-50 hover:text-green-700 transition-all duration-300"
+                                    className="border-gray-300 hover:border-green-500 hover:bg-green-50 hover:text-green-700 transition-all duration-300"
                                   >
-                                    View Details
+                                    View
                                   </Button>
                                   <Button
                                     size="sm"
                                     onClick={() =>
                                       handleFolderEnrollment(folder)
                                     }
-                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transition-all duration-300"
                                     disabled={
                                       enrollmentStatus?.status ===
                                       "payment_submitted"
@@ -724,7 +649,7 @@ export default function TrainingPage() {
                                     {enrollmentStatus?.status ===
                                     "payment_submitted"
                                       ? "Pending"
-                                      : "Enroll Now"}
+                                      : "Enroll"}
                                   </Button>
                                 </>
                               )}
@@ -772,222 +697,6 @@ export default function TrainingPage() {
                 </div>
               </div>
             )}
-
-            {/* Featured Courses Section */}
-            <div>
-              <motion.h3
-                className="text-2xl font-bold text-center mb-8 text-gray-900"
-                initial={{ opacity: 0, y: -10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                viewport={{ once: true }}
-              >
-                Featured{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
-                  Courses
-                </span>
-              </motion.h3>
-              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
-                {featuredBonusCourses.map((course, index) => {
-                  const enrollmentStatus = user
-                    ? checkEnrollmentStatus(course.id)
-                    : null;
-                  return (
-                    <motion.div
-                      key={course.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
-                      viewport={{ once: true }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="relative"
-                    >
-                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] shadow-orange-500/25">
-                        {/* Background gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-amber-50 opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0"></div>
-
-                        {/* Animated border gradient */}
-                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0">
-                          <div className="w-full h-full bg-card rounded-3xl"></div>
-                        </div>
-
-                        {/* Content container */}
-                        <div className="relative z-20 p-4 sm:p-6">
-                          {/* Stats badge */}
-                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                            <div className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 text-white text-xs font-semibold">
-                              {course.duration}
-                            </div>
-                          </div>
-
-                          {/* Icon */}
-                          <div className="relative mb-6 flex justify-center">
-                            <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                              <div className="text-white dark:group-hover:text-[#e2a70f]">
-                                {course.icon}
-                              </div>
-                            </div>
-                            {/* Floating particles */}
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
-                          </div>
-
-                          {/* Title and description */}
-                          <div className="text-center mb-4 sm:mb-6">
-                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
-                              {course.title}
-                            </h3>
-                            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
-                              {course.description}
-                            </p>
-                          </div>
-
-                          {/* Course info */}
-                          <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
-                            <div className="flex items-center gap-1">
-                              <FaClock className="w-4 h-4" />
-                              <span>{course.duration}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <FaDollarSign className="w-4 h-4" />
-                              <span>{course.price}</span>
-                            </div>
-                          </div>
-
-                          {/* Level badge */}
-                          <div className="text-center mb-4">
-                            <Badge
-                              variant="secondary"
-                              className="bg-gradient-to-r from-orange-100 to-amber-100 text-orange-800 border-orange-300 transition-all duration-300"
-                            >
-                              {course.level}
-                            </Badge>
-                          </div>
-
-                          {/* Features list - reveals on hover */}
-                          <div className="space-y-2 mb-4">
-                            {course.benefits?.slice(0, 3).map((benefit, idx) => (
-                              <div
-                                key={idx}
-                                className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
-                                style={{ transitionDelay: `${idx * 100 + 200}ms` }}
-                              >
-                                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 animate-pulse"></div>
-                                <span className="text-xs font-medium text-gray-600 dark:group-hover:text-gray-200">
-                                  {benefit.length > 30 ? benefit.substring(0, 30) + '...' : benefit}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* Action buttons */}
-                          <div className="space-y-2">
-                            {user ? (
-                              enrollmentStatus?.status === "approved" ? (
-                                <Button
-                                  size="sm"
-                                  onClick={() =>
-                                    router.push(`/course/${course.id}`)
-                                  }
-                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                                >
-                                  Access Course
-                                </Button>
-                              ) : (
-                                <>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setSelectedCourse(course)}
-                                    className="w-full border-gray-300 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 transition-all duration-300"
-                                  >
-                                    View Details
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedCourse(course);
-                                      handleEnrollment(course);
-                                    }}
-                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                                    disabled={
-                                      enrollmentStatus?.status ===
-                                      "payment_submitted"
-                                    }
-                                  >
-                                    {enrollmentStatus?.status ===
-                                    "payment_submitted"
-                                      ? "Pending"
-                                      : "Enroll Now"}
-                                  </Button>
-                                </>
-                              )
-                            ) : (
-                              <>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => setSelectedCourse(course)}
-                                  className="w-full border-gray-300 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 transition-all duration-300"
-                                >
-                                  View Details
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedCourse(course);
-                                    openAuthModal("login");
-                                  }}
-                                  className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                                >
-                                  Enroll
-                                </Button>
-                              </>
-                            )}
-                          </div>
-
-                          {/* Enrollment status */}
-                          {user && enrollmentStatus && (
-                            <div className="text-xs text-center mt-3">
-                              <Badge
-                                variant={
-                                  enrollmentStatus.status === "approved"
-                                    ? "default"
-                                    : enrollmentStatus.status ===
-                                        "payment_submitted"
-                                      ? "secondary"
-                                      : "destructive"
-                                }
-                              >
-                                {enrollmentStatus.status === "approved"
-                                  ? "Approved"
-                                  : enrollmentStatus.status ===
-                                      "payment_submitted"
-                                    ? "Payment Under Review"
-                                    : "Payment Required"}
-                              </Badge>
-                            </div>
-                          )}
-
-                          {/* Progress indicator */}
-                          <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                              <div className="h-full bg-gradient-to-r from-orange-500 to-amber-600 transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Hover glow effect */}
-                        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
-                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500 to-amber-600 opacity-20 blur-xl transform scale-110"></div>
-                        </div>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
 
             {/* All Courses Section */}
             <div>
@@ -1098,7 +807,7 @@ export default function TrainingPage() {
                           </div>
 
                           {/* Action buttons */}
-                          <div className="space-y-2">
+                          <div className={user && enrollmentStatus?.status === "approved" ? "" : "grid grid-cols-2 gap-3"}>
                             {user ? (
                               enrollmentStatus?.status === "approved" ? (
                                 <Button
@@ -1106,7 +815,7 @@ export default function TrainingPage() {
                                   onClick={() =>
                                     router.push(`/course/${course.id}`)
                                   }
-                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                                 >
                                   Access Course
                                 </Button>
@@ -1116,9 +825,9 @@ export default function TrainingPage() {
                                     variant="outline"
                                     size="sm"
                                     onClick={() => setSelectedCourse(course)}
-                                    className="w-full border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
+                                    className="border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
                                   >
-                                    View Details
+                                    View
                                   </Button>
                                   <Button
                                     size="sm"
@@ -1126,7 +835,7 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       handleEnrollment(course);
                                     }}
-                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transition-all duration-300"
                                     disabled={
                                       enrollmentStatus?.status ===
                                       "payment_submitted"
@@ -1135,7 +844,7 @@ export default function TrainingPage() {
                                     {enrollmentStatus?.status ===
                                     "payment_submitted"
                                       ? "Pending"
-                                      : "Enroll Now"}
+                                      : "Enroll"}
                                   </Button>
                                 </>
                               )
@@ -1145,9 +854,9 @@ export default function TrainingPage() {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => setSelectedCourse(course)}
-                                  className="w-full border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
+                                  className="border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
                                 >
-                                  View Details
+                                  View
                                 </Button>
                                 <Button
                                   size="sm"
@@ -1155,7 +864,7 @@ export default function TrainingPage() {
                                     setSelectedCourse(course);
                                     openAuthModal("login");
                                   }}
-                                  className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                  className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transition-all duration-300"
                                 >
                                   Enroll
                                 </Button>
