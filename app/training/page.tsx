@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaVideo,
@@ -13,6 +13,10 @@ import {
   FaUser,
   FaDollarSign,
   FaStar,
+  FaSearch,
+  FaFilter,
+  FaUsers,
+  FaGraduationCap,
 } from "react-icons/fa";
 import Header from "@/components/Header";
 
@@ -65,7 +69,14 @@ type Course = {
   priceCents?: number;
   topicsCount?: number;
   prerequisites?: string;
+  rating?: number;
+  studentsEnrolled?: number;
+  isComingSoon?: boolean;
+  category?: string;
 };
+
+// Constants
+const BENEFIT_TRUNCATE_LENGTH = 35;
 
 const courses = [
   {
@@ -88,6 +99,9 @@ const courses = [
     instructor: "Sarah Johnson - 10+ years industry experience",
     prerequisites: "Basic computer skills",
     thumbnail: "/placeholder.svg",
+    rating: 4.8,
+    studentsEnrolled: 1250,
+    category: "Media Production",
   },
   {
     id: 2,
@@ -109,6 +123,9 @@ const courses = [
     instructor: "Mike Chen - Digital Marketing Expert",
     prerequisites: "None",
     thumbnail: "/placeholder.svg",
+    rating: 4.9,
+    studentsEnrolled: 2100,
+    category: "Marketing",
   },
   {
     id: 3,
@@ -130,6 +147,9 @@ const courses = [
     instructor: "Alex Thompson - Senior Full-Stack Developer",
     prerequisites: "Basic computer literacy",
     thumbnail: "/placeholder.svg",
+    rating: 4.7,
+    studentsEnrolled: 3500,
+    category: "Development",
   },
   {
     id: 4,
@@ -151,6 +171,9 @@ const courses = [
     instructor: "Emily Rodriguez - Mobile App Architect",
     prerequisites: "Basic programming knowledge",
     thumbnail: "/placeholder.svg",
+    rating: 4.6,
+    studentsEnrolled: 890,
+    category: "Development",
   },
   {
     id: 5,
@@ -172,6 +195,9 @@ const courses = [
     instructor: "David Kim - Creative Director",
     prerequisites: "Design interest and creativity",
     thumbnail: "/placeholder.svg",
+    rating: 4.8,
+    studentsEnrolled: 1800,
+    category: "Design",
   },
   {
     id: 6,
@@ -193,6 +219,34 @@ const courses = [
     instructor: "Dr. James Wilson - AI Research Scientist",
     prerequisites: "Basic math and logic skills",
     thumbnail: "/placeholder.svg",
+    rating: 4.9,
+    studentsEnrolled: 1450,
+    category: "Technology",
+  },
+  {
+    id: 7,
+    title: "Data Science Fundamentals",
+    description: "Learn data analysis and visualization.",
+    icon: <FaChartLine size={24} />,
+    detailedDescription:
+      "Master data science concepts including data analysis, visualization, statistical modeling, and machine learning fundamentals using Python and popular data science libraries.",
+    duration: "10 weeks",
+    level: "Intermediate",
+    price: "$549",
+    benefits: [
+      "Python for data analysis",
+      "Data visualization with popular tools",
+      "Statistical modeling techniques",
+      "Real-world data projects",
+      "Industry certification preparation",
+    ],
+    instructor: "Dr. Sarah Martinez - Data Scientist",
+    prerequisites: "Basic programming knowledge",
+    thumbnail: "/placeholder.svg",
+    rating: 4.7,
+    studentsEnrolled: 0,
+    category: "Technology",
+    isComingSoon: true,
   },
 ];
 
@@ -272,6 +326,35 @@ export default function TrainingPage() {
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const { user, registerUser } = useAuth();
   const router = useRouter();
+  
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedLevel, setSelectedLevel] = useState<string>("all");
+
+  // Get unique categories from courses
+  const categories = useMemo(() => {
+    const cats = new Set(courses.map(c => c.category).filter(Boolean));
+    return ["all", ...Array.from(cats)];
+  }, []);
+
+  // Get unique levels from courses
+  const levels = useMemo(() => {
+    const lvls = new Set(courses.map(c => c.level).filter(Boolean));
+    return ["all", ...Array.from(lvls)];
+  }, []);
+
+  // Filter courses based on search and filters
+  const filteredCourses = useMemo(() => {
+    const lowerSearchQuery = searchQuery.toLowerCase();
+    return courses.filter(course => {
+      const matchesSearch = course.title.toLowerCase().includes(lowerSearchQuery) ||
+        course.description.toLowerCase().includes(lowerSearchQuery);
+      const matchesCategory = selectedCategory === "all" || course.category === selectedCategory;
+      const matchesLevel = selectedLevel === "all" || course.level === selectedLevel;
+      return matchesSearch && matchesCategory && matchesLevel;
+    });
+  }, [searchQuery, selectedCategory, selectedLevel]);
 
   useEffect(() => {
     // Load course folders from admin system
@@ -477,6 +560,65 @@ export default function TrainingPage() {
 
         {!selectedCourse ? (
           <div className="space-y-12">
+            {/* Search and Filter Section */}
+            <motion.div
+              className="bg-card rounded-2xl p-4 sm:p-6 shadow-lg border border-border"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex flex-col md:flex-row gap-4 items-center">
+                {/* Search Input */}
+                <div className="relative flex-1 w-full">
+                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    type="text"
+                    placeholder="Search courses..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 w-full"
+                  />
+                </div>
+                
+                {/* Category Filter */}
+                <div className="flex items-center gap-2 w-full md:w-auto">
+                  <FaFilter className="text-gray-400 w-4 h-4" />
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="px-4 py-2 rounded-lg border border-border bg-background text-foreground w-full md:w-auto"
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat === "all" ? "All Categories" : cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Level Filter */}
+                <div className="flex items-center gap-2 w-full md:w-auto">
+                  <FaGraduationCap className="text-gray-400 w-4 h-4" />
+                  <select
+                    value={selectedLevel}
+                    onChange={(e) => setSelectedLevel(e.target.value)}
+                    className="px-4 py-2 rounded-lg border border-border bg-background text-foreground w-full md:w-auto"
+                  >
+                    {levels.map((lvl) => (
+                      <option key={lvl} value={lvl}>
+                        {lvl === "all" ? "All Levels" : lvl}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
+              {/* Results count */}
+              <div className="mt-4 text-sm text-muted-foreground">
+                Showing {filteredCourses.length} of {courses.length} courses
+              </div>
+            </motion.div>
+
             {/* Course Folders Section */}
             {courseFolders.length > 0 && (
               <div>
@@ -541,7 +683,7 @@ export default function TrainingPage() {
                               <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                                 {folder.title}
                               </h3>
-                              <p className="text-gray-600 text-xs sm:text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
+                              <p className="text-gray-600 text-sm sm:text-base leading-relaxed group-hover:text-gray-800 dark:group-hover:text-gray-50 transition-colors duration-300">
                                 {folder.description}
                               </p>
                             </div>
@@ -569,15 +711,15 @@ export default function TrainingPage() {
                             </div>
 
                             {/* Features list - reveals on hover */}
-                            <div className="space-y-2 mb-4">
+                            <div className="space-y-2 sm:space-y-3 mb-4">
                               {["Expert-curated content", "Multiple topics", "Lifetime access"].map((feature, idx) => (
                                 <div
                                   key={idx}
                                   className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
                                   style={{ transitionDelay: `${idx * 100 + 200}ms` }}
                                 >
-                                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 animate-pulse"></div>
-                                  <span className="text-xs font-medium text-gray-600 dark:group-hover:text-gray-200">
+                                  <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 animate-pulse"></div>
+                                  <span className="text-sm sm:text-base font-medium text-gray-700 dark:group-hover:text-gray-100">
                                     {feature}
                                   </span>
                                 </div>
@@ -712,8 +854,24 @@ export default function TrainingPage() {
                   Courses
                 </span>
               </motion.h3>
+              {filteredCourses.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-lg text-muted-foreground">No courses found matching your criteria.</p>
+                  <Button 
+                    variant="outline" 
+                    className="mt-4"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedCategory("all");
+                      setSelectedLevel("all");
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+              ) : (
               <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
-                {courses.map((course, index) => {
+                {filteredCourses.map((course, index) => {
                   const enrollmentStatus = user
                     ? checkEnrollmentStatus(course.id)
                     : null;
@@ -728,7 +886,15 @@ export default function TrainingPage() {
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] shadow-blue-500/25">
+                      {/* Coming Soon Badge */}
+                      {course.isComingSoon && (
+                        <div className="absolute -top-2 -right-2 z-30">
+                          <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 text-xs font-bold shadow-lg">
+                            Coming Soon
+                          </Badge>
+                        </div>
+                      )}
+                      <Card className={`h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] shadow-blue-500/25 ${course.isComingSoon ? 'opacity-90' : ''}`}>
                         {/* Background gradient overlay */}
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0"></div>
 
@@ -763,9 +929,25 @@ export default function TrainingPage() {
                             <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                               {course.title}
                             </h3>
-                            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
+                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed group-hover:text-gray-800 dark:group-hover:text-gray-50 transition-colors duration-300">
                               {course.description}
                             </p>
+                          </div>
+
+                          {/* Rating and Students */}
+                          <div className="flex items-center justify-center gap-4 text-sm mb-3">
+                            {course.rating && (
+                              <div className="flex items-center gap-1 text-yellow-500">
+                                <FaStar className="w-4 h-4" />
+                                <span className="font-semibold">{course.rating}</span>
+                              </div>
+                            )}
+                            {course.studentsEnrolled !== undefined && course.studentsEnrolled > 0 && (
+                              <div className="flex items-center gap-1 text-muted-foreground">
+                                <FaUsers className="w-4 h-4" />
+                                <span>{course.studentsEnrolled.toLocaleString()} students</span>
+                              </div>
+                            )}
                           </div>
 
                           {/* Course info */}
@@ -791,16 +973,16 @@ export default function TrainingPage() {
                           </div>
 
                           {/* Features list - reveals on hover */}
-                          <div className="space-y-2 mb-4">
+                          <div className="space-y-2 sm:space-y-3 mb-4">
                             {course.benefits?.slice(0, 3).map((benefit, idx) => (
                               <div
                                 key={idx}
                                 className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
                                 style={{ transitionDelay: `${idx * 100 + 200}ms` }}
                               >
-                                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 animate-pulse"></div>
-                                <span className="text-xs font-medium text-gray-600 dark:group-hover:text-gray-200">
-                                  {benefit.length > 30 ? benefit.substring(0, 30) + '...' : benefit}
+                                <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 animate-pulse"></div>
+                                <span className="text-sm sm:text-base font-medium text-gray-700 dark:group-hover:text-gray-100">
+                                  {benefit.length > BENEFIT_TRUNCATE_LENGTH ? benefit.substring(0, BENEFIT_TRUNCATE_LENGTH) + '...' : benefit}
                                 </span>
                               </div>
                             ))}
@@ -808,7 +990,15 @@ export default function TrainingPage() {
 
                           {/* Action buttons */}
                           <div className={user && enrollmentStatus?.status === "approved" ? "" : "grid grid-cols-2 gap-3"}>
-                            {user ? (
+                            {course.isComingSoon ? (
+                              <Button
+                                size="sm"
+                                disabled
+                                className="w-full col-span-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white cursor-not-allowed opacity-80"
+                              >
+                                Coming Soon
+                              </Button>
+                            ) : user ? (
                               enrollmentStatus?.status === "approved" ? (
                                 <Button
                                   size="sm"
@@ -912,6 +1102,7 @@ export default function TrainingPage() {
                   );
                 })}
               </div>
+              )}
             </div>
           </div>
         ) : (

@@ -167,13 +167,13 @@ const TrainingSection = () => {
                   <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
                     {program.title}
                   </h3>
-                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
+                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed group-hover:text-gray-800 dark:group-hover:text-gray-50 transition-colors duration-300">
                     {program.description}
                   </p>
                 </div>
 
                 {/* Features list */}
-                <div className="space-y-2 mb-4">
+                <div className="space-y-2 sm:space-y-3 mb-4">
                   {program.features.map((feature, idx) => (
                     <div
                       key={idx}
@@ -181,9 +181,9 @@ const TrainingSection = () => {
                       style={{ transitionDelay: `${idx * 100 + 200}ms` }}
                     >
                       <div
-                        className={`w-2 h-2 rounded-full bg-gradient-to-r ${program.gradient} animate-pulse`}
+                        className={`w-2.5 h-2.5 rounded-full bg-gradient-to-r ${program.gradient} animate-pulse`}
                       ></div>
-                      <span className="text-xs font-medium text-gray-600">
+                      <span className="text-sm sm:text-base font-medium text-gray-700 dark:group-hover:text-gray-100">
                         {feature}
                       </span>
                     </div>
