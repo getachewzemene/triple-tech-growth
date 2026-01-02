@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import AddCourseModal from "@/components/admin/AddCourseModal";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
-import { isGoogleDriveUrl, extractGoogleDriveFileId } from "@/lib/utils";
+import { cn, isGoogleDriveUrl, extractGoogleDriveFileId } from "@/lib/utils";
 import Select, {
   components as selectComponents,
   StylesConfig,
@@ -677,7 +677,9 @@ export default function AddTopicModal({
                         placeholder="https://drive.google.com/file/d/YOUR_FILE_ID/view?usp=sharing"
                         value={googleDriveVideoUrl}
                         onChange={(e) => setGoogleDriveVideoUrl(e.target.value)}
-                        className={googleDriveVideoUrl && !isGoogleDriveUrl(googleDriveVideoUrl) ? "border-red-500" : ""}
+                        className={cn(
+                          googleDriveVideoUrl && !isGoogleDriveUrl(googleDriveVideoUrl) && "border-red-500"
+                        )}
                       />
                       {googleDriveVideoUrl && !isGoogleDriveUrl(googleDriveVideoUrl) && (
                         <p className="text-red-500 text-sm mt-1">

@@ -14,11 +14,15 @@ export function cn(...inputs: ClassValue[]) {
  * - https://drive.google.com/uc?id={fileId}
  * - Direct file ID string
  */
+
+// Google Drive file IDs are typically 25-44 characters
+const GOOGLE_DRIVE_MIN_FILE_ID_LENGTH = 25;
+
 export function extractGoogleDriveFileId(url: string): string | null {
   if (!url) return null;
 
   // If it's already just a file ID (no slashes or protocol)
-  if (/^[a-zA-Z0-9_-]+$/.test(url) && url.length > 20) {
+  if (/^[a-zA-Z0-9_-]+$/.test(url) && url.length >= GOOGLE_DRIVE_MIN_FILE_ID_LENGTH) {
     return url;
   }
 
@@ -47,7 +51,7 @@ export function isGoogleDriveUrl(url: string): boolean {
   return (
     url.includes("drive.google.com") ||
     url.includes("docs.google.com/file") ||
-    /^[a-zA-Z0-9_-]{25,}$/.test(url) // Just a file ID
+    /^[a-zA-Z0-9_-]+$/.test(url) && url.length >= GOOGLE_DRIVE_MIN_FILE_ID_LENGTH // Just a file ID
   );
 }
 

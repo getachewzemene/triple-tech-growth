@@ -519,6 +519,7 @@ const GoogleDriveVideoPlayer: React.FC<{
           title={title}
           className="w-full h-full border-none"
           allow="autoplay; encrypted-media; fullscreen"
+          sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
           allowFullScreen
           onLoad={handleLoad}
           onError={handleError}
