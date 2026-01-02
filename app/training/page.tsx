@@ -560,65 +560,6 @@ export default function TrainingPage() {
 
         {!selectedCourse ? (
           <div className="space-y-12">
-            {/* Search and Filter Section */}
-            <motion.div
-              className="bg-card rounded-2xl p-4 sm:p-6 shadow-lg border border-border"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex flex-col md:flex-row gap-4 items-center">
-                {/* Search Input */}
-                <div className="relative flex-1 w-full">
-                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    type="text"
-                    placeholder="Search courses..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 w-full"
-                  />
-                </div>
-                
-                {/* Category Filter */}
-                <div className="flex items-center gap-2 w-full md:w-auto">
-                  <FaFilter className="text-gray-400 w-4 h-4" />
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="px-4 py-2 rounded-lg border border-border bg-background text-foreground w-full md:w-auto"
-                  >
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat === "all" ? "All Categories" : cat}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Level Filter */}
-                <div className="flex items-center gap-2 w-full md:w-auto">
-                  <FaGraduationCap className="text-gray-400 w-4 h-4" />
-                  <select
-                    value={selectedLevel}
-                    onChange={(e) => setSelectedLevel(e.target.value)}
-                    className="px-4 py-2 rounded-lg border border-border bg-background text-foreground w-full md:w-auto"
-                  >
-                    {levels.map((lvl) => (
-                      <option key={lvl} value={lvl}>
-                        {lvl === "all" ? "All Levels" : lvl}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              
-              {/* Results count */}
-              <div className="mt-4 text-sm text-muted-foreground">
-                Showing {filteredCourses.length} of {courses.length} courses
-              </div>
-            </motion.div>
-
             {/* Course Folders Section */}
             {courseFolders.length > 0 && (
               <div>
@@ -842,18 +783,77 @@ export default function TrainingPage() {
 
             {/* All Courses Section */}
             <div>
-              <motion.h3
-                className="text-2xl font-bold text-center mb-8 text-gray-900"
+              {/* Header with Title and Search/Filter on same row */}
+              <motion.div
+                className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8"
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
                 viewport={{ once: true }}
               >
-                All Available{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
-                  Courses
-                </span>
-              </motion.h3>
+                {/* Title on the left */}
+                <h3 className="text-2xl font-bold text-gray-900">
+                  All Available{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
+                    Courses
+                  </span>
+                </h3>
+
+                {/* Search and Filter on the right */}
+                <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                  {/* Search Input */}
+                  <div className="relative">
+                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      type="text"
+                      placeholder="Search courses..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 w-full sm:w-48 md:w-56"
+                    />
+                  </div>
+                  
+                  {/* Category Filter */}
+                  <div className="flex items-center gap-2">
+                    <FaFilter className="text-gray-400 w-4 h-4 hidden sm:block" />
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm w-full sm:w-auto"
+                    >
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat === "all" ? "All Categories" : cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Level Filter */}
+                  <div className="flex items-center gap-2">
+                    <FaGraduationCap className="text-gray-400 w-4 h-4 hidden sm:block" />
+                    <select
+                      value={selectedLevel}
+                      onChange={(e) => setSelectedLevel(e.target.value)}
+                      className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm w-full sm:w-auto"
+                    >
+                      {levels.map((lvl) => (
+                        <option key={lvl} value={lvl}>
+                          {lvl === "all" ? "All Levels" : lvl}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </motion.div>
+              
+              {/* Results count - show when filters are applied */}
+              {(searchQuery || selectedCategory !== "all" || selectedLevel !== "all") && filteredCourses.length > 0 && (
+                <div className="text-sm text-muted-foreground mb-4">
+                  Showing {filteredCourses.length} of {courses.length} courses
+                </div>
+              )}
+              
               {filteredCourses.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-lg text-muted-foreground">No courses found matching your criteria.</p>
