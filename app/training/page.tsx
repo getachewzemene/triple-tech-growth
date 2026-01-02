@@ -556,13 +556,16 @@ export default function TrainingPage() {
             {courseFolders.length > 0 && (
               <div>
                 <motion.h3
-                  className="text-2xl font-bold text-center mb-8 text-blue-600"
+                  className="text-2xl font-bold text-center mb-8 text-gray-900"
                   initial={{ opacity: 0, y: -10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
                   viewport={{ once: true }}
                 >
-                  Featured Course Collections
+                  Featured Course{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
+                    Collections
+                  </span>
                 </motion.h3>
                 <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                   {courseFolders.map((folder, index) => {
@@ -580,140 +583,188 @@ export default function TrainingPage() {
                         whileTap={{ scale: 0.98 }}
                         className="relative"
                       >
-                        <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border shadow-green-500/25 border-l-4 border-l-green-500">
-                          {/* Background gradient overlay for course folders */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
+                        <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] shadow-green-500/25">
+                          {/* Background gradient overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0"></div>
 
-                          {/* Enhanced hover background like root page */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-800 opacity-0 group-hover:opacity-90 transition-all duration-500"></div>
+                          {/* Animated border gradient */}
+                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0">
+                            <div className="w-full h-full bg-card rounded-3xl"></div>
+                          </div>
 
-                          <CardHeader className="relative z-10">
-                            <div className="flex items-center gap-3 mb-3">
-                              <div className="text-green-600 group-hover:text-yellow transition-colors duration-300">
-                                <FaVideo size={24} />
-                              </div>
-                              <div className="flex-1">
-                                <CardTitle className="text-xl group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
-                                  {folder.title}
-                                </CardTitle>
-                                <CardDescription className="mt-1 group-hover:text-black dark:group-hover:text-white group-hover:opacity-90 transition-all duration-300">
-                                  {folder.description}
-                                </CardDescription>
+                          {/* Content container */}
+                          <div className="relative z-20 p-4 sm:p-6">
+                            {/* Stats badge */}
+                            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                              <div className="px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-semibold">
+                                {folder.topicsCount || 0} topics
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
-                              <FaClock className="w-4 h-4" />
-                              <span>{folder.topicsCount || 0} topics</span>
-                              <FaDollarSign className="w-4 h-4 ml-2" />
-                              <span>
-                                {formatFolderPrice(folder.priceCents)}
-                              </span>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="relative z-10">
-                            <div className="space-y-3">
-                              <div>
-                                <Badge variant="secondary" className="mb-2">
-                                  Course Collection
-                                </Badge>
-                                <p className="text-sm text-muted-foreground line-clamp-3">
-                                  Comprehensive course collection with multiple
-                                  topics covering various aspects of{" "}
-                                  {folder.title.toLowerCase()}.
-                                </p>
+
+                            {/* Icon */}
+                            <div className="relative mb-6 flex justify-center">
+                              <div className="p-4 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <FaVideo className="w-8 h-8 text-white dark:group-hover:text-[#e2a70f]" />
                               </div>
-                              <div className="flex gap-2">
-                                {enrollmentStatus?.status === "approved" ? (
+                              {/* Floating particles */}
+                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
+                              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
+                            </div>
+
+                            {/* Title and description */}
+                            <div className="text-center mb-4 sm:mb-6">
+                              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
+                                {folder.title}
+                              </h3>
+                              <p className="text-gray-600 text-xs sm:text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
+                                {folder.description}
+                              </p>
+                            </div>
+
+                            {/* Course info */}
+                            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
+                              <div className="flex items-center gap-1">
+                                <FaClock className="w-4 h-4" />
+                                <span>{folder.topicsCount || 0} topics</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <FaDollarSign className="w-4 h-4" />
+                                <span>{formatFolderPrice(folder.priceCents)}</span>
+                              </div>
+                            </div>
+
+                            {/* Level badge */}
+                            <div className="text-center mb-4">
+                              <Badge
+                                variant="secondary"
+                                className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border-green-300 transition-all duration-300"
+                              >
+                                Course Collection
+                              </Badge>
+                            </div>
+
+                            {/* Features list - reveals on hover */}
+                            <div className="space-y-2 mb-4">
+                              {["Expert-curated content", "Multiple topics", "Lifetime access"].map((feature, idx) => (
+                                <div
+                                  key={idx}
+                                  className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
+                                  style={{ transitionDelay: `${idx * 100 + 200}ms` }}
+                                >
+                                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 animate-pulse"></div>
+                                  <span className="text-xs font-medium text-gray-600 dark:group-hover:text-gray-200">
+                                    {feature}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Action buttons */}
+                            <div className="space-y-2">
+                              {enrollmentStatus?.status === "approved" ? (
+                                <Button
+                                  size="sm"
+                                  onClick={() =>
+                                    router.push(`/course/${folder.id}`)
+                                  }
+                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Access Course
+                                </Button>
+                              ) : (
+                                <>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                      setSelectedCourse({
+                                        id: folder.id,
+                                        title: folder.title,
+                                        description: folder.description,
+                                        detailedDescription: `Comprehensive course collection with multiple topics covering various aspects of ${folder.title.toLowerCase()}. This structured program provides in-depth knowledge and practical skills through expert-curated content.`,
+                                        price: `$${((folder.priceCents ?? 0) / 100).toFixed(2)}`,
+                                        instructor: folder.instructor,
+                                        instructorName: folder.instructorName,
+                                        instructorProfession:
+                                          folder.instructorProfession,
+                                        instructorExperience:
+                                          folder.instructorExperience,
+                                        instructorProfileImage:
+                                          folder.instructorProfileImage,
+                                        duration: "8-12 weeks",
+                                        level: "All Levels",
+                                        benefits: [
+                                          "Comprehensive curriculum designed by experts",
+                                          "Hands-on projects and practical applications",
+                                          "Progress tracking and milestone achievements",
+                                          "Interactive learning materials and resources",
+                                          "Certificate of completion upon finishing",
+                                          "Lifetime access to course materials",
+                                        ],
+                                        prerequisites:
+                                          "Basic computer skills recommended",
+                                        isFolder: true,
+                                      })
+                                    }
+                                    className="w-full border-gray-300 hover:border-green-500 hover:bg-green-50 hover:text-green-700 transition-all duration-300"
+                                  >
+                                    View Details
+                                  </Button>
                                   <Button
                                     size="sm"
                                     onClick={() =>
-                                      router.push(`/course/${folder.id}`)
+                                      handleFolderEnrollment(folder)
                                     }
-                                    className="flex-1 bg-green-600 hover:bg-green-700"
-                                  >
-                                    Access Course
-                                  </Button>
-                                ) : (
-                                  <>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() =>
-                                        setSelectedCourse({
-                                          id: folder.id,
-                                          title: folder.title,
-                                          description: folder.description,
-                                          detailedDescription: `Comprehensive course collection with multiple topics covering various aspects of ${folder.title.toLowerCase()}. This structured program provides in-depth knowledge and practical skills through expert-curated content.`,
-                                          price: `$${((folder.priceCents ?? 0) / 100).toFixed(2)}`,
-                                          instructor: folder.instructor,
-                                          instructorName: folder.instructorName,
-                                          instructorProfession:
-                                            folder.instructorProfession,
-                                          instructorExperience:
-                                            folder.instructorExperience,
-                                          instructorProfileImage:
-                                            folder.instructorProfileImage,
-                                          duration: "8-12 weeks",
-                                          level: "All Levels",
-                                          benefits: [
-                                            "Comprehensive curriculum designed by experts",
-                                            "Hands-on projects and practical applications",
-                                            "Progress tracking and milestone achievements",
-                                            "Interactive learning materials and resources",
-                                            "Certificate of completion upon finishing",
-                                            "Lifetime access to course materials",
-                                          ],
-                                          prerequisites:
-                                            "Basic computer skills recommended",
-                                          isFolder: true,
-                                        })
-                                      }
-                                      className="flex-1"
-                                    >
-                                      View Details
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      onClick={() =>
-                                        handleFolderEnrollment(folder)
-                                      }
-                                      className="flex-1 bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
-                                      disabled={
-                                        enrollmentStatus?.status ===
-                                        "payment_submitted"
-                                      }
-                                    >
-                                      {enrollmentStatus?.status ===
+                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    disabled={
+                                      enrollmentStatus?.status ===
                                       "payment_submitted"
-                                        ? "Pending"
-                                        : "Enroll Now"}
-                                    </Button>
-                                  </>
-                                )}
-                              </div>
-                              {enrollmentStatus && (
-                                <div className="text-xs text-center">
-                                  <Badge
-                                    variant={
-                                      enrollmentStatus.status === "approved"
-                                        ? "default"
-                                        : enrollmentStatus.status ===
-                                            "payment_submitted"
-                                          ? "secondary"
-                                          : "destructive"
                                     }
                                   >
-                                    {enrollmentStatus.status === "approved"
-                                      ? "Approved"
-                                      : enrollmentStatus.status ===
-                                          "payment_submitted"
-                                        ? "Payment Under Review"
-                                        : "Payment Required"}
-                                  </Badge>
-                                </div>
+                                    {enrollmentStatus?.status ===
+                                    "payment_submitted"
+                                      ? "Pending"
+                                      : "Enroll Now"}
+                                  </Button>
+                                </>
                               )}
                             </div>
-                          </CardContent>
+
+                            {/* Enrollment status */}
+                            {enrollmentStatus && (
+                              <div className="text-xs text-center mt-3">
+                                <Badge
+                                  variant={
+                                    enrollmentStatus.status === "approved"
+                                      ? "default"
+                                      : enrollmentStatus.status ===
+                                          "payment_submitted"
+                                        ? "secondary"
+                                        : "destructive"
+                                  }
+                                >
+                                  {enrollmentStatus.status === "approved"
+                                    ? "Approved"
+                                    : enrollmentStatus.status ===
+                                        "payment_submitted"
+                                      ? "Payment Under Review"
+                                      : "Payment Required"}
+                                </Badge>
+                              </div>
+                            )}
+
+                            {/* Progress indicator */}
+                            <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                              <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                                <div className="h-full bg-gradient-to-r from-green-500 to-emerald-600 transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Hover glow effect */}
+                          <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
+                            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500 to-emerald-600 opacity-20 blur-xl transform scale-110"></div>
+                          </div>
                         </Card>
                       </motion.div>
                     );
@@ -722,16 +773,19 @@ export default function TrainingPage() {
               </div>
             )}
 
-            {/* Featured Bonus Courses Section */}
+            {/* Featured Courses Section */}
             <div>
               <motion.h3
-                className="text-2xl font-bold text-center mb-8 text-yellow-600"
+                className="text-2xl font-bold text-center mb-8 text-gray-900"
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
                 viewport={{ once: true }}
               >
-                Featured Bonus Courses
+                Featured{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
+                  Courses
+                </span>
               </motion.h3>
               <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
                 {featuredBonusCourses.map((course, index) => {
@@ -749,89 +803,114 @@ export default function TrainingPage() {
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border shadow-yellow-500/25">
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] shadow-orange-500/25">
                         {/* Background gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-amber-50 opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0"></div>
 
-                        {/* Enhanced hover background like root page */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-0 group-hover:opacity-90 transition-all duration-500"></div>
+                        {/* Animated border gradient */}
+                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0">
+                          <div className="w-full h-full bg-card rounded-3xl"></div>
+                        </div>
 
-                        {course.featured && (
-                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
-                            BONUS
-                          </div>
-                        )}
-                        <CardHeader className="relative z-10">
-                          <div className="flex items-center gap-3 mb-3">
-                            {course.thumbnail && (
-                              <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100 p-1">
-                                <Image
-                                  src={course.thumbnail}
-                                  alt={course.title}
-                                  fill
-                                  className="object-cover rounded-xl"
-                                  sizes="64px"
-                                />
-                              </div>
-                            )}
-                            <div className="relative">
-                              <div className="p-3 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                                <div className="text-white text-xl">
-                                  {course.icon}
-                                </div>
-                              </div>
-                              {/* Floating particles */}
-                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-                            </div>
-                            <div className="flex-1">
-                              <CardTitle className="text-xl font-bold group-hover:text-black dark:group-hover:text-white transition-all duration-300">
-                                {course.title}
-                              </CardTitle>
-                              <CardDescription className="mt-1 group-hover:text-black dark:group-hover:text-white group-hover:opacity-90 transition-all duration-300">
-                                {course.description}
-                              </CardDescription>
+                        {/* Content container */}
+                        <div className="relative z-20 p-4 sm:p-6">
+                          {/* Stats badge */}
+                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <div className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 text-white text-xs font-semibold">
+                              {course.duration}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
-                            <FaClock className="w-4 h-4" />
-                            <span>{course.duration}</span>
-                            <FaDollarSign className="w-4 h-4 ml-2" />
-                            <span>{course.price}</span>
+
+                          {/* Icon */}
+                          <div className="relative mb-6 flex justify-center">
+                            <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                              <div className="text-white dark:group-hover:text-[#e2a70f]">
+                                {course.icon}
+                              </div>
+                            </div>
+                            {/* Floating particles */}
+                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
+                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
                           </div>
-                        </CardHeader>
-                        <CardContent className="relative z-10">
-                          <div className="space-y-3">
-                            <div>
-                              <Badge
-                                variant="secondary"
-                                className="mb-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border-yellow-300 transition-all duration-300 dark:group-hover:text-yellow-300"
+
+                          {/* Title and description */}
+                          <div className="text-center mb-4 sm:mb-6">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
+                              {course.title}
+                            </h3>
+                            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
+                              {course.description}
+                            </p>
+                          </div>
+
+                          {/* Course info */}
+                          <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
+                            <div className="flex items-center gap-1">
+                              <FaClock className="w-4 h-4" />
+                              <span>{course.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <FaDollarSign className="w-4 h-4" />
+                              <span>{course.price}</span>
+                            </div>
+                          </div>
+
+                          {/* Level badge */}
+                          <div className="text-center mb-4">
+                            <Badge
+                              variant="secondary"
+                              className="bg-gradient-to-r from-orange-100 to-amber-100 text-orange-800 border-orange-300 transition-all duration-300"
+                            >
+                              {course.level}
+                            </Badge>
+                          </div>
+
+                          {/* Features list - reveals on hover */}
+                          <div className="space-y-2 mb-4">
+                            {course.benefits?.slice(0, 3).map((benefit, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
+                                style={{ transitionDelay: `${idx * 100 + 200}ms` }}
                               >
-                                {course.level}
-                              </Badge>
-                              <p className="text-sm text-gray-600 line-clamp-3 group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
-                                {course.detailedDescription}
-                              </p>
-                            </div>
-                            <div className="flex gap-2">
-                              {user ? (
-                                enrollmentStatus?.status === "approved" ? (
+                                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 animate-pulse"></div>
+                                <span className="text-xs font-medium text-gray-600 dark:group-hover:text-gray-200">
+                                  {benefit.length > 30 ? benefit.substring(0, 30) + '...' : benefit}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Action buttons */}
+                          <div className="space-y-2">
+                            {user ? (
+                              enrollmentStatus?.status === "approved" ? (
+                                <Button
+                                  size="sm"
+                                  onClick={() =>
+                                    router.push(`/course/${course.id}`)
+                                  }
+                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Access Course
+                                </Button>
+                              ) : (
+                                <>
                                   <Button
+                                    variant="outline"
                                     size="sm"
-                                    onClick={() =>
-                                      router.push(`/course/${course.id}`)
-                                    }
-                                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    onClick={() => setSelectedCourse(course)}
+                                    className="w-full border-gray-300 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 transition-all duration-300"
                                   >
-                                    Access Course
+                                    View Details
                                   </Button>
-                                ) : (
                                   <Button
                                     size="sm"
                                     onClick={() => {
                                       setSelectedCourse(course);
                                       handleEnrollment(course);
                                     }}
-                                    className="flex-1 bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                     disabled={
                                       enrollmentStatus?.status ===
                                       "payment_submitted"
@@ -842,53 +921,67 @@ export default function TrainingPage() {
                                       ? "Pending"
                                       : "Enroll Now"}
                                   </Button>
-                                )
-                              ) : (
-                                <div className="flex-1 space-y-2">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setSelectedCourse(course)}
-                                    className="w-full border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 hover:text-yellow-700 transition-all duration-300"
-                                  >
-                                    View Details
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedCourse(course);
-                                      openAuthModal("login");
-                                    }}
-                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                                  >
-                                    Enroll
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
-                            {user && enrollmentStatus && (
-                              <div className="text-xs text-center">
-                                <Badge
-                                  variant={
-                                    enrollmentStatus.status === "approved"
-                                      ? "default"
-                                      : enrollmentStatus.status ===
-                                          "payment_submitted"
-                                        ? "secondary"
-                                        : "destructive"
-                                  }
+                                </>
+                              )
+                            ) : (
+                              <>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => setSelectedCourse(course)}
+                                  className="w-full border-gray-300 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 transition-all duration-300"
                                 >
-                                  {enrollmentStatus.status === "approved"
-                                    ? "Approved"
-                                    : enrollmentStatus.status ===
-                                        "payment_submitted"
-                                      ? "Payment Under Review"
-                                      : "Payment Required"}
-                                </Badge>
-                              </div>
+                                  View Details
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedCourse(course);
+                                    openAuthModal("login");
+                                  }}
+                                  className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Enroll
+                                </Button>
+                              </>
                             )}
                           </div>
-                        </CardContent>
+
+                          {/* Enrollment status */}
+                          {user && enrollmentStatus && (
+                            <div className="text-xs text-center mt-3">
+                              <Badge
+                                variant={
+                                  enrollmentStatus.status === "approved"
+                                    ? "default"
+                                    : enrollmentStatus.status ===
+                                        "payment_submitted"
+                                      ? "secondary"
+                                      : "destructive"
+                                }
+                              >
+                                {enrollmentStatus.status === "approved"
+                                  ? "Approved"
+                                  : enrollmentStatus.status ===
+                                      "payment_submitted"
+                                    ? "Payment Under Review"
+                                    : "Payment Required"}
+                              </Badge>
+                            </div>
+                          )}
+
+                          {/* Progress indicator */}
+                          <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-orange-500 to-amber-600 transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Hover glow effect */}
+                        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
+                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-500 to-amber-600 opacity-20 blur-xl transform scale-110"></div>
+                        </div>
                       </Card>
                     </motion.div>
                   );
@@ -899,16 +992,19 @@ export default function TrainingPage() {
             {/* All Courses Section */}
             <div>
               <motion.h3
-                className="text-2xl font-bold text-center mb-8 text-gray-700"
+                className="text-2xl font-bold text-center mb-8 text-gray-900"
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
                 viewport={{ once: true }}
               >
-                All Available Courses
+                All Available{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
+                  Courses
+                </span>
               </motion.h3>
               <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
-                {courses.map((course) => {
+                {courses.map((course, index) => {
                   const enrollmentStatus = user
                     ? checkEnrollmentStatus(course.id)
                     : null;
@@ -917,71 +1013,110 @@ export default function TrainingPage() {
                       key={course.id}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1, duration: 0.5 }}
+                      transition={{ delay: index * 0.1, duration: 0.5 }}
                       viewport={{ once: true }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className="relative"
                     >
-                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-6 hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-3xl bg-card backdrop-blur-sm border border-border shadow-blue-500/25">
-                        {/* Background gradient overlay for regular courses */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
+                      <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] shadow-blue-500/25">
+                        {/* Background gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0"></div>
 
-                        {/* Enhanced hover background like root page */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-0 group-hover:opacity-90 transition-all duration-500"></div>
-                        <CardHeader className="relative z-10">
-                          <div className="flex items-center gap-3 mb-3">
-                            {course.thumbnail && (
-                              <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
-                                <Image
-                                  src={course.thumbnail}
-                                  alt={course.title}
-                                  fill
-                                  className="object-cover"
-                                  sizes="64px"
-                                />
+                        {/* Animated border gradient */}
+                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0">
+                          <div className="w-full h-full bg-card rounded-3xl"></div>
+                        </div>
+
+                        {/* Content container */}
+                        <div className="relative z-20 p-4 sm:p-6">
+                          {/* Stats badge */}
+                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <div className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs font-semibold">
+                              {course.duration}
+                            </div>
+                          </div>
+
+                          {/* Icon */}
+                          <div className="relative mb-6 flex justify-center">
+                            <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                              <div className="text-white dark:group-hover:text-[#e2a70f]">
+                                {course.icon}
                               </div>
-                            )}
-                            <div className="text-blue-600 group-hover:text-yellow transition-colors duration-300">
-                              {course.icon}
                             </div>
-                            <div className="flex-1">
-                              <CardTitle className="text-xl group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
-                                {course.title}
-                              </CardTitle>
-                              <CardDescription className="mt-1 group-hover:text-black dark:group-hover:text-white group-hover:opacity-90 transition-all duration-300">
-                                {course.description}
-                              </CardDescription>
+                            {/* Floating particles */}
+                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
+                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
+                          </div>
+
+                          {/* Title and description */}
+                          <div className="text-center mb-4 sm:mb-6">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
+                              {course.title}
+                            </h3>
+                            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-100 transition-colors duration-300">
+                              {course.description}
+                            </p>
+                          </div>
+
+                          {/* Course info */}
+                          <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
+                            <div className="flex items-center gap-1">
+                              <FaClock className="w-4 h-4" />
+                              <span>{course.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <FaDollarSign className="w-4 h-4" />
+                              <span>{course.price}</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-white transition-colors duration-300">
-                            <FaClock className="w-4 h-4" />
-                            <span>{course.duration}</span>
-                            <FaDollarSign className="w-4 h-4 ml-2" />
-                            <span>{course.price}</span>
+
+                          {/* Level badge */}
+                          <div className="text-center mb-4">
+                            <Badge
+                              variant="secondary"
+                              className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border-blue-300 transition-all duration-300"
+                            >
+                              {course.level}
+                            </Badge>
                           </div>
-                        </CardHeader>
-                        <CardContent className="relative z-10">
-                          <div className="space-y-3">
-                            <div>
-                              <Badge
-                                variant="secondary"
-                                className="mb-2 transition-all duration-300 dark:group-hover:text-blue-200"
+
+                          {/* Features list - reveals on hover */}
+                          <div className="space-y-2 mb-4">
+                            {course.benefits?.slice(0, 3).map((benefit, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
+                                style={{ transitionDelay: `${idx * 100 + 200}ms` }}
                               >
-                                {course.level}
-                              </Badge>
-                              <p className="text-sm text-muted-foreground line-clamp-3 group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
-                                {course.detailedDescription}
-                              </p>
-                            </div>
-                            <div className="flex gap-2">
-                              {user ? (
+                                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 animate-pulse"></div>
+                                <span className="text-xs font-medium text-gray-600 dark:group-hover:text-gray-200">
+                                  {benefit.length > 30 ? benefit.substring(0, 30) + '...' : benefit}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Action buttons */}
+                          <div className="space-y-2">
+                            {user ? (
+                              enrollmentStatus?.status === "approved" ? (
+                                <Button
+                                  size="sm"
+                                  onClick={() =>
+                                    router.push(`/course/${course.id}`)
+                                  }
+                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Access Course
+                                </Button>
+                              ) : (
                                 <>
                                   <Button
                                     variant="outline"
                                     size="sm"
                                     onClick={() => setSelectedCourse(course)}
-                                    className="flex-1"
+                                    className="w-full border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
                                   >
                                     View Details
                                   </Button>
@@ -991,65 +1126,78 @@ export default function TrainingPage() {
                                       setSelectedCourse(course);
                                       handleEnrollment(course);
                                     }}
-                                    className="flex-1 bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
+                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                     disabled={
-                                      enrollmentStatus?.status === "approved"
+                                      enrollmentStatus?.status ===
+                                      "payment_submitted"
                                     }
                                   >
-                                    {enrollmentStatus?.status === "approved"
-                                      ? "Enrolled"
-                                      : enrollmentStatus?.status ===
-                                          "payment_submitted"
-                                        ? "Pending"
-                                        : "Enroll Now"}
+                                    {enrollmentStatus?.status ===
+                                    "payment_submitted"
+                                      ? "Pending"
+                                      : "Enroll Now"}
                                   </Button>
                                 </>
-                              ) : (
-                                <div className="flex-1 space-y-2">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setSelectedCourse(course)}
-                                    className="w-full"
-                                  >
-                                    View Details
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedCourse(course);
-                                      openAuthModal("login");
-                                    }}
-                                    className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
-                                  >
-                                    Enroll
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
-                            {user && enrollmentStatus && (
-                              <div className="text-xs text-center">
-                                <Badge
-                                  variant={
-                                    enrollmentStatus.status === "approved"
-                                      ? "default"
-                                      : enrollmentStatus.status ===
-                                          "payment_submitted"
-                                        ? "secondary"
-                                        : "destructive"
-                                  }
+                              )
+                            ) : (
+                              <>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => setSelectedCourse(course)}
+                                  className="w-full border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
                                 >
-                                  {enrollmentStatus.status === "approved"
-                                    ? "Approved"
-                                    : enrollmentStatus.status ===
-                                        "payment_submitted"
-                                      ? "Payment Under Review"
-                                      : "Payment Required"}
-                                </Badge>
-                              </div>
+                                  View Details
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedCourse(course);
+                                    openAuthModal("login");
+                                  }}
+                                  className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
+                                  Enroll
+                                </Button>
+                              </>
                             )}
                           </div>
-                        </CardContent>
+
+                          {/* Enrollment status */}
+                          {user && enrollmentStatus && (
+                            <div className="text-xs text-center mt-3">
+                              <Badge
+                                variant={
+                                  enrollmentStatus.status === "approved"
+                                    ? "default"
+                                    : enrollmentStatus.status ===
+                                        "payment_submitted"
+                                      ? "secondary"
+                                      : "destructive"
+                                }
+                              >
+                                {enrollmentStatus.status === "approved"
+                                  ? "Approved"
+                                  : enrollmentStatus.status ===
+                                      "payment_submitted"
+                                    ? "Payment Under Review"
+                                    : "Payment Required"}
+                              </Badge>
+                            </div>
+                          )}
+
+                          {/* Progress indicator */}
+                          <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Hover glow effect */}
+                        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
+                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 opacity-20 blur-xl transform scale-110"></div>
+                        </div>
                       </Card>
                     </motion.div>
                   );
