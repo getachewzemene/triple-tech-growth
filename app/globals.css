@@ -77,45 +77,45 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.9 84% 4.9%; /* #020817 for main background */
-    --foreground: 222.9 84% 4.9%; /* #020817 for headers in dark */
+    --background: 222 47% 11%; /* #0f172a - slate-900, brighter main background */
+    --foreground: 0 0% 100%; /* white for text in dark mode */
 
-    --card: 222.9 84% 4.9%; /* #020817 for card background */
+    --card: 222 47% 15%; /* #1e293b - slate-800, slightly lighter card background */
     --card-foreground: 0 0% 100%; /* white for card text */
 
-    --popover: 222.9 84% 4.9%; /* #020817 for modal background */
+    --popover: 222 47% 15%; /* #1e293b for modal background */
     --popover-foreground: 0 0% 100%; /* white for modal text */
 
     --primary: 0 0% 100%; /* white for primary text */
-    --primary-foreground: 222.9 84% 4.9%; /* #020817 for primary foreground */
+    --primary-foreground: 222 47% 11%; /* dark for primary foreground */
 
-    --secondary: 222.9 84% 4.9%; /* #020817 for secondary background */
+    --secondary: 222 47% 18%; /* slightly lighter secondary background */
     --secondary-foreground: 0 0% 100%; /* white for secondary text */
 
-    --muted: 222.9 84% 4.9%; /* #020817 for muted background */
-    --muted-foreground: 0 0% 100%; /* white for muted text */
+    --muted: 222 47% 18%; /* slightly lighter muted background */
+    --muted-foreground: 215 20% 65%; /* muted text color */
 
-    --accent: 222.9 84% 4.9%; /* #020817 for accent background */
+    --accent: 222 47% 18%; /* slightly lighter accent background */
     --accent-foreground: 0 0% 100%; /* white for accent text */
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%; /* white for destructive text */
 
     /* Make borders slightly brighter than the background so they show up in dark mode */
-    --border: 222.9 84% 12%; /* slightly brighter than bg (#020817) */
+    --border: 222 47% 22%; /* brighter border for visibility */
     /* Inputs should be slightly lighter than the background so borders are visible */
-    --input: 222.9 84% 12%; /* slightly lighter than background for contrast */
+    --input: 222 47% 22%; /* slightly lighter than background for contrast */
     /* Use gold for focus rings in dark mode as well so focus matches CTAs */
     --ring: 43.3 87.5% 47.3%;
   /* Input focus color for dark mode (slightly lighter cyan) */
   --focus-input: 187 90% 55%; /* cyan lighter for dark */
 
     /* Custom Triple Technologies Colors for Dark Mode */
-    --light-blue: 222.9 84% 4.9%; /* #020817 for dark theme blue */
+    --light-blue: 222 47% 11%; /* slate-900 for dark theme blue */
     --light-blue-foreground: 0 0% 100%; /* white text on blue */
     --yellow: 48 100% 50%; /* Keep yellow bright */
-    --yellow-foreground: 222.9 84% 4.9%; /* #020817 text on yellow */
-    --light-gray: 222.9 84% 4.9%; /* #020817 for dark theme gray */
+    --yellow-foreground: 222 47% 11%; /* dark text on yellow */
+    --light-gray: 222 47% 15%; /* slate-800 for dark theme gray */
     --light-gray-foreground: 0 0% 100%; /* white text on gray */
 
     /* Chart color variables for dark mode */
@@ -125,26 +125,26 @@ All colors MUST be HSL.
     --chart-4: 280 65% 70%;
     --chart-5: 340 75% 65%;
 
-    --sidebar-background: 222.9 84% 4.9%; /* #020817 for sidebar */
+    --sidebar-background: 222 47% 11%; /* slate-900 for sidebar */
     --sidebar-foreground: 0 0% 100%; /* white for sidebar text */
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222.9 84% 4.9%; /* #020817 for sidebar accent */
+    --sidebar-accent: 222 47% 15%; /* slate-800 for sidebar accent */
     --sidebar-accent-foreground: 0 0% 100%; /* white for sidebar accent text */
-    --sidebar-border: 222.9 84% 4.9%; /* #020817 for sidebar border */
+    --sidebar-border: 222 47% 22%; /* visible sidebar border */
     --sidebar-ring: 0 0% 100%; /* white for sidebar ring */
   }
 }
 
-/* Explicit dark-mode utility overrides to ensure Tailwind bg utilities use the exact hex color where needed. */
+/* Explicit dark-mode utility overrides to ensure Tailwind bg utilities use the brighter dark colors. */
 .dark .bg-background,
 .dark .bg-card,
 .dark .bg-popover {
-  background-color: #020817 !important;
+  background-color: hsl(var(--background)) !important;
 }
 
 .dark body {
-  background-color: #020817 !important;
+  background-color: hsl(var(--background)) !important;
   color: #ffffff !important;
 }
 
