@@ -112,7 +112,7 @@ const TrainingSection = () => {
             growth and technical expertise
           </p>
         </div>
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8 sm:mt-12 px-4">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 sm:mt-12 px-4">
           {trainingPrograms.map((program, index) => (
             <div
               key={program.title}
