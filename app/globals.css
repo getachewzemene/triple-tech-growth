@@ -138,9 +138,13 @@ All colors MUST be HSL.
 
 /* Explicit dark-mode utility overrides to ensure Tailwind bg utilities use the brighter dark colors. */
 .dark .bg-background,
-.dark .bg-card,
 .dark .bg-popover {
   background-color: hsl(var(--background)) !important;
+}
+
+/* Keep card background slightly lighter than the main background in dark mode */
+.dark .bg-card {
+  background-color: hsl(var(--card)) !important;
 }
 
 .dark body {
