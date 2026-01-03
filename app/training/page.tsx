@@ -371,9 +371,7 @@ export default function TrainingPage() {
 
   const handleEnrollment = (course: Course) => {
     // Check if user is already enrolled
-    const enrolledCourses: any[] = JSON.parse(
-      localStorage.getItem("enrolledCourses") || "[]",
-    );
+    const enrolledCourses: any[] = safeLocalStorage.getItem("enrolledCourses", []);
     const isEnrolled = enrolledCourses.some((enrolled: any) =>
       enrolled.courseId === course.id,
     );
