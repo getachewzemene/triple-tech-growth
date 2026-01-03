@@ -12,7 +12,6 @@ import {
   FaClock,
   FaUser,
   FaDollarSign,
-  FaStar,
   FaPlay,
   FaCheckCircle,
 } from "react-icons/fa";
@@ -26,7 +25,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useAuthModal } from "@/app/providers/AuthModalProvider";
 import { useRouter } from "next/navigation";
@@ -249,333 +247,300 @@ export default function CoursesPage() {
             </p>
           </div>
 
-          <Tabs defaultValue="courses" className="space-y-6">
-            <TabsList>
-              <TabsTrigger value="courses">Courses</TabsTrigger>
-              <TabsTrigger value="enrolled">Enrolled Courses</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="courses">
-              <div className="space-y-8">
-                {/* Featured Bonus Courses */}
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-blue-600">
-                      Bonus Courses
-                    </h2>
-                    <Badge
-                      variant="secondary"
-                      className="bg-yellow-100 text-yellow-800"
-                    >
-                      Featured
-                    </Badge>
-                  </div>
-                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
-                    {featuredCourses.map((course, index) => {
-                      const enrollmentStatus = checkEnrollmentStatus(course.id);
-                      return (
-                        <motion.div
-                          key={course.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          whileHover={{ scale: 1.02 }}
-                          className="relative"
-                        >
-                          <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg border-l-4 border-l-yellow-500">
-                            {course.featured && (
-                              <div className="absolute -top-2 -right-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                                BONUS
-                              </div>
-                            )}
-                            <CardHeader>
-                              <div className="flex items-center gap-3 mb-3">
-                                <div className="text-yellow-600">
-                                  {course.icon}
-                                </div>
-                                <div className="flex-1">
-                                  <CardTitle className="text-lg">
-                                    {course.title}
-                                  </CardTitle>
-                                  <CardDescription className="mt-1">
-                                    {course.description}
-                                  </CardDescription>
-                                </div>
-                                {enrollmentStatus &&
-                                  getStatusIcon(enrollmentStatus.status)}
-                              </div>
-                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                  <FaClock className="w-4 h-4" />
-                                  <span>{course.duration}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <FaDollarSign className="w-4 h-4" />
-                                  <span>{course.price}</span>
-                                </div>
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <div className="space-y-3">
-                                <p className="text-sm text-muted-foreground line-clamp-2">
-                                  {course.detailedDescription}
-                                </p>
-                                <div className="flex items-center gap-2 text-sm">
-                                  <FaUser className="w-4 h-4 text-muted-foreground" />
-                                  <span className="text-muted-foreground">
-                                    {course.instructor}
-                                  </span>
-                                </div>
-                                {enrollmentStatus ? (
-                                  <div className="space-y-2">
-                                    <Badge
-                                      variant={
-                                        enrollmentStatus.status === "approved"
-                                          ? "default"
-                                          : "secondary"
-                                      }
-                                    >
-                                      {getStatusText(enrollmentStatus.status)}
-                                    </Badge>
-                                    {enrollmentStatus.status === "approved" && (
-                                      <Button
-                                        size="sm"
-                                        className="w-full bg-green-600 hover:bg-green-700"
-                                        onClick={() =>
-                                          router.push(`/course/${course.id}`)
-                                        }
-                                      >
-                                        <FaPlay className="w-4 h-4 mr-2" />
-                                        Access Course
-                                      </Button>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <Button
-                                    size="sm"
-                                    className="w-full bg-blue-600 hover:bg-blue-700"
-                                    onClick={() => handleEnrollment(course)}
-                                  >
-                                    Enroll Now
-                                  </Button>
-                                )}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* All Available Courses */}
-                <div>
-                  <h2 className="text-2xl font-bold mb-6">All Courses</h2>
-                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
-                    {allCourses.map((course, index) => {
-                      const enrollmentStatus = checkEnrollmentStatus(course.id);
-                      return (
-                        <motion.div
-                          key={course.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            delay: (index + featuredCourses.length) * 0.1,
-                          }}
-                          whileHover={{ scale: 1.02 }}
-                        >
-                          <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg">
-                            <CardHeader>
-                              <div className="flex items-center gap-3 mb-3">
-                                <div className="text-blue-600">
-                                  {course.icon}
-                                </div>
-                                <div className="flex-1">
-                                  <CardTitle className="text-lg">
-                                    {course.title}
-                                  </CardTitle>
-                                  <CardDescription className="mt-1">
-                                    {course.description}
-                                  </CardDescription>
-                                </div>
-                                {enrollmentStatus &&
-                                  getStatusIcon(enrollmentStatus.status)}
-                              </div>
-                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                  <FaClock className="w-4 h-4" />
-                                  <span>{course.duration}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <FaDollarSign className="w-4 h-4" />
-                                  <span>{course.price}</span>
-                                </div>
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <div className="space-y-3">
-                                <p className="text-sm text-muted-foreground line-clamp-2">
-                                  {course.detailedDescription}
-                                </p>
-                                <div className="flex items-center gap-2 text-sm">
-                                  <FaUser className="w-4 h-4 text-muted-foreground" />
-                                  <span className="text-muted-foreground">
-                                    {course.instructor}
-                                  </span>
-                                </div>
-                                {enrollmentStatus ? (
-                                  <div className="space-y-2">
-                                    <Badge
-                                      variant={
-                                        enrollmentStatus.status === "approved"
-                                          ? "default"
-                                          : "secondary"
-                                      }
-                                    >
-                                      {getStatusText(enrollmentStatus.status)}
-                                    </Badge>
-                                    {enrollmentStatus.status === "approved" && (
-                                      <Button
-                                        size="sm"
-                                        className="w-full bg-green-600 hover:bg-green-700"
-                                        onClick={() =>
-                                          router.push(`/course/${course.id}`)
-                                        }
-                                      >
-                                        <FaPlay className="w-4 h-4 mr-2" />
-                                        Access Course
-                                      </Button>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <Button
-                                    size="sm"
-                                    className="w-full bg-blue-600 hover:bg-blue-700"
-                                    onClick={() => handleEnrollment(course)}
-                                  >
-                                    Enroll Now
-                                  </Button>
-                                )}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="enrolled">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold">
+          <div className="space-y-8">
+            {/* My Enrolled Courses Section */}
+            {enrolledCourses.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-green-600">
                     My Enrolled Courses
                   </h2>
-                  <Button
-                    onClick={() => router.push("/training")}
-                    variant="outline"
+                  <Badge
+                    variant="secondary"
+                    className="bg-green-100 text-green-800"
                   >
-                    Browse More Courses
-                  </Button>
+                    {enrolledCourses.length} Enrolled
+                  </Badge>
                 </div>
+                <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
+                  {enrolledCourses.map((course: any, index: number) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Card className="h-full border-l-4 border-l-green-500">
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg">
+                              {course.courseTitle}
+                            </CardTitle>
+                            {getStatusIcon(course.status)}
+                          </div>
+                          <CardDescription>
+                            Enrolled on{" "}
+                            {new Date(course.enrolledAt).toLocaleDateString()}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <Badge
+                            variant={
+                              course.status === "approved"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
+                            {getStatusText(course.status)}
+                          </Badge>
 
-                {enrolledCourses.length === 0 ? (
-                  <Card>
-                    <CardContent className="p-8 text-center">
-                      <h3 className="text-lg font-semibold mb-2">
-                        Not enrolled yet
-                      </h3>
-                      <p className="text-muted-foreground mb-4">
-                        Enroll in the Courses tab
-                      </p>
-                      <Button
-                        onClick={() => {
-                          // Switch to courses tab
-                          const coursesTab = document.querySelector(
-                            '[value="courses"]',
-                          ) as HTMLElement;
-                          if (coursesTab) coursesTab.click();
-                        }}
-                      >
-                        View Courses
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
-                    {enrolledCourses.map((course: any, index: number) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <Card className="h-full">
-                          <CardHeader>
-                            <div className="flex items-center justify-between">
-                              <CardTitle className="text-lg">
-                                {course.courseTitle}
-                              </CardTitle>
-                              {getStatusIcon(course.status)}
+                          <div className="text-sm space-y-1">
+                            <div>
+                              <strong>Name:</strong> {course.fullName}
                             </div>
-                            <CardDescription>
-                              Enrolled on{" "}
-                              {new Date(course.enrolledAt).toLocaleDateString()}
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-4">
-                            <Badge
-                              variant={
-                                course.status === "approved"
-                                  ? "default"
-                                  : "secondary"
+                            <div>
+                              <strong>Email:</strong> {course.email}
+                            </div>
+                          </div>
+
+                          {course.status === "pending_payment" && (
+                            <Button
+                              size="sm"
+                              className="w-full"
+                              onClick={() => router.push("/training")}
+                            >
+                              Complete Payment
+                            </Button>
+                          )}
+
+                          {course.status === "approved" && (
+                            <Button
+                              size="sm"
+                              className="w-full bg-green-600 hover:bg-green-700"
+                              onClick={() =>
+                                router.push(`/course/${course.courseId}`)
                               }
                             >
-                              {getStatusText(course.status)}
-                            </Badge>
-
-                            <div className="text-sm space-y-1">
-                              <div>
-                                <strong>Name:</strong> {course.fullName}
-                              </div>
-                              <div>
-                                <strong>Email:</strong> {course.email}
-                              </div>
-                            </div>
-
-                            {course.status === "pending_payment" && (
-                              <Button
-                                size="sm"
-                                className="w-full"
-                                onClick={() => router.push("/training")}
-                              >
-                                Complete Payment
-                              </Button>
-                            )}
-
-                            {course.status === "approved" && (
-                              <Button
-                                size="sm"
-                                className="w-full bg-green-600 hover:bg-green-700"
-                                onClick={() =>
-                                  router.push(`/course/${course.courseId}`)
-                                }
-                              >
-                                <FaPlay className="w-4 h-4 mr-2" />
-                                Access Course
-                              </Button>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
+                              <FaPlay className="w-4 h-4 mr-2" />
+                              Access Course
+                            </Button>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            )}
+
+            {/* Featured Bonus Courses */}
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-blue-600">
+                  Bonus Courses
+                </h2>
+                <Badge
+                  variant="secondary"
+                  className="bg-yellow-100 text-yellow-800"
+                >
+                  Featured
+                </Badge>
+              </div>
+              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
+                {featuredCourses.map((course, index) => {
+                  const enrollmentStatus = checkEnrollmentStatus(course.id);
+                  return (
+                    <motion.div
+                      key={course.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ scale: 1.02 }}
+                      className="relative"
+                    >
+                      <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg border-l-4 border-l-yellow-500">
+                        {course.featured && (
+                          <div className="absolute -top-2 -right-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            BONUS
+                          </div>
+                        )}
+                        <CardHeader>
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-yellow-600">
+                              {course.icon}
+                            </div>
+                            <div className="flex-1">
+                              <CardTitle className="text-lg">
+                                {course.title}
+                              </CardTitle>
+                              <CardDescription className="mt-1">
+                                {course.description}
+                              </CardDescription>
+                            </div>
+                            {enrollmentStatus &&
+                              getStatusIcon(enrollmentStatus.status)}
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <FaClock className="w-4 h-4" />
+                              <span>{course.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <FaDollarSign className="w-4 h-4" />
+                              <span>{course.price}</span>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-3">
+                            <p className="text-sm text-muted-foreground line-clamp-2">
+                              {course.detailedDescription}
+                            </p>
+                            <div className="flex items-center gap-2 text-sm">
+                              <FaUser className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-muted-foreground">
+                                {course.instructor}
+                              </span>
+                            </div>
+                            {enrollmentStatus ? (
+                              <div className="space-y-2">
+                                <Badge
+                                  variant={
+                                    enrollmentStatus.status === "approved"
+                                      ? "default"
+                                      : "secondary"
+                                  }
+                                >
+                                  {getStatusText(enrollmentStatus.status)}
+                                </Badge>
+                                {enrollmentStatus.status === "approved" && (
+                                  <Button
+                                    size="sm"
+                                    className="w-full bg-green-600 hover:bg-green-700"
+                                    onClick={() =>
+                                      router.push(`/course/${course.id}`)
+                                    }
+                                  >
+                                    <FaPlay className="w-4 h-4 mr-2" />
+                                    Access Course
+                                  </Button>
+                                )}
+                              </div>
+                            ) : (
+                              <Button
+                                size="sm"
+                                className="w-full bg-blue-600 hover:bg-blue-700"
+                                onClick={() => handleEnrollment(course)}
+                              >
+                                Enroll Now
+                              </Button>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* All Available Courses */}
+            <div>
+              <h2 className="text-2xl font-bold mb-6">All Courses</h2>
+              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6">
+                {allCourses.map((course, index) => {
+                  const enrollmentStatus = checkEnrollmentStatus(course.id);
+                  return (
+                    <motion.div
+                      key={course.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        delay: (index + featuredCourses.length) * 0.1,
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      <Card className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg">
+                        <CardHeader>
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-blue-600">
+                              {course.icon}
+                            </div>
+                            <div className="flex-1">
+                              <CardTitle className="text-lg">
+                                {course.title}
+                              </CardTitle>
+                              <CardDescription className="mt-1">
+                                {course.description}
+                              </CardDescription>
+                            </div>
+                            {enrollmentStatus &&
+                              getStatusIcon(enrollmentStatus.status)}
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <FaClock className="w-4 h-4" />
+                              <span>{course.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <FaDollarSign className="w-4 h-4" />
+                              <span>{course.price}</span>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-3">
+                            <p className="text-sm text-muted-foreground line-clamp-2">
+                              {course.detailedDescription}
+                            </p>
+                            <div className="flex items-center gap-2 text-sm">
+                              <FaUser className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-muted-foreground">
+                                {course.instructor}
+                              </span>
+                            </div>
+                            {enrollmentStatus ? (
+                              <div className="space-y-2">
+                                <Badge
+                                  variant={
+                                    enrollmentStatus.status === "approved"
+                                      ? "default"
+                                      : "secondary"
+                                  }
+                                >
+                                  {getStatusText(enrollmentStatus.status)}
+                                </Badge>
+                                {enrollmentStatus.status === "approved" && (
+                                  <Button
+                                    size="sm"
+                                    className="w-full bg-green-600 hover:bg-green-700"
+                                    onClick={() =>
+                                      router.push(`/course/${course.id}`)
+                                    }
+                                  >
+                                    <FaPlay className="w-4 h-4 mr-2" />
+                                    Access Course
+                                  </Button>
+                                )}
+                              </div>
+                            ) : (
+                              <Button
+                                size="sm"
+                                className="w-full bg-blue-600 hover:bg-blue-700"
+                                onClick={() => handleEnrollment(course)}
+                              >
+                                Enroll Now
+                              </Button>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>
