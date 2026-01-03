@@ -20,7 +20,7 @@ import {
   FaTrophy,
   FaHistory,
 } from "react-icons/fa";
-import Header from "@/components/Header";
+import StudentHeader from "@/components/StudentHeader";
 import Footer from "@/components/Footer";
 import UpdateProfileModal from "@/components/UpdateProfileModal";
 import {
@@ -58,7 +58,7 @@ export default function StudentDashboardPage() {
   if (!user) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <StudentHeader />
         <div className="flex items-center justify-center min-h-[60vh]">
           <Card className="w-96">
             <CardContent className="p-6 text-center">
@@ -144,7 +144,7 @@ export default function StudentDashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <StudentHeader />
       <div className="container mx-auto px-4 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
