@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -64,6 +65,18 @@ import {
   Download,
   RefreshCw,
   Edit,
+  Award,
+  Target,
+  Layers,
+  PlayCircle,
+  ClipboardList,
+  Trophy,
+  CalendarDays,
+  LayoutGrid,
+  BookMarked,
+  FileCheck,
+  Timer,
+  Zap,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
@@ -339,6 +352,257 @@ const sampleUsers = [
   },
 ];
 
+// Training system sample data for demonstration
+const trainingData = {
+  overview: {
+    totalCourses: 24,
+    activeLearners: 1847,
+    completionRate: 78.5,
+    averageRating: 4.7,
+    totalCertificates: 1256,
+    totalHoursLearned: 15680,
+  },
+  learningPaths: [
+    {
+      id: "lp1",
+      title: "Full-Stack Web Development",
+      description: "Complete path from beginner to professional web developer",
+      courses: 8,
+      duration: "16 weeks",
+      enrollments: 456,
+      completions: 312,
+      status: "active",
+      level: "Beginner to Advanced",
+    },
+    {
+      id: "lp2",
+      title: "Digital Marketing Specialist",
+      description: "Master digital marketing strategies and tools",
+      courses: 6,
+      duration: "12 weeks",
+      enrollments: 389,
+      completions: 298,
+      status: "active",
+      level: "Beginner to Intermediate",
+    },
+    {
+      id: "lp3",
+      title: "Data Science Fundamentals",
+      description: "Learn data analysis, visualization, and machine learning basics",
+      courses: 7,
+      duration: "14 weeks",
+      enrollments: 278,
+      completions: 189,
+      status: "active",
+      level: "Intermediate",
+    },
+    {
+      id: "lp4",
+      title: "Mobile App Development",
+      description: "Build cross-platform mobile applications",
+      courses: 5,
+      duration: "10 weeks",
+      enrollments: 234,
+      completions: 156,
+      status: "draft",
+      level: "Intermediate to Advanced",
+    },
+  ],
+  studentProgress: [
+    {
+      id: "sp1",
+      studentName: "John Smith",
+      email: "john.smith@example.com",
+      course: "Web Development",
+      progress: 85,
+      startDate: "2024-01-05",
+      lastActivity: "2024-01-15",
+      status: "in_progress",
+      completedLessons: 17,
+      totalLessons: 20,
+      timeSpent: "24h 30m",
+      quizScore: 88,
+    },
+    {
+      id: "sp2",
+      studentName: "Sarah Johnson",
+      email: "sarah.j@company.com",
+      course: "Digital Marketing",
+      progress: 100,
+      startDate: "2023-12-01",
+      lastActivity: "2024-01-10",
+      status: "completed",
+      completedLessons: 15,
+      totalLessons: 15,
+      timeSpent: "18h 45m",
+      quizScore: 95,
+    },
+    {
+      id: "sp3",
+      studentName: "Mike Chen",
+      email: "mike.chen@email.com",
+      course: "Video Editing",
+      progress: 45,
+      startDate: "2024-01-10",
+      lastActivity: "2024-01-14",
+      status: "in_progress",
+      completedLessons: 9,
+      totalLessons: 20,
+      timeSpent: "8h 15m",
+      quizScore: 72,
+    },
+    {
+      id: "sp4",
+      studentName: "Emily Davis",
+      email: "emily.davis@student.edu",
+      course: "AI Automation",
+      progress: 60,
+      startDate: "2024-01-08",
+      lastActivity: "2024-01-15",
+      status: "in_progress",
+      completedLessons: 12,
+      totalLessons: 20,
+      timeSpent: "15h 20m",
+      quizScore: 85,
+    },
+    {
+      id: "sp5",
+      studentName: "David Wilson",
+      email: "d.wilson@techcorp.com",
+      course: "Data Science",
+      progress: 30,
+      startDate: "2024-01-12",
+      lastActivity: "2024-01-14",
+      status: "behind",
+      completedLessons: 6,
+      totalLessons: 20,
+      timeSpent: "5h 45m",
+      quizScore: 68,
+    },
+  ],
+  scheduledSessions: [
+    {
+      id: "ss1",
+      title: "Web Development Workshop",
+      instructor: "Alex Thompson",
+      date: "2024-01-20",
+      time: "10:00 AM - 12:00 PM",
+      type: "live",
+      attendees: 45,
+      maxCapacity: 50,
+      status: "upcoming",
+      description: "Hands-on workshop covering React fundamentals",
+    },
+    {
+      id: "ss2",
+      title: "Digital Marketing Q&A",
+      instructor: "Mike Chen",
+      date: "2024-01-22",
+      time: "2:00 PM - 3:30 PM",
+      type: "webinar",
+      attendees: 78,
+      maxCapacity: 100,
+      status: "upcoming",
+      description: "Live Q&A session on SEO strategies",
+    },
+    {
+      id: "ss3",
+      title: "AI Tools Demo",
+      instructor: "Dr. James Wilson",
+      date: "2024-01-25",
+      time: "11:00 AM - 1:00 PM",
+      type: "live",
+      attendees: 32,
+      maxCapacity: 40,
+      status: "upcoming",
+      description: "Demonstration of AI automation tools",
+    },
+    {
+      id: "ss4",
+      title: "Career Guidance Session",
+      instructor: "Sarah Johnson",
+      date: "2024-01-18",
+      time: "3:00 PM - 4:00 PM",
+      type: "webinar",
+      attendees: 120,
+      maxCapacity: 150,
+      status: "completed",
+      description: "Career paths in tech industry",
+    },
+  ],
+  certificates: [
+    {
+      id: "cert1",
+      studentName: "Sarah Johnson",
+      email: "sarah.j@company.com",
+      course: "Digital Marketing Specialist",
+      issueDate: "2024-01-10",
+      certificateId: "DM-2024-00156",
+      status: "issued",
+      grade: "A",
+      score: 95,
+    },
+    {
+      id: "cert2",
+      studentName: "John Smith",
+      email: "john.smith@example.com",
+      course: "Web Development Fundamentals",
+      issueDate: "2024-01-08",
+      certificateId: "WD-2024-00089",
+      status: "issued",
+      grade: "B+",
+      score: 88,
+    },
+    {
+      id: "cert3",
+      studentName: "Emily Davis",
+      email: "emily.davis@student.edu",
+      course: "Graphic Design Basics",
+      issueDate: "2024-01-05",
+      certificateId: "GD-2024-00234",
+      status: "issued",
+      grade: "A-",
+      score: 92,
+    },
+    {
+      id: "cert4",
+      studentName: "Mike Chen",
+      email: "mike.chen@email.com",
+      course: "Video Editing Pro",
+      issueDate: "pending",
+      certificateId: "VE-2024-00178",
+      status: "pending",
+      grade: "-",
+      score: 45,
+    },
+  ],
+  trainingReports: {
+    enrollmentTrends: [
+      { month: "Oct", enrollments: 180 },
+      { month: "Nov", enrollments: 220 },
+      { month: "Dec", enrollments: 195 },
+      { month: "Jan", enrollments: 310 },
+      { month: "Feb", enrollments: 340 },
+      { month: "Mar", enrollments: 380 },
+    ],
+    completionTrends: [
+      { month: "Oct", completions: 145 },
+      { month: "Nov", completions: 178 },
+      { month: "Dec", completions: 165 },
+      { month: "Jan", completions: 210 },
+      { month: "Feb", completions: 245 },
+      { month: "Mar", completions: 290 },
+    ],
+    coursePopularity: [
+      { course: "Web Dev", enrollments: 540 },
+      { course: "Marketing", enrollments: 420 },
+      { course: "Data Science", enrollments: 380 },
+      { course: "Video Editing", enrollments: 290 },
+      { course: "AI/ML", enrollments: 250 },
+    ],
+  },
+};
+
 const chartConfig = {
   visitors: {
     label: "Visitors",
@@ -385,6 +649,19 @@ const sidebarItems = [
       { title: "All Courses", id: "courses-all" },
       { title: "Course Folders", id: "courses-folders" },
       { title: "Enrollments", id: "enrollments" },
+    ],
+  },
+  {
+    title: "Training",
+    icon: BookMarked,
+    id: "training",
+    submenu: [
+      { title: "Training Dashboard", id: "training-dashboard" },
+      { title: "Curriculum", id: "training-curriculum" },
+      { title: "Student Progress", id: "training-progress" },
+      { title: "Schedule", id: "training-schedule" },
+      { title: "Certificates", id: "training-certificates" },
+      { title: "Reports", id: "training-reports" },
     ],
   },
   {
@@ -3017,6 +3294,1066 @@ function AdminPageContent() {
             </div>
           </div>
         );
+      // Training Dashboard
+      case "training":
+      case "training-dashboard":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                  Training Dashboard
+                </h1>
+                <p className="text-muted-foreground">
+                  Overview of your training program performance
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Report
+                </Button>
+                <Button size="sm" className="bg-primary">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Course
+                </Button>
+              </div>
+            </div>
+
+            {/* Training Overview Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <BookOpen className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.overview.totalCourses}</p>
+                      <p className="text-xs text-muted-foreground">Total Courses</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-5 w-5 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.overview.activeLearners.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">Active Learners</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Target className="h-5 w-5 text-purple-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.overview.completionRate}%</p>
+                      <p className="text-xs text-muted-foreground">Completion Rate</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Star className="h-5 w-5 text-yellow-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.overview.averageRating}</p>
+                      <p className="text-xs text-muted-foreground">Avg Rating</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Award className="h-5 w-5 text-orange-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.overview.totalCertificates.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">Certificates</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="h-5 w-5 text-indigo-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.overview.totalHoursLearned.toLocaleString()}h</p>
+                      <p className="text-xs text-muted-foreground">Hours Learned</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Learning Paths & Recent Activity */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Layers className="h-5 w-5" />
+                    Learning Paths
+                  </CardTitle>
+                  <CardDescription>Active learning programs</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {trainingData.learningPaths.slice(0, 3).map((path) => (
+                      <div key={path.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm">{path.title}</h4>
+                          <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
+                            <span>{path.courses} courses</span>
+                            <span>{path.duration}</span>
+                            <span>{path.enrollments} enrolled</span>
+                          </div>
+                        </div>
+                        <Badge variant={path.status === "active" ? "default" : "secondary"}>
+                          {path.status}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                  <Button variant="outline" className="w-full mt-4" onClick={() => setActiveSection("training-curriculum")}>
+                    View All Learning Paths
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CalendarDays className="h-5 w-5" />
+                    Upcoming Sessions
+                  </CardTitle>
+                  <CardDescription>Scheduled training events</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {trainingData.scheduledSessions.filter(s => s.status === "upcoming").slice(0, 3).map((session) => (
+                      <div key={session.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm">{session.title}</h4>
+                          <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
+                            <span>{session.date}</span>
+                            <span>{session.time}</span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <Badge variant="outline" className="mb-1">{session.type}</Badge>
+                          <p className="text-xs text-muted-foreground">{session.attendees}/{session.maxCapacity}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <Button variant="outline" className="w-full mt-4" onClick={() => setActiveSection("training-schedule")}>
+                    View Full Schedule
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Recent Student Progress */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  Recent Student Progress
+                </CardTitle>
+                <CardDescription>Latest learning activities</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Student</TableHead>
+                        <TableHead>Course</TableHead>
+                        <TableHead>Progress</TableHead>
+                        <TableHead className="hidden md:table-cell">Quiz Score</TableHead>
+                        <TableHead className="hidden md:table-cell">Last Activity</TableHead>
+                        <TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {trainingData.studentProgress.slice(0, 5).map((student) => (
+                        <TableRow key={student.id}>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{student.studentName}</p>
+                              <p className="text-xs text-muted-foreground">{student.email}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>{student.course}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Progress value={student.progress} className="w-20 h-2" />
+                              <span className="text-sm">{student.progress}%</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">{student.quizScore}%</TableCell>
+                          <TableCell className="hidden md:table-cell">{student.lastActivity}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                student.status === "completed" ? "default" :
+                                student.status === "in_progress" ? "secondary" :
+                                "destructive"
+                              }
+                            >
+                              {student.status.replace("_", " ")}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <Button variant="outline" className="w-full mt-4" onClick={() => setActiveSection("training-progress")}>
+                  View All Student Progress
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      // Curriculum Management
+      case "training-curriculum":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                  Curriculum Management
+                </h1>
+                <p className="text-muted-foreground">
+                  Manage learning paths, course categories, and prerequisites
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+                <Button size="sm" className="bg-primary">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Learning Path
+                </Button>
+              </div>
+            </div>
+
+            {/* Learning Paths Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {trainingData.learningPaths.map((path) => (
+                <Card key={path.id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-lg">{path.title}</CardTitle>
+                        <CardDescription className="mt-1">{path.description}</CardDescription>
+                      </div>
+                      <Badge variant={path.status === "active" ? "default" : "secondary"}>
+                        {path.status}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="text-center p-3 bg-muted/30 rounded-lg">
+                        <p className="text-2xl font-bold text-blue-600">{path.courses}</p>
+                        <p className="text-xs text-muted-foreground">Courses</p>
+                      </div>
+                      <div className="text-center p-3 bg-muted/30 rounded-lg">
+                        <p className="text-2xl font-bold text-green-600">{path.enrollments}</p>
+                        <p className="text-xs text-muted-foreground">Enrolled</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-sm mb-4">
+                      <span className="text-muted-foreground">Duration: {path.duration}</span>
+                      <span className="text-muted-foreground">Level: {path.level}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">Completion Rate:</span>
+                        <Progress value={(path.completions / path.enrollments) * 100} className="w-20 h-2" />
+                        <span className="text-sm font-medium">{Math.round((path.completions / path.enrollments) * 100)}%</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Course Categories */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <LayoutGrid className="h-5 w-5" />
+                  Course Categories
+                </CardTitle>
+                <CardDescription>Organize courses by category</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { name: "Development", count: 8, icon: "💻", color: "bg-blue-100" },
+                    { name: "Marketing", count: 5, icon: "📈", color: "bg-green-100" },
+                    { name: "Design", count: 4, icon: "🎨", color: "bg-purple-100" },
+                    { name: "Data Science", count: 4, icon: "📊", color: "bg-orange-100" },
+                    { name: "Business", count: 2, icon: "💼", color: "bg-yellow-100" },
+                    { name: "AI & ML", count: 1, icon: "🤖", color: "bg-pink-100" },
+                  ].map((category, index) => (
+                    <div key={index} className={`p-4 rounded-lg ${category.color} cursor-pointer hover:opacity-80 transition-opacity`}>
+                      <div className="text-2xl mb-2">{category.icon}</div>
+                      <h4 className="font-medium">{category.name}</h4>
+                      <p className="text-sm text-muted-foreground">{category.count} courses</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Prerequisites Configuration */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ClipboardList className="h-5 w-5" />
+                  Prerequisites & Requirements
+                </CardTitle>
+                <CardDescription>Configure course dependencies and skill requirements</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[
+                    { course: "Advanced Web Development", prerequisite: "Web Development Fundamentals", required: true },
+                    { course: "Machine Learning", prerequisite: "Python Programming Basics", required: true },
+                    { course: "Advanced SEO", prerequisite: "Digital Marketing Basics", required: false },
+                    { course: "Mobile App Development", prerequisite: "React Fundamentals", required: true },
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-sm">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <p className="font-medium">{item.course}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Requires: <span className="text-blue-600">{item.prerequisite}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={item.required ? "default" : "outline"}>
+                          {item.required ? "Required" : "Recommended"}
+                        </Badge>
+                        <Button size="sm" variant="ghost">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Button variant="outline" className="w-full mt-4">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Prerequisite Rule
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      // Student Progress
+      case "training-progress":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                  Student Progress
+                </h1>
+                <p className="text-muted-foreground">
+                  Track and manage student learning progress
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Search students..." className="pl-10 w-64" />
+                </div>
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </div>
+            </div>
+
+            {/* Progress Summary Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <PlayCircle className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.studentProgress.filter(s => s.status === "in_progress").length}</p>
+                      <p className="text-xs text-muted-foreground">In Progress</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.studentProgress.filter(s => s.status === "completed").length}</p>
+                      <p className="text-xs text-muted-foreground">Completed</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <TrendingDown className="h-5 w-5 text-red-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.studentProgress.filter(s => s.status === "behind").length}</p>
+                      <p className="text-xs text-muted-foreground">Behind Schedule</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Timer className="h-5 w-5 text-purple-500" />
+                    <div>
+                      <p className="text-2xl font-bold">82h</p>
+                      <p className="text-xs text-muted-foreground">Total Time</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Detailed Progress Table */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Student Progress Details</CardTitle>
+                    <CardDescription>{trainingData.studentProgress.length} students tracked</CardDescription>
+                  </div>
+                  <select className="px-3 py-2 border border-input bg-background rounded-md text-sm">
+                    <option value="all">All Courses</option>
+                    <option value="web">Web Development</option>
+                    <option value="marketing">Digital Marketing</option>
+                    <option value="video">Video Editing</option>
+                    <option value="ai">AI Automation</option>
+                  </select>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Student</TableHead>
+                        <TableHead>Course</TableHead>
+                        <TableHead>Progress</TableHead>
+                        <TableHead className="hidden md:table-cell">Lessons</TableHead>
+                        <TableHead className="hidden md:table-cell">Time Spent</TableHead>
+                        <TableHead className="hidden lg:table-cell">Quiz Score</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="w-[100px]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {trainingData.studentProgress.map((student) => (
+                        <TableRow key={student.id}>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{student.studentName}</p>
+                              <p className="text-xs text-muted-foreground">{student.email}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>{student.course}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Progress value={student.progress} className="w-24 h-2" />
+                              <span className="text-sm font-medium">{student.progress}%</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            {student.completedLessons}/{student.totalLessons}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">{student.timeSpent}</TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <div className="flex items-center gap-1">
+                              <span className={`font-medium ${student.quizScore >= 80 ? "text-green-600" : student.quizScore >= 60 ? "text-yellow-600" : "text-red-600"}`}>
+                                {student.quizScore}%
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                student.status === "completed" ? "default" :
+                                student.status === "in_progress" ? "secondary" :
+                                "destructive"
+                              }
+                            >
+                              {student.status.replace("_", " ")}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-1">
+                              <Button size="sm" variant="outline">
+                                <Eye className="h-3 w-3" />
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <MessageSquare className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      // Training Schedule
+      case "training-schedule":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                  Training Schedule
+                </h1>
+                <p className="text-muted-foreground">
+                  Manage live sessions, webinars, and scheduled training events
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Calendar View
+                </Button>
+                <Button size="sm" className="bg-primary">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Schedule Session
+                </Button>
+              </div>
+            </div>
+
+            {/* Schedule Overview */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <CalendarDays className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.scheduledSessions.filter(s => s.status === "upcoming").length}</p>
+                      <p className="text-xs text-muted-foreground">Upcoming</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <PlayCircle className="h-5 w-5 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.scheduledSessions.filter(s => s.type === "live").length}</p>
+                      <p className="text-xs text-muted-foreground">Live Sessions</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Video className="h-5 w-5 text-purple-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.scheduledSessions.filter(s => s.type === "webinar").length}</p>
+                      <p className="text-xs text-muted-foreground">Webinars</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-5 w-5 text-orange-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.scheduledSessions.reduce((sum, s) => sum + s.attendees, 0)}</p>
+                      <p className="text-xs text-muted-foreground">Total Registrations</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Scheduled Sessions List */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarDays className="h-5 w-5" />
+                  Scheduled Sessions
+                </CardTitle>
+                <CardDescription>All upcoming and recent training sessions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {trainingData.scheduledSessions.map((session) => (
+                    <div key={session.id} className={`p-4 border rounded-lg ${session.status === "upcoming" ? "border-blue-200 bg-blue-50/30" : "border-gray-200"}`}>
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-start gap-4">
+                          <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${session.type === "live" ? "bg-green-100 text-green-600" : "bg-purple-100 text-purple-600"}`}>
+                            {session.type === "live" ? <PlayCircle className="h-6 w-6" /> : <Video className="h-6 w-6" />}
+                          </div>
+                          <div>
+                            <h4 className="font-semibold">{session.title}</h4>
+                            <p className="text-sm text-muted-foreground">{session.description}</p>
+                            <div className="flex items-center gap-4 mt-2 text-sm">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="h-4 w-4" />
+                                {session.date}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-4 w-4" />
+                                {session.time}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Users className="h-4 w-4" />
+                                {session.attendees}/{session.maxCapacity}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={session.status === "upcoming" ? "default" : "secondary"}>
+                            {session.status}
+                          </Badge>
+                          <Badge variant="outline">{session.type}</Badge>
+                          <div className="flex gap-1">
+                            <Button size="sm" variant="outline">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      // Certificates Management
+      case "training-certificates":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                  Certificate Management
+                </h1>
+                <p className="text-muted-foreground">
+                  Issue, manage, and verify training certificates
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <FileCheck className="h-4 w-4 mr-2" />
+                  Verify Certificate
+                </Button>
+                <Button size="sm" className="bg-primary">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Issue Certificate
+                </Button>
+              </div>
+            </div>
+
+            {/* Certificate Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Award className="h-5 w-5 text-yellow-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.certificates.filter(c => c.status === "issued").length}</p>
+                      <p className="text-xs text-muted-foreground">Issued</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="h-5 w-5 text-orange-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.certificates.filter(c => c.status === "pending").length}</p>
+                      <p className="text-xs text-muted-foreground">Pending</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Trophy className="h-5 w-5 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{trainingData.certificates.filter(c => c.grade === "A" || c.grade === "A-").length}</p>
+                      <p className="text-xs text-muted-foreground">With Honors</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Zap className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {Math.round(trainingData.certificates.filter(c => c.status === "issued").reduce((sum, c) => sum + c.score, 0) / trainingData.certificates.filter(c => c.status === "issued").length)}%
+                      </p>
+                      <p className="text-xs text-muted-foreground">Avg Score</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Certificate Templates */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Certificate Templates
+                </CardTitle>
+                <CardDescription>Manage certificate designs and templates</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { name: "Course Completion", icon: "🎓", count: 156 },
+                    { name: "Excellence Award", icon: "🏆", count: 45 },
+                    { name: "Participation", icon: "🎖️", count: 89 },
+                    { name: "Professional", icon: "💼", count: 23 },
+                  ].map((template, index) => (
+                    <div key={index} className="p-4 border rounded-lg text-center hover:shadow-md transition-shadow cursor-pointer">
+                      <div className="text-3xl mb-2">{template.icon}</div>
+                      <h4 className="font-medium">{template.name}</h4>
+                      <p className="text-sm text-muted-foreground">{template.count} issued</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Issued Certificates Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Issued Certificates</CardTitle>
+                <CardDescription>All certificates issued to students</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Certificate ID</TableHead>
+                        <TableHead>Student</TableHead>
+                        <TableHead>Course</TableHead>
+                        <TableHead className="hidden md:table-cell">Issue Date</TableHead>
+                        <TableHead>Grade</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="w-[100px]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {trainingData.certificates.map((cert) => (
+                        <TableRow key={cert.id}>
+                          <TableCell className="font-mono text-sm">{cert.certificateId}</TableCell>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{cert.studentName}</p>
+                              <p className="text-xs text-muted-foreground">{cert.email}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>{cert.course}</TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            {cert.issueDate === "pending" ? "-" : cert.issueDate}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                cert.grade === "A" || cert.grade === "A-" ? "default" :
+                                cert.grade === "B+" || cert.grade === "B" ? "secondary" :
+                                "outline"
+                              }
+                            >
+                              {cert.grade}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={cert.status === "issued" ? "default" : "secondary"}>
+                              {cert.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-1">
+                              <Button size="sm" variant="outline">
+                                <Eye className="h-3 w-3" />
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <Download className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      // Training Reports
+      case "training-reports":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                  Training Reports
+                </h1>
+                <p className="text-muted-foreground">
+                  Comprehensive analytics and reports for training programs
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <select className="px-3 py-2 border border-input bg-background rounded-md text-sm">
+                  <option value="30">Last 30 Days</option>
+                  <option value="90">Last 90 Days</option>
+                  <option value="365">Last Year</option>
+                  <option value="all">All Time</option>
+                </select>
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Report
+                </Button>
+              </div>
+            </div>
+
+            {/* Report Summary */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+                <CardContent className="p-4">
+                  <div>
+                    <p className="text-3xl font-bold">
+                      {trainingData.trainingReports.enrollmentTrends.reduce((sum, m) => sum + m.enrollments, 0).toLocaleString()}
+                    </p>
+                    <p className="text-sm opacity-90">Total Enrollments</p>
+                    <div className="flex items-center mt-2 text-sm">
+                      <TrendingUp className="h-4 w-4 mr-1" />
+                      <span>+23% from last period</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
+                <CardContent className="p-4">
+                  <div>
+                    <p className="text-3xl font-bold">
+                      {trainingData.trainingReports.completionTrends.reduce((sum, m) => sum + m.completions, 0).toLocaleString()}
+                    </p>
+                    <p className="text-sm opacity-90">Completions</p>
+                    <div className="flex items-center mt-2 text-sm">
+                      <TrendingUp className="h-4 w-4 mr-1" />
+                      <span>+18% from last period</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+                <CardContent className="p-4">
+                  <div>
+                    <p className="text-3xl font-bold">78.5%</p>
+                    <p className="text-sm opacity-90">Completion Rate</p>
+                    <div className="flex items-center mt-2 text-sm">
+                      <TrendingUp className="h-4 w-4 mr-1" />
+                      <span>+5.2% from last period</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
+                <CardContent className="p-4">
+                  <div>
+                    <p className="text-3xl font-bold">4.7</p>
+                    <p className="text-sm opacity-90">Avg Rating</p>
+                    <div className="flex items-center mt-2 text-sm">
+                      <Star className="h-4 w-4 mr-1" />
+                      <span>Based on 2,340 reviews</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Enrollment Trends</CardTitle>
+                  <CardDescription>Monthly enrollment and completion data</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer config={chartConfig} className="h-[300px]">
+                    <AreaChart data={trainingData.trainingReports.enrollmentTrends.map((item, index) => ({
+                      ...item,
+                      completions: trainingData.trainingReports.completionTrends[index]?.completions || 0,
+                    }))}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="month" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Area
+                        type="monotone"
+                        dataKey="enrollments"
+                        stackId="1"
+                        stroke="hsl(var(--chart-1))"
+                        fill="hsl(var(--chart-1))"
+                        fillOpacity={0.6}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="completions"
+                        stackId="2"
+                        stroke="hsl(var(--chart-2))"
+                        fill="hsl(var(--chart-2))"
+                        fillOpacity={0.6}
+                      />
+                    </AreaChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Course Popularity</CardTitle>
+                  <CardDescription>Enrollments by course category</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ChartContainer config={chartConfig} className="h-[300px]">
+                    <BarChart data={trainingData.trainingReports.coursePopularity}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="course" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar dataKey="enrollments" fill="hsl(var(--chart-3))" />
+                    </BarChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Detailed Reports */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <PieChart className="h-5 w-5" />
+                  Performance Breakdown
+                </CardTitle>
+                <CardDescription>Detailed analysis by category</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <h4 className="font-medium mb-4">By Course Category</h4>
+                    <div className="space-y-3">
+                      {[
+                        { name: "Development", percentage: 35, color: "bg-blue-500" },
+                        { name: "Marketing", percentage: 25, color: "bg-green-500" },
+                        { name: "Data Science", percentage: 20, color: "bg-purple-500" },
+                        { name: "Design", percentage: 12, color: "bg-orange-500" },
+                        { name: "Other", percentage: 8, color: "bg-gray-500" },
+                      ].map((item, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
+                          <span className="flex-1 text-sm">{item.name}</span>
+                          <span className="text-sm font-medium">{item.percentage}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-4">By Student Level</h4>
+                    <div className="space-y-3">
+                      {[
+                        { name: "Beginner", percentage: 45, color: "bg-emerald-500" },
+                        { name: "Intermediate", percentage: 35, color: "bg-cyan-500" },
+                        { name: "Advanced", percentage: 20, color: "bg-indigo-500" },
+                      ].map((item, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
+                          <span className="flex-1 text-sm">{item.name}</span>
+                          <span className="text-sm font-medium">{item.percentage}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-4">Completion Status</h4>
+                    <div className="space-y-3">
+                      {[
+                        { name: "Completed", percentage: 65, color: "bg-green-500" },
+                        { name: "In Progress", percentage: 25, color: "bg-yellow-500" },
+                        { name: "Not Started", percentage: 10, color: "bg-red-500" },
+                      ].map((item, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
+                          <span className="flex-1 text-sm">{item.name}</span>
+                          <span className="text-sm font-medium">{item.percentage}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
       default:
         return renderDashboard();
     }
