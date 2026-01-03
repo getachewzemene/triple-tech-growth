@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { User, LogOut, Edit, Home, Settings } from "lucide-react";
+import { User, LogOut, Edit, Home, Settings, Camera } from "lucide-react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import StudentProfileModal from "@/components/StudentProfileModal";
 
 const StudentHeader = () => {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -68,7 +71,7 @@ const StudentHeader = () => {
                 <p className="text-xs text-gray-500 dark:text-gray-400">Student Account</p>
               </div>
               <DropdownMenuItem
-                onClick={() => router.push("/profile")}
+                onClick={() => setIsProfileModalOpen(true)}
                 className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 py-2"
               >
                 <Edit className="w-4 h-4 text-blue-600" />
@@ -100,6 +103,12 @@ const StudentHeader = () => {
           </DropdownMenu>
         )}
       </div>
+
+      {/* Profile Edit Modal */}
+      <StudentProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+      />
     </header>
   );
 };
