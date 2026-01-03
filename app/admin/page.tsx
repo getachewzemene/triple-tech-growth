@@ -647,7 +647,14 @@ const sidebarItems = [
     id: "training",
     submenu: [
       { title: "Training Dashboard", id: "training-dashboard" },
-      { title: "Courses", id: "training-courses" },
+      { 
+        title: "Courses", 
+        id: "training-courses",
+        submenu: [
+          { title: "All Courses", id: "courses-all" },
+          { title: "Course Folders", id: "courses-folders" },
+        ],
+      },
       { title: "Enrollments", id: "training-enrollments" },
       { title: "Student Progress", id: "training-progress" },
       { title: "Schedule", id: "training-schedule" },
@@ -4722,23 +4729,55 @@ function AdminPageContent() {
 
                   {item.submenu && expandedMenus.has(item.id) && (
                     <SidebarMenuSub>
-                      {item.submenu.map((subItem) => (
+                      {item.submenu.map((subItem: any) => (
                         <SidebarMenuSubItem key={subItem.id}>
-                          <SidebarMenuSubButton
-                            onClick={() => setActiveSection(subItem.id)}
-                            isActive={activeSection === subItem.id}
-                          >
-                            {subItem.title}
-                            {subItem.id === "training-enrollments" &&
-                              notifications.length > 0 && (
-                                <Badge
-                                  variant="destructive"
-                                  className="ml-2 px-1 py-0 text-xs"
-                                >
-                                  {notifications.length}
-                                </Badge>
+                          {subItem.submenu ? (
+                            <>
+                              <SidebarMenuSubButton
+                                onClick={() => toggleMenu(subItem.id)}
+                                isActive={activeSection === subItem.id || activeSection.startsWith(subItem.id.replace('training-', '') + '-') || (subItem.submenu && subItem.submenu.some((nested: any) => activeSection === nested.id))}
+                              >
+                                {subItem.title}
+                                <ChevronRight
+                                  className={`h-3 w-3 ml-auto transition-transform ${
+                                    expandedMenus.has(subItem.id)
+                                      ? "transform rotate-90"
+                                      : ""
+                                  }`}
+                                />
+                              </SidebarMenuSubButton>
+                              {expandedMenus.has(subItem.id) && (
+                                <SidebarMenuSub className="ml-2">
+                                  {subItem.submenu.map((nestedItem: any) => (
+                                    <SidebarMenuSubItem key={nestedItem.id}>
+                                      <SidebarMenuSubButton
+                                        onClick={() => setActiveSection(nestedItem.id)}
+                                        isActive={activeSection === nestedItem.id}
+                                      >
+                                        {nestedItem.title}
+                                      </SidebarMenuSubButton>
+                                    </SidebarMenuSubItem>
+                                  ))}
+                                </SidebarMenuSub>
                               )}
-                          </SidebarMenuSubButton>
+                            </>
+                          ) : (
+                            <SidebarMenuSubButton
+                              onClick={() => setActiveSection(subItem.id)}
+                              isActive={activeSection === subItem.id}
+                            >
+                              {subItem.title}
+                              {subItem.id === "training-enrollments" &&
+                                notifications.length > 0 && (
+                                  <Badge
+                                    variant="destructive"
+                                    className="ml-2 px-1 py-0 text-xs"
+                                  >
+                                    {notifications.length}
+                                  </Badge>
+                                )}
+                            </SidebarMenuSubButton>
+                          )}
                         </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>
@@ -4893,27 +4932,67 @@ function AdminPageContent() {
 
                     {item.submenu && expandedMenus.has(item.id) && (
                       <div className="ml-6 mt-2 space-y-1">
-                        {item.submenu.map((subItem) => (
-                          <button
-                            key={subItem.id}
-                            onClick={() => setActiveSection(subItem.id)}
-                            className={`w-full flex items-center space-x-2 px-3 py-2 rounded-md text-sm transition-colors ${
-                              activeSection === subItem.id
-                                ? "bg-primary/10 text-primary"
-                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                            }`}
-                          >
-                            <span>{subItem.title}</span>
-                            {subItem.id === "training-enrollments" &&
-                              notifications.length > 0 && (
-                                <Badge
-                                  variant="destructive"
-                                  className="ml-auto px-1 py-0 text-xs"
+                        {item.submenu.map((subItem: any) => (
+                          <div key={subItem.id}>
+                            {subItem.submenu ? (
+                              <>
+                                <button
+                                  onClick={() => toggleMenu(subItem.id)}
+                                  className={`w-full flex items-center space-x-2 px-3 py-2 rounded-md text-sm transition-colors ${
+                                    activeSection === subItem.id || subItem.submenu.some((nested: any) => activeSection === nested.id)
+                                      ? "bg-primary/10 text-primary"
+                                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                  }`}
                                 >
-                                  {notifications.length}
-                                </Badge>
-                              )}
-                          </button>
+                                  <span>{subItem.title}</span>
+                                  <ChevronRight
+                                    className={`h-3 w-3 ml-auto transition-transform ${
+                                      expandedMenus.has(subItem.id)
+                                        ? "transform rotate-90"
+                                        : ""
+                                    }`}
+                                  />
+                                </button>
+                                {expandedMenus.has(subItem.id) && (
+                                  <div className="ml-4 mt-1 space-y-1">
+                                    {subItem.submenu.map((nestedItem: any) => (
+                                      <button
+                                        key={nestedItem.id}
+                                        onClick={() => setActiveSection(nestedItem.id)}
+                                        className={`w-full flex items-center space-x-2 px-3 py-2 rounded-md text-sm transition-colors ${
+                                          activeSection === nestedItem.id
+                                            ? "bg-primary/10 text-primary"
+                                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                        }`}
+                                      >
+                                        <span>{nestedItem.title}</span>
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <button
+                                onClick={() => setActiveSection(subItem.id)}
+                                className={`w-full flex items-center space-x-2 px-3 py-2 rounded-md text-sm transition-colors ${
+                                  activeSection === subItem.id
+                                    ? "bg-primary/10 text-primary"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                }`}
+                              >
+                                <span>{subItem.title}</span>
+                                {subItem.id === "training-enrollments" &&
+                                  notifications.length > 0 && (
+                                    <Badge
+                                      variant="destructive"
+                                      className="ml-auto px-1 py-0 text-xs"
+                                    >
+                                      {notifications.length}
+                                    </Badge>
+                                  )}
+                              </button>
+                            )}
+                          </div>
                         ))}
                       </div>
                     )}
