@@ -657,7 +657,8 @@ const sidebarItems = [
     id: "training",
     submenu: [
       { title: "Training Dashboard", id: "training-dashboard" },
-      { title: "Curriculum", id: "training-curriculum" },
+      { title: "Courses", id: "training-courses" },
+      { title: "Enrollments", id: "training-enrollments" },
       { title: "Student Progress", id: "training-progress" },
       { title: "Schedule", id: "training-schedule" },
       { title: "Certificates", id: "training-certificates" },
@@ -3526,17 +3527,260 @@ function AdminPageContent() {
           </div>
         );
 
-      // Curriculum Management
-      case "training-curriculum":
+      // Course Management (integrated from Courses module)
+      case "training-courses":
         return (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-                  Curriculum Management
+                  Course Management
                 </h1>
                 <p className="text-muted-foreground">
-                  Manage learning paths, course categories, and prerequisites
+                  Upload and manage your training courses
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setIsAddCourseFolderModalOpen(true)}
+                  variant="outline"
+                  size="sm"
+                >
+                  <FolderPlus className="h-4 w-4 mr-2" />
+                  Add Course Folder
+                </Button>
+                <Button
+                  onClick={() => {
+                    setSelectedFolderForTopic(null);
+                    setIsAddTopicModalOpen(true);
+                  }}
+                  size="sm"
+                  className="bg-primary"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Upload Course
+                </Button>
+              </div>
+            </div>
+
+            {/* Course Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Folder className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{courseFolders.length}</p>
+                      <p className="text-xs text-muted-foreground">Course Folders</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Video className="h-5 w-5 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{topics.length}</p>
+                      <p className="text-xs text-muted-foreground">Total Courses</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <UserCheck className="h-5 w-5 text-purple-500" />
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {enrollments.filter((e: any) => e.status === "approved").length}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Active Students</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="h-5 w-5 text-orange-500" />
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {enrollments.filter((e: any) => e.status === "pending").length}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Pending Enrollments</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Course Folders List */}
+            {courseFolders.length > 0 ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Folder className="h-5 w-5" />
+                    Course Folders
+                  </CardTitle>
+                  <CardDescription>Organize your courses into folders and manage topics</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {courseFolders.map((folder: any) => (
+                    <div key={folder.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleFolderExpansion(folder.id)}
+                            className="h-6 w-6 p-0"
+                          >
+                            {expandedFolders.has(folder.id) ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Folder className="h-5 w-5 text-blue-500" />
+                          <div>
+                            <h3 className="font-medium">{folder.title}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {folder.description}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant="outline">
+                            {getTopicsForFolder(folder.id).length} courses
+                          </Badge>
+                          <Badge variant="secondary">
+                            ${(folder.priceCents / 100).toFixed(2)}
+                          </Badge>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => openAddTopicModal(folder)}
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            Add Course
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Expanded Topics */}
+                      {expandedFolders.has(folder.id) && (
+                        <div className="mt-4 pl-10 space-y-2">
+                          {getTopicsForFolder(folder.id).length > 0 ? (
+                            getTopicsForFolder(folder.id).map((topic: any) => (
+                              <div
+                                key={topic.id}
+                                className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  {topic.videoS3Key || topic.googleDriveVideoUrl ? (
+                                    <Video className="h-4 w-4 text-blue-500" />
+                                  ) : (
+                                    <FileText className="h-4 w-4 text-red-500" />
+                                  )}
+                                  <div>
+                                    <p className="font-medium text-sm">{topic.title}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {topic.description?.substring(0, 60)}...
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="outline" className="text-xs">
+                                    Order: {topic.order}
+                                  </Badge>
+                                  <Button size="sm" variant="ghost">
+                                    <Eye className="h-4 w-4" />
+                                  </Button>
+                                  <Button size="sm" variant="ghost">
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-sm text-muted-foreground py-2">
+                              No courses in this folder yet. Click &quot;Add Course&quot; to upload content.
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardContent className="p-8">
+                  <div className="text-center">
+                    <Folder className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">No Course Folders Yet</h3>
+                    <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                      Create your first course folder to start organizing your training content. 
+                      Students will enroll and access courses through these folders.
+                    </p>
+                    <Button
+                      onClick={() => setIsAddCourseFolderModalOpen(true)}
+                      className="bg-primary"
+                    >
+                      <FolderPlus className="h-4 w-4 mr-2" />
+                      Create First Course Folder
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Standalone Courses (if any) */}
+            {courses.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Video className="h-5 w-5" />
+                    Standalone Courses
+                  </CardTitle>
+                  <CardDescription>Individual courses not in folders</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {courses.map((course: any) => (
+                      <div key={course.id} className="border rounded-lg p-4">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-medium">{course.title}</h4>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {course.detail?.substring(0, 80)}...
+                            </p>
+                          </div>
+                          <Badge variant="outline">
+                            {course.instructor}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        );
+
+      // Enrollment Management (integrated from Courses module)
+      case "training-enrollments":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                  Enrollment Management
+                </h1>
+                <p className="text-muted-foreground">
+                  Review and approve student enrollment requests
                 </p>
               </div>
               <div className="flex gap-2">
@@ -3544,136 +3788,205 @@ function AdminPageContent() {
                   <Download className="h-4 w-4 mr-2" />
                   Export
                 </Button>
-                <Button size="sm" className="bg-primary">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Learning Path
+                <Button variant="outline" size="sm">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Refresh
                 </Button>
               </div>
             </div>
 
-            {/* Learning Paths Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {trainingData.learningPaths.map((path) => (
-                <Card key={path.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg">{path.title}</CardTitle>
-                        <CardDescription className="mt-1">{path.description}</CardDescription>
-                      </div>
-                      <Badge variant={path.status === "active" ? "default" : "secondary"}>
-                        {path.status}
-                      </Badge>
+            {/* Enrollment Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{enrollments.length}</p>
+                      <p className="text-xs text-muted-foreground">Total Enrollments</p>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="text-center p-3 bg-muted/30 rounded-lg">
-                        <p className="text-2xl font-bold text-blue-600">{path.courses}</p>
-                        <p className="text-xs text-muted-foreground">Courses</p>
-                      </div>
-                      <div className="text-center p-3 bg-muted/30 rounded-lg">
-                        <p className="text-2xl font-bold text-green-600">{path.enrollments}</p>
-                        <p className="text-xs text-muted-foreground">Enrolled</p>
-                      </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {enrollments.filter((e: any) => e.status === "approved").length}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Approved</p>
                     </div>
-                    <div className="flex items-center justify-between text-sm mb-4">
-                      <span className="text-muted-foreground">Duration: {path.duration}</span>
-                      <span className="text-muted-foreground">Level: {path.level}</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="h-5 w-5 text-orange-500" />
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {enrollments.filter((e: any) => e.status === "pending").length}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Pending</p>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">Completion Rate:</span>
-                        <Progress value={(path.completions / path.enrollments) * 100} className="w-20 h-2" />
-                        <span className="text-sm font-medium">{Math.round((path.completions / path.enrollments) * 100)}%</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <XCircle className="h-5 w-5 text-red-500" />
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {enrollments.filter((e: any) => e.status === "rejected").length}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Rejected</p>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Course Categories */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <LayoutGrid className="h-5 w-5" />
-                  Course Categories
-                </CardTitle>
-                <CardDescription>Organize courses by category</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { name: "Development", count: 8, icon: "💻", color: "bg-blue-100" },
-                    { name: "Marketing", count: 5, icon: "📈", color: "bg-green-100" },
-                    { name: "Design", count: 4, icon: "🎨", color: "bg-purple-100" },
-                    { name: "Data Science", count: 4, icon: "📊", color: "bg-orange-100" },
-                    { name: "Business", count: 2, icon: "💼", color: "bg-yellow-100" },
-                    { name: "AI & ML", count: 1, icon: "🤖", color: "bg-pink-100" },
-                  ].map((category, index) => (
-                    <div key={index} className={`p-4 rounded-lg ${category.color} cursor-pointer hover:opacity-80 transition-opacity`}>
-                      <div className="text-2xl mb-2">{category.icon}</div>
-                      <h4 className="font-medium">{category.name}</h4>
-                      <p className="text-sm text-muted-foreground">{category.count} courses</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Prerequisites Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ClipboardList className="h-5 w-5" />
-                  Prerequisites & Requirements
-                </CardTitle>
-                <CardDescription>Configure course dependencies and skill requirements</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {[
-                    { course: "Advanced Web Development", prerequisite: "Web Development Fundamentals", required: true },
-                    { course: "Machine Learning", prerequisite: "Python Programming Basics", required: true },
-                    { course: "Advanced SEO", prerequisite: "Digital Marketing Basics", required: false },
-                    { course: "Mobile App Development", prerequisite: "React Fundamentals", required: true },
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-sm">
-                          {index + 1}
-                        </div>
+            {/* Pending Payment Approvals */}
+            {notifications.length > 0 && (
+              <Card className="border-orange-200 bg-orange-50">
+                <CardHeader>
+                  <CardTitle className="text-orange-800 flex items-center gap-2">
+                    <Clock className="h-5 w-5" />
+                    Pending Payment Approvals
+                  </CardTitle>
+                  <CardDescription className="text-orange-600">
+                    {notifications.length} payment proof(s) require your review
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {notifications.map((notification: any, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 bg-white rounded-lg border"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
                         <div>
-                          <p className="font-medium">{item.course}</p>
+                          <p className="font-medium text-foreground">
+                            {notification.studentName}
+                          </p>
                           <p className="text-sm text-muted-foreground">
-                            Requires: <span className="text-blue-600">{item.prerequisite}</span>
+                            {notification.studentEmail}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Course: {notification.courseTitle || notification.courseId}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={item.required ? "default" : "outline"}>
-                          {item.required ? "Required" : "Recommended"}
-                        </Badge>
-                        <Button size="sm" variant="ghost">
-                          <Edit className="h-4 w-4" />
+                      <div className="flex space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            // View payment proof
+                          }}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View Proof
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700"
+                          onClick={() => handleApproveEnrollment(notification)}
+                        >
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleRejectEnrollment(notification)}
+                        >
+                          <XCircle className="h-4 w-4 mr-1" />
+                          Reject
                         </Button>
                       </div>
                     </div>
                   ))}
-                </div>
-                <Button variant="outline" className="w-full mt-4">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Prerequisite Rule
-                </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* All Enrollments Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle>All Enrollments</CardTitle>
+                <CardDescription>Complete list of student enrollments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {enrollments.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Student</TableHead>
+                          <TableHead>Course</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="w-[100px]">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {enrollments.map((enrollment: any) => (
+                          <TableRow key={enrollment.id}>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{enrollment.studentName || enrollment.userId}</p>
+                                <p className="text-xs text-muted-foreground">{enrollment.studentEmail}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell>{enrollment.courseTitle || enrollment.courseId}</TableCell>
+                            <TableCell>{new Date(enrollment.createdAt).toLocaleDateString()}</TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  enrollment.status === "approved" ? "default" :
+                                  enrollment.status === "pending" ? "secondary" :
+                                  "destructive"
+                                }
+                              >
+                                {enrollment.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex space-x-1">
+                                <Button size="sm" variant="outline">
+                                  <Eye className="h-3 w-3" />
+                                </Button>
+                                {enrollment.status === "pending" && (
+                                  <>
+                                    <Button size="sm" variant="outline" className="text-green-600">
+                                      <CheckCircle className="h-3 w-3" />
+                                    </Button>
+                                    <Button size="sm" variant="outline" className="text-red-600">
+                                      <XCircle className="h-3 w-3" />
+                                    </Button>
+                                  </>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No Enrollments Yet</h3>
+                    <p className="text-muted-foreground">
+                      When students enroll in your courses, they will appear here.
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
