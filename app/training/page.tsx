@@ -666,8 +666,8 @@ export default function TrainingPage() {
                             </div>
 
                             {/* Action buttons */}
-                            <div className={enrollmentStatus?.status === "approved" ? "" : "grid grid-cols-2 gap-3"}>
-                              {enrollmentStatus?.status === "approved" ? (
+                            <div className={user && enrollmentStatus?.status === "approved" ? "" : "grid grid-cols-2 gap-3"}>
+                              {user && enrollmentStatus?.status === "approved" ? (
                                 <Button
                                   size="sm"
                                   onClick={() =>
@@ -677,7 +677,7 @@ export default function TrainingPage() {
                                 >
                                   Access Course
                                 </Button>
-                              ) : (
+                              ) : user ? (
                                 <>
                                   <Button
                                     variant="outline"
@@ -733,11 +733,29 @@ export default function TrainingPage() {
                                       : "Enroll"}
                                   </Button>
                                 </>
+                              ) : (
+                                <>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => openAuthModal("login")}
+                                    className="border-gray-300 hover:border-green-500 hover:bg-green-50 hover:text-green-700 transition-all duration-300"
+                                  >
+                                    View Details
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => openAuthModal("login")}
+                                    className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                                  >
+                                    Enroll
+                                  </Button>
+                                </>
                               )}
                             </div>
 
                             {/* Enrollment status */}
-                            {enrollmentStatus && (
+                            {user && enrollmentStatus && (
                               <div className="text-xs text-center mt-3">
                                 <Badge
                                   variant={
@@ -1041,10 +1059,10 @@ export default function TrainingPage() {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => setSelectedCourse(course)}
+                                  onClick={() => openAuthModal("login")}
                                   className="border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
                                 >
-                                  View
+                                  View Details
                                 </Button>
                                 <Button
                                   size="sm"
