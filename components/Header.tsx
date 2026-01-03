@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, User, Sun, Moon, Globe } from "lucide-react";
+import { Menu, X, User, Sun, Moon, Globe, ChevronDown } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useLanguage } from "@/app/providers/LanguageProvider";
@@ -139,8 +139,6 @@ const Header = () => {
                 { name: "Services", id: "services" },
                 { name: "Projects", id: "projects" },
                 { name: "Why Choose Us", id: "why-choose-us" },
-                { name: "Training", id: "training" },
-                ...(user ? [{ name: "Courses", id: "courses" }] : []),
                 { name: "Team", id: "team" },
                 { name: "Contact Us", id: "contact" },
               ].map((item) => (
@@ -148,17 +146,13 @@ const Header = () => {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`relative transition-all duration-500 font-medium px-2 py-2 rounded-lg group text-sm focus-visible-high ${
-                    (activeSection === item.id && pathname === "/") ||
-                    (item.id === "training" && pathname === "/training") ||
-                    (item.id === "courses" && pathname === "/courses")
+                    (activeSection === item.id && pathname === "/")
                       ? "text-yellow bg-white/10 after:w-full"
                       : isScrolled
                         ? "text-white hover:text-yellow hover:bg-white/10"
                         : "text-white hover:text-yellow hover:bg-white/10"
                   } after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:h-[3px] after:bg-gradient-to-r after:from-yellow after:to-yellow/70 after:transition-all after:duration-500 after:rounded-full group-hover:after:w-full ${
-                    (activeSection === item.id && pathname === "/") ||
-                    (item.id === "training" && pathname === "/training") ||
-                    (item.id === "courses" && pathname === "/courses")
+                    (activeSection === item.id && pathname === "/")
                       ? "after:w-8"
                       : "after:w-0"
                   } transform hover:scale-105`}
@@ -167,6 +161,52 @@ const Header = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-light-blue/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
               ))}
+              
+              {/* Training Dropdown with Courses */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={`relative transition-all duration-500 font-medium px-2 py-2 rounded-lg group text-sm focus-visible-high flex items-center ${
+                      (activeSection === "training" && pathname === "/") ||
+                      pathname === "/training" ||
+                      pathname === "/courses"
+                        ? "text-yellow bg-white/10 after:w-full"
+                        : isScrolled
+                          ? "text-white hover:text-yellow hover:bg-white/10"
+                          : "text-white hover:text-yellow hover:bg-white/10"
+                    } after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:h-[3px] after:bg-gradient-to-r after:from-yellow after:to-yellow/70 after:transition-all after:duration-500 after:rounded-full group-hover:after:w-full ${
+                      (activeSection === "training" && pathname === "/") ||
+                      pathname === "/training" ||
+                      pathname === "/courses"
+                        ? "after:w-8"
+                        : "after:w-0"
+                    } transform hover:scale-105`}
+                  >
+                    <span className="relative z-10">Training</span>
+                    <ChevronDown className="h-4 w-4 ml-1" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow/20 to-light-blue/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg z-[100]"
+                >
+                  <DropdownMenuItem
+                    onClick={() => scrollToSection("training")}
+                    className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${pathname === "/training" ? "bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300" : ""}`}
+                  >
+                    <span className="font-medium">Training Programs</span>
+                  </DropdownMenuItem>
+                  {user && (
+                    <DropdownMenuItem
+                      onClick={() => scrollToSection("courses")}
+                      className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${pathname === "/courses" ? "bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300" : ""}`}
+                    >
+                      <span className="font-medium">Courses</span>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </nav>
 
             {/* Theme and Language Controls */}
@@ -284,8 +324,6 @@ const Header = () => {
                   { name: "Services", id: "services" },
                   { name: "Projects", id: "projects" },
                   { name: "Why Choose Us", id: "why-choose-us" },
-                  { name: "Training", id: "training" },
-                  ...(user ? [{ name: "Courses", id: "courses" }] : []),
                   { name: "Team", id: "team" },
                   { name: "Contact Us", id: "contact" },
                 ].map((item) => (
@@ -293,9 +331,7 @@ const Header = () => {
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
                     className={`transition-colors duration-300 font-medium text-left py-2 ${
-                      (activeSection === item.id && pathname === "/") ||
-                      (item.id === "training" && pathname === "/training") ||
-                      (item.id === "courses" && pathname === "/courses")
+                      (activeSection === item.id && pathname === "/")
                         ? "text-yellow border-l-2 border-yellow pl-4"
                         : "text-white hover:text-yellow"
                     }`}
@@ -303,6 +339,33 @@ const Header = () => {
                     {item.name}
                   </button>
                 ))}
+
+                {/* Training Section with Courses dropdown */}
+                <div className="space-y-2">
+                  <button
+                    onClick={() => scrollToSection("training")}
+                    className={`transition-colors duration-300 font-medium text-left py-2 w-full ${
+                      (activeSection === "training" && pathname === "/") ||
+                      pathname === "/training"
+                        ? "text-yellow border-l-2 border-yellow pl-4"
+                        : "text-white hover:text-yellow"
+                    }`}
+                  >
+                    Training Programs
+                  </button>
+                  {user && (
+                    <button
+                      onClick={() => scrollToSection("courses")}
+                      className={`transition-colors duration-300 font-medium text-left py-2 w-full ${
+                        pathname === "/courses"
+                          ? "text-yellow border-l-2 border-yellow pl-6"
+                          : "text-white/80 hover:text-yellow pl-6"
+                      }`}
+                    >
+                      └ Courses
+                    </button>
+                  )}
+                </div>
 
                 {/* Mobile Theme and Language Controls */}
                 <div className="pt-4 border-t border-white/20 space-y-3">
