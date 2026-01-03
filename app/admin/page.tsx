@@ -2418,12 +2418,12 @@ function AdminPageContent() {
             </div>
 
             {notifications.length > 0 && (
-              <Card className="border-orange-200 bg-orange-50">
+              <Card className="border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/30">
                 <CardHeader>
-                  <CardTitle className="text-orange-800">
+                  <CardTitle className="text-orange-800 dark:text-orange-300">
                     Pending Payment Approvals
                   </CardTitle>
-                  <CardDescription className="text-orange-600">
+                  <CardDescription className="text-orange-600 dark:text-orange-400">
                     {notifications.length} payment proof(s) require your review
                   </CardDescription>
                 </CardHeader>
@@ -2431,7 +2431,7 @@ function AdminPageContent() {
                   {notifications.map((notification: any, index: number) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-4 bg-white rounded border"
+                      className="flex items-center justify-between p-4 bg-background rounded border"
                     >
                       <div className="flex items-center space-x-3">
                         <div className="h-2 w-2 bg-orange-500 rounded-full"></div>
@@ -2457,7 +2457,7 @@ function AdminPageContent() {
                           }
                           size="sm"
                           variant="default"
-                          className="bg-green-600 hover:bg-green-700"
+                          className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
                           Approve
@@ -3851,13 +3851,13 @@ function AdminPageContent() {
 
             {/* Pending Payment Approvals */}
             {notifications.length > 0 && (
-              <Card className="border-orange-200 bg-orange-50">
+              <Card className="border-orange-200 dark:border-orange-900 bg-orange-50 dark:bg-orange-950/30">
                 <CardHeader>
-                  <CardTitle className="text-orange-800 flex items-center gap-2">
+                  <CardTitle className="text-orange-800 dark:text-orange-300 flex items-center gap-2">
                     <Clock className="h-5 w-5" />
                     Pending Payment Approvals
                   </CardTitle>
-                  <CardDescription className="text-orange-600">
+                  <CardDescription className="text-orange-600 dark:text-orange-400">
                     {notifications.length} payment proof(s) require your review
                   </CardDescription>
                 </CardHeader>
@@ -3865,7 +3865,7 @@ function AdminPageContent() {
                   {notifications.map((notification: any, index: number) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-4 bg-white rounded-lg border"
+                      className="flex items-center justify-between p-4 bg-background rounded-lg border"
                     >
                       <div className="flex items-center space-x-3">
                         <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
@@ -3894,7 +3894,7 @@ function AdminPageContent() {
                         </Button>
                         <Button
                           size="sm"
-                          className="bg-green-600 hover:bg-green-700"
+                          className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
                           onClick={() => handleApproveEnrollment(notification)}
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
@@ -4240,16 +4240,16 @@ function AdminPageContent() {
               <CardContent>
                 <div className="space-y-4">
                   {trainingData.scheduledSessions.map((session) => (
-                    <div key={session.id} className={`p-4 border rounded-lg ${session.status === "upcoming" ? "border-blue-200 bg-blue-50/30" : "border-gray-200"}`}>
+                    <div key={session.id} className={`p-4 border rounded-lg ${session.status === "upcoming" ? "border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-blue-950/30" : "border-border"}`}>
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-start gap-4">
-                          <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${session.type === "live" ? "bg-green-100 text-green-600" : "bg-purple-100 text-purple-600"}`}>
+                          <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${session.type === "live" ? "bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400" : "bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400"}`}>
                             {session.type === "live" ? <PlayCircle className="h-6 w-6" /> : <Video className="h-6 w-6" />}
                           </div>
                           <div>
-                            <h4 className="font-semibold">{session.title}</h4>
+                            <h4 className="font-semibold text-foreground">{session.title}</h4>
                             <p className="text-sm text-muted-foreground">{session.description}</p>
-                            <div className="flex items-center gap-4 mt-2 text-sm">
+                            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Calendar className="h-4 w-4" />
                                 {session.date}
