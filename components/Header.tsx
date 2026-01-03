@@ -83,6 +83,12 @@ const Header = () => {
       return;
     }
 
+    if (id === "student") {
+      router.push("/student");
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     if (pathname !== "/") {
       router.push("/");
       setTimeout(() => {
@@ -104,7 +110,7 @@ const Header = () => {
     <TooltipProvider>
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-          isScrolled || pathname === "/training" || pathname === "/courses"
+          isScrolled || pathname === "/training" || pathname === "/courses" || pathname === "/student"
             ? "bg-light-blue/95 backdrop-blur-md shadow-2xl border-b border-white/10"
             : "bg-transparent"
         }`}
@@ -141,6 +147,7 @@ const Header = () => {
                 { name: "Why Choose Us", id: "why-choose-us" },
                 { name: "Training", id: "training" },
                 ...(user ? [{ name: "Courses", id: "courses" }] : []),
+                ...(user ? [{ name: "Dashboard", id: "student" }] : []),
                 { name: "Team", id: "team" },
                 { name: "Contact Us", id: "contact" },
               ].map((item) => (
@@ -150,7 +157,8 @@ const Header = () => {
                   className={`relative transition-all duration-500 font-medium px-2 py-2 rounded-lg group text-sm focus-visible-high ${
                     (activeSection === item.id && pathname === "/") ||
                     (item.id === "training" && pathname === "/training") ||
-                    (item.id === "courses" && pathname === "/courses")
+                    (item.id === "courses" && pathname === "/courses") ||
+                    (item.id === "student" && pathname === "/student")
                       ? "text-yellow bg-white/10 after:w-full"
                       : isScrolled
                         ? "text-white hover:text-yellow hover:bg-white/10"
@@ -158,7 +166,8 @@ const Header = () => {
                   } after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:h-[3px] after:bg-gradient-to-r after:from-yellow after:to-yellow/70 after:transition-all after:duration-500 after:rounded-full group-hover:after:w-full ${
                     (activeSection === item.id && pathname === "/") ||
                     (item.id === "training" && pathname === "/training") ||
-                    (item.id === "courses" && pathname === "/courses")
+                    (item.id === "courses" && pathname === "/courses") ||
+                    (item.id === "student" && pathname === "/student")
                       ? "after:w-8"
                       : "after:w-0"
                   } transform hover:scale-105`}
@@ -286,6 +295,7 @@ const Header = () => {
                   { name: "Why Choose Us", id: "why-choose-us" },
                   { name: "Training", id: "training" },
                   ...(user ? [{ name: "Courses", id: "courses" }] : []),
+                  ...(user ? [{ name: "Dashboard", id: "student" }] : []),
                   { name: "Team", id: "team" },
                   { name: "Contact Us", id: "contact" },
                 ].map((item) => (
@@ -295,7 +305,8 @@ const Header = () => {
                     className={`transition-colors duration-300 font-medium text-left py-2 ${
                       (activeSection === item.id && pathname === "/") ||
                       (item.id === "training" && pathname === "/training") ||
-                      (item.id === "courses" && pathname === "/courses")
+                      (item.id === "courses" && pathname === "/courses") ||
+                      (item.id === "student" && pathname === "/student")
                         ? "text-yellow border-l-2 border-yellow pl-4"
                         : "text-white hover:text-yellow"
                     }`}
