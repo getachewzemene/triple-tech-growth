@@ -242,8 +242,8 @@ const StudentProfileModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto pb-12">
+        <DialogHeader className="text-center space-y-2">
           <DialogTitle className="text-2xl font-bold text-light-blue">
             Edit Profile
           </DialogTitle>
@@ -333,6 +333,12 @@ const StudentProfileModal = ({
                   </span>
                 </div>
               )}
+              {!errors.fullName && profileData.fullName.trim().length >= 2 && (
+                <div className="flex items-center gap-1 mt-1">
+                  <CheckCircle2 className="h-3 w-3 text-green-500" />
+                  <span className="text-xs text-green-500">Valid name</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -354,6 +360,12 @@ const StudentProfileModal = ({
                   <span className="text-xs text-red-500">{errors.email}</span>
                 </div>
               )}
+              {!errors.email && profileData.email && validateEmail(profileData.email).isValid && (
+                <div className="flex items-center gap-1 mt-1">
+                  <CheckCircle2 className="h-3 w-3 text-green-500" />
+                  <span className="text-xs text-green-500">Valid email</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -373,6 +385,12 @@ const StudentProfileModal = ({
                 <div className="flex items-center gap-1 mt-1">
                   <AlertTriangle className="h-3 w-3 text-red-500" />
                   <span className="text-xs text-red-500">{errors.phone}</span>
+                </div>
+              )}
+              {!errors.phone && profileData.phone && validatePhone(profileData.phone).isValid && (
+                <div className="flex items-center gap-1 mt-1">
+                  <CheckCircle2 className="h-3 w-3 text-green-500" />
+                  <span className="text-xs text-green-500">Valid phone number</span>
                 </div>
               )}
             </div>
@@ -414,7 +432,7 @@ const StudentProfileModal = ({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading} className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white">
+            <Button type="submit" disabled={loading} variant="gold">
               {loading ? "Saving..." : "Save Changes"}
             </Button>
           </div>
