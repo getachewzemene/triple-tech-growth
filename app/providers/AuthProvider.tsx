@@ -21,6 +21,13 @@ const ADMIN_CREDENTIALS = {
   password: "triple123",
 };
 
+// Demo student credentials for testing the student dashboard
+const DEMO_STUDENT_CREDENTIALS = {
+  email: "demo@student.com",
+  password: "demo123",
+  fullName: "Demo Student",
+};
+
 const queryClient = new QueryClient();
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -42,6 +49,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = (email: string, password: string): boolean => {
+    // Check for demo student credentials first
+    if (
+      email === DEMO_STUDENT_CREDENTIALS.email &&
+      password === DEMO_STUDENT_CREDENTIALS.password
+    ) {
+      const userData = { username: DEMO_STUDENT_CREDENTIALS.fullName, isAdmin: false };
+      setIsAuthenticated(true);
+      setUser(userData);
+      safeLocalStorage.setItem("triple-auth", { user: userData });
+      return true;
+    }
+
     // Check if it's a registered user
     const registeredUsers = safeLocalStorage.getItem("registeredUsers", []);
     const foundUser = registeredUsers.find(

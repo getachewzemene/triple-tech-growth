@@ -623,6 +623,13 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
                 </Alert>
               )}
 
+              {/* Demo credentials hint */}
+              <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                <AlertDescription className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>Demo Login:</strong> Use <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">demo@student.com</code> / <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">demo123</code> to try the student dashboard.
+                </AlertDescription>
+              </Alert>
+
               <div className="space-y-2">
                 <Label htmlFor="login-email">Email Address *</Label>
                 <div className="relative">
