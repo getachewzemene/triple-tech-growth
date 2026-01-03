@@ -642,16 +642,6 @@ const sidebarItems = [
     id: "users",
   },
   {
-    title: "Courses",
-    icon: GraduationCap,
-    id: "courses",
-    submenu: [
-      { title: "All Courses", id: "courses-all" },
-      { title: "Course Folders", id: "courses-folders" },
-      { title: "Enrollments", id: "enrollments" },
-    ],
-  },
-  {
     title: "Training",
     icon: BookMarked,
     id: "training",
@@ -4711,7 +4701,7 @@ function AdminPageContent() {
                   >
                     <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
-                    {item.id === "courses" && notifications.length > 0 && (
+                    {item.id === "training" && notifications.length > 0 && (
                       <Badge
                         variant="destructive"
                         className="ml-2 px-1 py-0 text-xs"
@@ -4739,7 +4729,7 @@ function AdminPageContent() {
                             isActive={activeSection === subItem.id}
                           >
                             {subItem.title}
-                            {subItem.id === "enrollments" &&
+                            {subItem.id === "training-enrollments" &&
                               notifications.length > 0 && (
                                 <Badge
                                   variant="destructive"
@@ -4882,7 +4872,7 @@ function AdminPageContent() {
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                      {item.id === "courses" && notifications.length > 0 && (
+                      {item.id === "training" && notifications.length > 0 && (
                         <Badge
                           variant="destructive"
                           className="ml-auto px-1 py-0 text-xs"
@@ -4914,7 +4904,7 @@ function AdminPageContent() {
                             }`}
                           >
                             <span>{subItem.title}</span>
-                            {subItem.id === "enrollments" &&
+                            {subItem.id === "training-enrollments" &&
                               notifications.length > 0 && (
                                 <Badge
                                   variant="destructive"
