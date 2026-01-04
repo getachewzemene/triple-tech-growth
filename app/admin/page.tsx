@@ -4828,7 +4828,7 @@ function AdminPageContent() {
         </Sidebar>
 
         <SidebarInset className="flex-1 flex flex-col">
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 md:px-6">
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 md:px-6 bg-[hsl(210,100%,20%,0.95)] backdrop-blur-md text-white">
             <SidebarTrigger className="-ml-1 md:hidden" />
             <div className="flex-1 md:hidden">
               <h2 className="text-lg font-semibold truncate">
