@@ -26,7 +26,7 @@ const StudentHeader = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-light-blue/95 backdrop-blur-md shadow-2xl border-b border-white/10">
+    <header className="fixed top-0 w-full z-50 bg-[hsl(210,100%,20%,0.95)] backdrop-blur-md shadow-2xl border-b border-white/10">
       <div className="container mx-auto px-4 py-3 sm:py-4 flex justify-between items-center">
         <div
           className="flex items-center space-x-3 text-2xl font-bold transition-all duration-500 transform hover:scale-105 text-white cursor-pointer"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -129,6 +130,7 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
   const [success, setSuccess] = useState("");
   const { login, registerUser } = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
 
   // Login form state
   const [loginData, setLoginData] = useState({
@@ -307,6 +309,8 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
       // Reset form
       setLoginData({ email: "", password: "" });
       setLoginErrors({ email: "", password: "" });
+      // Navigate to student dashboard
+      router.push("/student");
     } else {
       setError("Invalid email or password");
       toast({
@@ -392,6 +396,8 @@ const UserAuthModal = ({ isOpen, onClose }: UserAuthModalProps) => {
           address: "",
         });
         setPasswordStrength(0);
+        // Navigate to student dashboard
+        router.push("/student");
       }, 1000);
     } catch (err) {
       setError("Failed to create account. Please try again.");
