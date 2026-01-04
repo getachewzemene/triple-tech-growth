@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL || "https://tripletechnologies.com";
 
-const staticPages = ["", "/training", "/profile"];
+const staticPages = ["", "/training", "/student"];
 
 function generateSitemap() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
