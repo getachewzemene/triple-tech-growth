@@ -4674,7 +4674,10 @@ function AdminPageContent() {
       <div className="flex h-screen w-full overflow-hidden">
   <Sidebar className="border-r hidden md:block">
           <SidebarHeader className="border-b px-6 py-4">
-            <div className="flex items-center space-x-3">
+            <div
+              className="flex items-center space-x-3 cursor-pointer transition-all duration-300 hover:opacity-80"
+              onClick={() => router.push("/")}
+            >
               <Image
                 src="/logo.png"
                 alt="Triple Technologies Logo"
@@ -4874,7 +4877,10 @@ function AdminPageContent() {
           <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 hidden" />
           <div className="fixed inset-y-0 left-0 z-50 h-full w-72 border-r bg-background shadow-lg transition-transform -translate-x-full data-[state=open]:translate-x-0 hidden">
             <div className="flex h-16 items-center border-b px-6">
-              <div className="flex items-center space-x-3">
+              <div
+                className="flex items-center space-x-3 cursor-pointer transition-all duration-300 hover:opacity-80"
+                onClick={() => router.push("/")}
+              >
                 <Image
                   src="/logo.png"
                   alt="Triple Technologies Logo"

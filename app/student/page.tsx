@@ -562,14 +562,6 @@ export default function StudentDashboardPage() {
                           <FaBook className="w-4 h-4 mr-2" />
                           Browse Available Courses
                         </Button>
-                        <Button
-                          variant="outline"
-                          className="justify-start"
-                          onClick={() => router.push("/profile")}
-                        >
-                          <FaUser className="w-4 h-4 mr-2" />
-                          Go to Full Profile
-                        </Button>
                       </div>
                     </div>
                   </CardContent>

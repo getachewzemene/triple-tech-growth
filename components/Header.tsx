@@ -241,22 +241,22 @@ const Header = () => {
               </DropdownMenu>
             </div>
 
-            {/* Profile/Login Button */}
+            {/* Dashboard/Login Button */}
             {user ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => router.push("/profile")}
+                    onClick={() => router.push("/student")}
                     variant="outline"
                     size="sm"
                     className="bg-transparent border-white/30 text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue hover:border-yellow transition-all duration-500 transform hover:scale-105 backdrop-blur-sm"
                   >
                     <User className="w-4 h-4 mr-2" />
-                    Profile
+                    Dashboard
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>View Profile</p>
+                  <p>View Dashboard</p>
                 </TooltipContent>
               </Tooltip>
             ) : (
@@ -383,7 +383,7 @@ const Header = () => {
                       {user ? (
                     <Button
                       onClick={() => {
-                        router.push("/profile");
+                        router.push("/student");
                         setIsMobileMenuOpen(false);
                       }}
                       variant="outline"
@@ -391,7 +391,7 @@ const Header = () => {
                       className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
                     >
                       <User className="w-4 h-4 mr-2" />
-                      Profile
+                      Dashboard
                     </Button>
                   ) : (
                     <Button
@@ -412,7 +412,7 @@ const Header = () => {
                   {user ? (
                     <Button
                       onClick={() => {
-                        router.push("/profile");
+                        router.push("/student");
                         setIsMobileMenuOpen(false);
                       }}
                       variant="outline"
@@ -420,7 +420,7 @@ const Header = () => {
                       className="w-full bg-transparent border-white text-white hover:bg-white hover:text-primary"
                     >
                       <User className="w-4 h-4 mr-2" />
-                      Profile
+                      Dashboard
                     </Button>
                   ) : (
                     <Button

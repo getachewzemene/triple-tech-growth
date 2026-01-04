@@ -167,9 +167,9 @@ export default function CoursePage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" onClick={() => router.push("/profile")} className="text-muted-foreground hover:text-foreground">
+              <Button variant="ghost" size="sm" onClick={() => router.push("/student")} className="text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Profile
+                Back to Dashboard
               </Button>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">{courseFolder.title}</h1>
