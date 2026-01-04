@@ -49,10 +49,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = (email: string, password: string): boolean => {
-    // Check for demo student credentials first
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const normalizedPassword = String(password).trim();
+
+    // Check for demo student credentials first (email case-insensitive, ignore whitespace)
     if (
-      email === DEMO_STUDENT_CREDENTIALS.email &&
-      password === DEMO_STUDENT_CREDENTIALS.password
+      normalizedEmail === DEMO_STUDENT_CREDENTIALS.email.toLowerCase() &&
+      normalizedPassword === DEMO_STUDENT_CREDENTIALS.password
     ) {
       const userData = { username: DEMO_STUDENT_CREDENTIALS.fullName, isAdmin: false };
       setIsAuthenticated(true);
@@ -64,12 +67,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Check if it's a registered user
     const registeredUsers = safeLocalStorage.getItem("registeredUsers", []);
     const foundUser = registeredUsers.find(
-      (u: Record<string, unknown>) =>
-        u.email === email && u.password === password,
+      (u: Record<string, any>) =>
+        String(u.email || "").trim().toLowerCase() === normalizedEmail &&
+        String(u.password || "").trim() === normalizedPassword,
     );
 
     if (foundUser) {
-      const userData = { username: foundUser.fullName, isAdmin: false };
+      const userData = { username: String(foundUser.fullName || ""), isAdmin: false };
       setIsAuthenticated(true);
       setUser(userData);
       safeLocalStorage.setItem("triple-auth", { user: userData });
