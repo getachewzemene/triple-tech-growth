@@ -4,12 +4,22 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 
+export type UserRole = "STUDENT" | "INSTRUCTOR" | "ADMIN";
+
+export interface AuthUser {
+  id: string;
+  username: string;
+  email?: string;
+  isAdmin?: boolean;
+  role: UserRole;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => boolean;
   loginAdmin: (username: string, password: string) => boolean;
   logout: () => void;
-  user: { username: string; isAdmin?: boolean } | null;
+  user: AuthUser | null;
   registerUser: (userData: Record<string, unknown>) => void;
 }
 
@@ -28,16 +38,25 @@ const DEMO_STUDENT_CREDENTIALS = {
   fullName: "Demo Student",
 };
 
+// Demo instructor credentials for testing the instructor dashboard
+const DEMO_INSTRUCTOR_CREDENTIALS = {
+  email: "demo@instructor.com",
+  password: "demo123",
+  fullName: "Demo Instructor",
+};
+
 const queryClient = new QueryClient();
+
+// Generate a simple ID for users
+const generateUserId = (email: string): string => {
+  return `user_${email.replace(/[^a-z0-9]/gi, '_').substring(0, 20)}_${Date.now().toString(36)}`;
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{
-    username: string;
-    isAdmin?: boolean;
-  } | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
     // Check if user is already logged in (from localStorage)
@@ -52,12 +71,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const normalizedEmail = String(email).trim().toLowerCase();
     const normalizedPassword = String(password).trim();
 
-    // Check for demo student credentials first (email case-insensitive, ignore whitespace)
+    // Check for demo instructor credentials first
+    if (
+      normalizedEmail === DEMO_INSTRUCTOR_CREDENTIALS.email.toLowerCase() &&
+      normalizedPassword === DEMO_INSTRUCTOR_CREDENTIALS.password
+    ) {
+      const userData: AuthUser = {
+        id: "instructor_demo_001",
+        username: DEMO_INSTRUCTOR_CREDENTIALS.fullName,
+        email: DEMO_INSTRUCTOR_CREDENTIALS.email,
+        isAdmin: false,
+        role: "INSTRUCTOR",
+      };
+      setIsAuthenticated(true);
+      setUser(userData);
+      safeLocalStorage.setItem("triple-auth", { user: userData });
+      return true;
+    }
+
+    // Check for demo student credentials (email case-insensitive, ignore whitespace)
     if (
       normalizedEmail === DEMO_STUDENT_CREDENTIALS.email.toLowerCase() &&
       normalizedPassword === DEMO_STUDENT_CREDENTIALS.password
     ) {
-      const userData = { username: DEMO_STUDENT_CREDENTIALS.fullName, isAdmin: false };
+      const userData: AuthUser = {
+        id: "student_demo_001",
+        username: DEMO_STUDENT_CREDENTIALS.fullName,
+        email: DEMO_STUDENT_CREDENTIALS.email,
+        isAdmin: false,
+        role: "STUDENT",
+      };
       setIsAuthenticated(true);
       setUser(userData);
       safeLocalStorage.setItem("triple-auth", { user: userData });
@@ -73,7 +116,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     if (foundUser) {
-      const userData = { username: String(foundUser.fullName || ""), isAdmin: false };
+      const userData: AuthUser = {
+        id: foundUser.id || generateUserId(normalizedEmail),
+        username: String(foundUser.fullName || ""),
+        email: normalizedEmail,
+        isAdmin: false,
+        role: (foundUser.role as UserRole) || "STUDENT",
+      };
       setIsAuthenticated(true);
       setUser(userData);
       safeLocalStorage.setItem("triple-auth", { user: userData });
@@ -88,7 +137,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       username === ADMIN_CREDENTIALS.username &&
       password === ADMIN_CREDENTIALS.password
     ) {
-      const userData = { username, isAdmin: true };
+      const userData: AuthUser = {
+        id: "admin_001",
+        username,
+        isAdmin: true,
+        role: "ADMIN",
+      };
       setIsAuthenticated(true);
       setUser(userData);
       safeLocalStorage.setItem("triple-auth", { user: userData });
@@ -100,14 +154,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const registerUser = (userData: Record<string, unknown>) => {
     const registeredUsers = safeLocalStorage.getItem("registeredUsers", []);
-    registeredUsers.push({
+    const email = String(userData.email || "").trim().toLowerCase();
+    const userId = generateUserId(email);
+    const newUser = {
       ...userData,
+      id: userId,
+      role: "STUDENT",
       registeredAt: new Date().toISOString(),
-    });
+    };
+    registeredUsers.push(newUser);
     safeLocalStorage.setItem("registeredUsers", registeredUsers);
 
     // Auto-login the user
-    const userAuthData = { username: String((userData as any).fullName ?? ""), isAdmin: false };
+    const userAuthData: AuthUser = {
+      id: userId,
+      username: String((userData as any).fullName ?? ""),
+      email,
+      isAdmin: false,
+      role: "STUDENT",
+    };
     setIsAuthenticated(true);
     setUser(userAuthData);
     safeLocalStorage.setItem("triple-auth", { user: userAuthData });

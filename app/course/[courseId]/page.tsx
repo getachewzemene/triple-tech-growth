@@ -11,10 +11,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Video, FileText, CheckCircle, Book, ArrowLeft, ChevronRight } from "lucide-react";
-import { FaUser } from "react-icons/fa";
+import { Video, FileText, CheckCircle, Book, ArrowLeft, ChevronRight, MessageSquare } from "lucide-react";
+import { FaUser, FaComments } from "react-icons/fa";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ContentDisplay from "@/components/course/ContentDisplay";
+import DiscussionForum from "@/components/discussions/DiscussionForum";
 
 type CourseFolder = {
   id: string;
@@ -53,6 +55,7 @@ export default function CoursePage() {
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [contentLoading, setContentLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<"content" | "discussions">("content");
 
   useEffect(() => {
     const loadCourse = () => {
@@ -108,6 +111,26 @@ export default function CoursePage() {
   };
 
   const calculateProgress = () => (topics.length === 0 ? 0 : (completedTopics.size / topics.length) * 100);
+
+  const handleCreateDiscussion = async (title: string, content: string) => {
+    if (!user) return;
+    
+    try {
+      await fetch("/api/discussions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseId,
+          authorId: user.id,
+          title,
+          content,
+        }),
+      });
+      // In production, we would refresh the discussions list here
+    } catch (error) {
+      console.error("Failed to create discussion:", error);
+    }
+  };
 
   if (!user) {
     return (
@@ -193,111 +216,140 @@ export default function CoursePage() {
       </div>
 
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
-          <div className="md:col-span-1">
-            <Card className="h-full">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Book className="h-5 w-5" />
-                  Course Content
-                </CardTitle>
-                <div className="text-sm text-muted-foreground">{completedTopics.size} of {topics.length} topics completed</div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-y-auto max-h-[calc(100vh-300px)]">
-                  {topics.length === 0 ? (
-                    <div className="p-4 text-center text-muted-foreground">
-                      <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                      <p>No topics available yet</p>
+        {/* Tab Navigation */}
+        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as "content" | "discussions")} className="space-y-4">
+          <TabsList className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-md">
+            <TabsTrigger value="content" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg px-6">
+              <Book className="h-4 w-4" />
+              Course Content
+            </TabsTrigger>
+            <TabsTrigger value="discussions" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg px-6">
+              <FaComments className="h-4 w-4" />
+              Discussions
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Content Tab */}
+          <TabsContent value="content">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100vh-280px)]">
+              <div className="md:col-span-1">
+                <Card className="h-full">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <Book className="h-5 w-5" />
+                      Course Content
+                    </CardTitle>
+                    <div className="text-sm text-muted-foreground">{completedTopics.size} of {topics.length} topics completed</div>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <div className="overflow-y-auto max-h-[calc(100vh-380px)]">
+                      {topics.length === 0 ? (
+                        <div className="p-4 text-center text-muted-foreground">
+                          <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                          <p>No topics available yet</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          {topics.map((topic, index) => {
+                            const isSelected = selectedTopic?.id === topic.id;
+                            const isCompleted = completedTopics.has(topic.id);
+
+                            return (
+                              <motion.div key={topic.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.1 }}>
+                                <button onClick={() => selectTopic(topic)} className={`w-full text-left p-4 border-b transition-all duration-200 hover:bg-muted/50 ${isSelected ? "bg-blue-50 border-l-4 border-l-blue-500 text-blue-900" : "hover:bg-gray-50"}`}>
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        {topic.videoS3Key && <Video className="h-4 w-4 text-blue-500 flex-shrink-0" />}
+                                        {topic.pdfS3Key && <FileText className="h-4 w-4 text-red-500 flex-shrink-0" />}
+                                        <span className="text-sm font-medium truncate">{topic.title}</span>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground line-clamp-2">{topic.description}</p>
+                                    </div>
+                                    <div className="ml-2 flex-shrink-0">
+                                      {isCompleted ? <CheckCircle className="h-5 w-5 text-green-500" /> : isSelected ? <ChevronRight className="h-5 w-5 text-blue-500" /> : <div className="w-5 h-5 rounded-full border-2 border-gray-300" />}
+                                    </div>
+                                  </div>
+                                </button>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="md:col-span-3">
+                <Card className="h-full">
+                  {selectedTopic ? (
+                    <div className="h-full flex flex-col">
+                      <CardHeader className="pb-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <CardTitle className="flex items-center gap-2">
+                              {selectedTopic.videoS3Key && <Video className="h-5 w-5 text-blue-500" />}
+                              {selectedTopic.pdfS3Key && <FileText className="h-5 w-5 text-red-500" />}
+                              {selectedTopic.title}
+                            </CardTitle>
+                            <p className="text-muted-foreground mt-1">{selectedTopic.description}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            {!completedTopics.has(selectedTopic.id) && (
+                              <Button size="sm" onClick={() => markTopicComplete(selectedTopic.id)} className="bg-green-600 hover:bg-green-700">
+                                <CheckCircle className="h-4 w-4 mr-2" />
+                                Mark Complete
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </CardHeader>
+
+                      <CardContent className="flex-1 p-0">
+                        <AnimatePresence mode="wait">
+                          {contentLoading ? (
+                            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex items-center justify-center">
+                              <div className="text-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                                <p className="text-sm text-muted-foreground">Loading content...</p>
+                              </div>
+                            </motion.div>
+                          ) : (
+                            <motion.div key={selectedTopic.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }} className="h-full">
+                              <ContentDisplay topic={selectedTopic} onComplete={() => markTopicComplete(selectedTopic.id)} isCompleted={completedTopics.has(selectedTopic.id)} />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </CardContent>
                     </div>
                   ) : (
-                    <div className="space-y-1">
-                      {topics.map((topic, index) => {
-                        const isSelected = selectedTopic?.id === topic.id;
-                        const isCompleted = completedTopics.has(topic.id);
-
-                        return (
-                          <motion.div key={topic.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.1 }}>
-                            <button onClick={() => selectTopic(topic)} className={`w-full text-left p-4 border-b transition-all duration-200 hover:bg-muted/50 ${isSelected ? "bg-blue-50 border-l-4 border-l-blue-500 text-blue-900" : "hover:bg-gray-50"}`}>
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    {topic.videoS3Key && <Video className="h-4 w-4 text-blue-500 flex-shrink-0" />}
-                                    {topic.pdfS3Key && <FileText className="h-4 w-4 text-red-500 flex-shrink-0" />}
-                                    <span className="text-sm font-medium truncate">{topic.title}</span>
-                                  </div>
-                                  <p className="text-xs text-muted-foreground line-clamp-2">{topic.description}</p>
-                                </div>
-                                <div className="ml-2 flex-shrink-0">
-                                  {isCompleted ? <CheckCircle className="h-5 w-5 text-green-500" /> : isSelected ? <ChevronRight className="h-5 w-5 text-blue-500" /> : <div className="w-5 h-5 rounded-full border-2 border-gray-300" />}
-                                </div>
-                              </div>
-                            </button>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
+                    <CardContent className="h-full flex items-center justify-center">
+                      <div className="text-center">
+                        <Book className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
+                        <h3 className="text-lg font-semibold mb-2">Welcome to {courseFolder.title}</h3>
+                        <p className="text-muted-foreground mb-4">Select a topic from the sidebar to start learning</p>
+                        <Badge variant="outline">{topics.length} {topics.length === 1 ? "topic" : "topics"} available</Badge>
+                      </div>
+                    </CardContent>
                   )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
 
-          <div className="md:col-span-3">
-            <Card className="h-full">
-              {selectedTopic ? (
-                <div className="h-full flex flex-col">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="flex items-center gap-2">
-                          {selectedTopic.videoS3Key && <Video className="h-5 w-5 text-blue-500" />}
-                          {selectedTopic.pdfS3Key && <FileText className="h-5 w-5 text-red-500" />}
-                          {selectedTopic.title}
-                        </CardTitle>
-                        <p className="text-muted-foreground mt-1">{selectedTopic.description}</p>
-                      </div>
-                      <div className="flex gap-2">
-                        {!completedTopics.has(selectedTopic.id) && (
-                          <Button size="sm" onClick={() => markTopicComplete(selectedTopic.id)} className="bg-green-600 hover:bg-green-700">
-                            <CheckCircle className="h-4 w-4 mr-2" />
-                            Mark Complete
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="flex-1 p-0">
-                    <AnimatePresence mode="wait">
-                      {contentLoading ? (
-                        <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex items-center justify-center">
-                          <div className="text-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                            <p className="text-sm text-muted-foreground">Loading content...</p>
-                          </div>
-                        </motion.div>
-                      ) : (
-                        <motion.div key={selectedTopic.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }} className="h-full">
-                          <ContentDisplay topic={selectedTopic} onComplete={() => markTopicComplete(selectedTopic.id)} isCompleted={completedTopics.has(selectedTopic.id)} />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </CardContent>
-                </div>
-              ) : (
-                <CardContent className="h-full flex items-center justify-center">
-                  <div className="text-center">
-                    <Book className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Welcome to {courseFolder.title}</h3>
-                    <p className="text-muted-foreground mb-4">Select a topic from the sidebar to start learning</p>
-                    <Badge variant="outline">{topics.length} {topics.length === 1 ? "topic" : "topics"} available</Badge>
-                  </div>
-                </CardContent>
-              )}
-            </Card>
-          </div>
-        </div>
+          {/* Discussions Tab */}
+          <TabsContent value="discussions">
+            <DiscussionForum
+              courseId={courseId}
+              courseName={courseFolder.title}
+              currentUserId={user?.id}
+              isEnrolled={true}
+              isInstructor={user?.role === "INSTRUCTOR" || user?.role === "ADMIN"}
+              onCreateDiscussion={handleCreateDiscussion}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

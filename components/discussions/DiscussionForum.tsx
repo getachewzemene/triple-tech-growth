@@ -6,7 +6,7 @@ import {
   FaComment,
   FaThumbsUp,
   FaReply,
-  FaPin,
+  FaThumbtack,
   FaLock,
   FaCheckCircle,
   FaPlus,
@@ -300,7 +300,7 @@ export function DiscussionForum({
                         </h3>
                         {discussion.isPinned && (
                           <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 text-xs">
-                            <FaPin className="mr-1" /> Pinned
+                            <FaThumbtack className="mr-1" /> Pinned
                           </Badge>
                         )}
                         {discussion.isLocked && (
