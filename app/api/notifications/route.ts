@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total: filteredNotifications.length,
-        totalPages: 1,
+        totalPages: Math.ceil(filteredNotifications.length / limit),
       },
     });
   } catch (error) {

@@ -161,6 +161,8 @@ model Lesson {
   title       String
   description String?
   contentType ContentType
+  // Note: For video content, use either s3Key (S3-hosted) OR videoUrl (external), not both
+  // Validation should be done at the application layer
   s3Key       String?
   videoUrl    String?          // For external video URLs (YouTube, etc)
   content     String?          @db.Text // For text-based content
@@ -376,6 +378,8 @@ model Certificate {
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   
+  // Note: One certificate per user per course - for retakes, consider archiving old certificates
+  // or removing this constraint based on business requirements
   @@unique([userId, courseId])
   @@map("certificates")
 }

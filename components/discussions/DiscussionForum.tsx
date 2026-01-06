@@ -309,7 +309,7 @@ export function DiscussionForum({
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2" title={discussion.content}>
                         {discussion.content}
                       </p>
                       <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">

@@ -126,8 +126,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       message: "Discussion updated successfully",
       data: {
         id,
-        title: title || "Updated Title",
-        content: content || "Updated content",
+        title: title ?? undefined,
+        content: content ?? undefined,
         isPinned: isPinned ?? false,
         isLocked: isLocked ?? false,
         updatedAt: new Date().toISOString(),

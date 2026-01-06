@@ -63,6 +63,7 @@ interface ChatWindowProps {
   currentUserName: string;
   conversations?: Conversation[];
   initialConversationId?: string;
+  className?: string;
   onSendMessage?: (conversationId: string, content: string) => void;
 }
 
@@ -71,6 +72,7 @@ export function ChatWindow({
   currentUserName,
   conversations = [],
   initialConversationId,
+  className = "",
   onSendMessage,
 }: ChatWindowProps) {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
@@ -236,7 +238,7 @@ export function ChatWindow({
   });
 
   return (
-    <div className="flex h-[600px] bg-white dark:bg-slate-900 rounded-xl overflow-hidden border">
+    <div className={`flex h-[600px] md:h-[70vh] max-h-[800px] bg-white dark:bg-slate-900 rounded-xl overflow-hidden border ${className}`}>
       {/* Conversation List */}
       <div
         className={`w-full md:w-80 border-r flex flex-col ${

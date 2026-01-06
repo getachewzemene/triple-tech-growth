@@ -28,7 +28,7 @@ export default function MessagesPage() {
               <p className="text-muted-foreground mb-4">
                 Please log in to access your messages and chat with other students and instructors.
               </p>
-              <Button onClick={() => (openAuthModal ? openAuthModal("login") : router.push("/admin/login"))}>
+              <Button onClick={() => openAuthModal?.("login")}>
                 Sign In / Sign Up
               </Button>
             </CardContent>

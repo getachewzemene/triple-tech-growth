@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
     // 4. Send confirmation email to the applicant
 
     // For demo purposes, we'll return a success response
-    const applicationId = `app_${Date.now()}`;
+    // Use crypto.randomUUID() for collision-safe ID generation
+    const applicationId = `app_${crypto.randomUUID()}`;
     
     return NextResponse.json({
       success: true,
