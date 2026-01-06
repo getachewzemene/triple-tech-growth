@@ -19,6 +19,14 @@ import {
   FaPlay,
   FaTrophy,
   FaHistory,
+  FaFire,
+  FaStar,
+  FaMedal,
+  FaCrown,
+  FaRocket,
+  FaBolt,
+  FaAward,
+  FaUsers,
 } from "react-icons/fa";
 import StudentHeader from "@/components/StudentHeader";
 import Footer from "@/components/Footer";
@@ -34,10 +42,26 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { safeLocalStorage } from "@/lib/hooks/useLocalStorage";
 import { useAuthModal } from "@/app/providers/AuthModalProvider";
+
+// Gamification data
+const badges = [
+  { id: 1, name: "First Steps", icon: "🚀", description: "Complete your first lesson", earned: true, points: 50 },
+  { id: 2, name: "Quick Learner", icon: "⚡", description: "Complete 5 lessons in a day", earned: false, points: 100 },
+  { id: 3, name: "Consistent", icon: "🔥", description: "7-day learning streak", earned: false, points: 150 },
+  { id: 4, name: "Explorer", icon: "🗺️", description: "Enroll in 3 different courses", earned: false, points: 75 },
+  { id: 5, name: "Scholar", icon: "🎓", description: "Complete your first course", earned: false, points: 500 },
+  { id: 6, name: "Master", icon: "👑", description: "Complete 5 courses", earned: false, points: 1000 },
+];
+
+// Streak calculation (simulated)
+const calculateStreak = () => {
+  return Math.floor(Math.random() * 7) + 1;
+};
 
 export default function StudentDashboardPage() {
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
@@ -151,52 +175,93 @@ export default function StudentDashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Header Section */}
-          <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                <FaGraduationCap className="text-blue-600" />
-                Student Dashboard
-              </h1>
-              <p className="text-muted-foreground">
-                Welcome back, <span className="font-semibold text-foreground">{userProfile.fullName}</span>! Track your learning progress and manage your courses.
-              </p>
+          {/* Skool-Style Header with Gamification */}
+          <div className="mb-8">
+            {/* User Profile Card - Skool Style */}
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 mb-6 text-white">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-20 w-20 border-4 border-white/30">
+                    <AvatarFallback className="bg-white/20 text-white text-2xl font-bold">
+                      {userProfile.fullName.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
+                      {userProfile.fullName}
+                      <Badge className="bg-yellow-400 text-yellow-900 ml-2">
+                        <FaCrown className="mr-1" /> Level {Math.floor(activeCourses.length * 2.5) + 1}
+                      </Badge>
+                    </h1>
+                    <p className="text-white/80 flex items-center gap-2 mt-1">
+                      <FaGraduationCap /> Student at Triple Technologies Academy
+                    </p>
+                    {/* Streak indicator */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-1 bg-orange-500/30 px-3 py-1 rounded-full">
+                        <FaFire className="text-orange-300" />
+                        <span className="text-sm font-medium">{calculateStreak()}-day streak</span>
+                      </div>
+                      <div className="flex items-center gap-1 bg-blue-500/30 px-3 py-1 rounded-full">
+                        <FaStar className="text-yellow-300" />
+                        <span className="text-sm font-medium">{activeCourses.length * 250 + 150} points</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsUpdateModalOpen(true)}
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                  >
+                    <FaEdit className="w-4 h-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                  <Button
+                    onClick={() => router.push("/training")}
+                    className="bg-white text-blue-600 hover:bg-white/90"
+                  >
+                    <FaRocket className="w-4 h-4 mr-2" />
+                    Explore Courses
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setIsUpdateModalOpen(true)}
-                className="flex items-center gap-2"
-              >
-                <FaEdit className="w-4 h-4" />
-                Edit Profile
-              </Button>
-              <Button
-                onClick={() => router.push("/training")}
-                className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
-              >
-                Browse Courses
-              </Button>
-            </div>
+
+            {/* XP Progress Bar */}
+            <Card className="mb-6 bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-800 dark:to-blue-900/30 border-0">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                    Level {Math.floor(activeCourses.length * 2.5) + 1} Progress
+                  </span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {250 - ((activeCourses.length * 250 + 150) % 250)} XP to next level
+                  </span>
+                </div>
+                <Progress value={((activeCourses.length * 250 + 150) % 250) / 2.5} className="h-3" />
+                <div className="flex justify-between mt-2 text-xs text-gray-500">
+                  <span>Current: {activeCourses.length * 250 + 150} XP</span>
+                  <span>Next Level: {(Math.floor((activeCourses.length * 250 + 150) / 250) + 1) * 250} XP</span>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {/* Statistics Cards - Enhanced Skool Style */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
             >
-              <Card className="border-l-4 border-l-blue-500">
+              <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Total Enrolled</p>
-                      <p className="text-2xl font-bold text-blue-600">{enrolledCourses.length}</p>
-                    </div>
-                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                      <FaBook className="w-6 h-6 text-blue-600" />
-                    </div>
+                  <div className="flex flex-col items-center text-center">
+                    <FaBook className="w-8 h-8 mb-2 opacity-80" />
+                    <p className="text-3xl font-bold">{enrolledCourses.length}</p>
+                    <p className="text-sm opacity-80">Total Courses</p>
                   </div>
                 </CardContent>
               </Card>
@@ -207,16 +272,12 @@ export default function StudentDashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <Card className="border-l-4 border-l-green-500">
+              <Card className="bg-gradient-to-br from-green-500 to-emerald-600 text-white border-0 shadow-lg">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Active Courses</p>
-                      <p className="text-2xl font-bold text-green-600">{activeCourses.length}</p>
-                    </div>
-                    <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full">
-                      <FaCheckCircle className="w-6 h-6 text-green-600" />
-                    </div>
+                  <div className="flex flex-col items-center text-center">
+                    <FaCheckCircle className="w-8 h-8 mb-2 opacity-80" />
+                    <p className="text-3xl font-bold">{activeCourses.length}</p>
+                    <p className="text-sm opacity-80">Active</p>
                   </div>
                 </CardContent>
               </Card>
@@ -227,16 +288,12 @@ export default function StudentDashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <Card className="border-l-4 border-l-yellow-500">
+              <Card className="bg-gradient-to-br from-yellow-500 to-orange-500 text-white border-0 shadow-lg">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Pending</p>
-                      <p className="text-2xl font-bold text-yellow-600">{pendingCourses.length}</p>
-                    </div>
-                    <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
-                      <FaHourglassHalf className="w-6 h-6 text-yellow-600" />
-                    </div>
+                  <div className="flex flex-col items-center text-center">
+                    <FaHourglassHalf className="w-8 h-8 mb-2 opacity-80" />
+                    <p className="text-3xl font-bold">{pendingCourses.length}</p>
+                    <p className="text-sm opacity-80">Pending</p>
                   </div>
                 </CardContent>
               </Card>
@@ -247,45 +304,94 @@ export default function StudentDashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <Card className="border-l-4 border-l-purple-500">
+              <Card className="bg-gradient-to-br from-purple-500 to-pink-500 text-white border-0 shadow-lg">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Completed</p>
-                      <p className="text-2xl font-bold text-purple-600">0</p>
-                    </div>
-                    <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full">
-                      <FaTrophy className="w-6 h-6 text-purple-600" />
-                    </div>
+                  <div className="flex flex-col items-center text-center">
+                    <FaTrophy className="w-8 h-8 mb-2 opacity-80" />
+                    <p className="text-3xl font-bold">0</p>
+                    <p className="text-sm opacity-80">Completed</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Card className="bg-gradient-to-br from-orange-500 to-red-500 text-white border-0 shadow-lg col-span-2 sm:col-span-1">
+                <CardContent className="p-4">
+                  <div className="flex flex-col items-center text-center">
+                    <FaFire className="w-8 h-8 mb-2 opacity-80" />
+                    <p className="text-3xl font-bold">{calculateStreak()}</p>
+                    <p className="text-sm opacity-80">Day Streak</p>
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
           </div>
 
+          {/* Badges Section - Skool Gamification */}
+          <Card className="mb-8 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-200 dark:border-amber-800">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FaAward className="text-amber-500" />
+                Your Achievements
+              </CardTitle>
+              <CardDescription>Unlock badges by completing challenges and milestones</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                {badges.map((badge, index) => (
+                  <motion.div
+                    key={badge.id}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`relative p-4 rounded-xl text-center transition-all cursor-pointer hover:scale-105 ${
+                      badge.earned 
+                        ? 'bg-gradient-to-br from-amber-400 to-yellow-500 text-white shadow-lg' 
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500'
+                    }`}
+                  >
+                    <div className="text-3xl mb-2">{badge.icon}</div>
+                    <div className={`text-xs font-medium ${badge.earned ? 'text-white' : ''}`}>{badge.name}</div>
+                    <div className={`text-xs mt-1 ${badge.earned ? 'text-white/80' : 'text-gray-400'}`}>+{badge.points} XP</div>
+                    {!badge.earned && (
+                      <div className="absolute inset-0 rounded-xl bg-gray-200/50 dark:bg-gray-700/50 flex items-center justify-center">
+                        <span className="text-2xl">🔒</span>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
           <Tabs defaultValue="active" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
-              <TabsTrigger value="active" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid bg-white dark:bg-slate-800 p-1 rounded-xl shadow-md">
+              <TabsTrigger value="active" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                 <FaPlay className="w-3 h-3" />
                 <span className="hidden sm:inline">Active</span>
                 {activeCourses.length > 0 && (
-                  <Badge variant="secondary" className="ml-1">{activeCourses.length}</Badge>
+                  <Badge variant="secondary" className="ml-1 data-[state=active]:bg-white/20">{activeCourses.length}</Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="pending" className="flex items-center gap-2">
+              <TabsTrigger value="pending" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                 <FaHourglassHalf className="w-3 h-3" />
                 <span className="hidden sm:inline">Pending</span>
                 {pendingCourses.length > 0 && (
                   <Badge variant="secondary" className="ml-1">{pendingCourses.length}</Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="profile" className="flex items-center gap-2">
+              <TabsTrigger value="achievements" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                <FaTrophy className="w-3 h-3" />
+                <span className="hidden sm:inline">Rewards</span>
+              </TabsTrigger>
+              <TabsTrigger value="profile" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                 <FaUser className="w-3 h-3" />
                 <span className="hidden sm:inline">Profile</span>
-              </TabsTrigger>
-              <TabsTrigger value="history" className="flex items-center gap-2">
-                <FaHistory className="w-3 h-3" />
-                <span className="hidden sm:inline">History</span>
               </TabsTrigger>
             </TabsList>
 
@@ -451,6 +557,129 @@ export default function StudentDashboardPage() {
                     ))}
                   </div>
                 )}
+              </div>
+            </TabsContent>
+
+            {/* Achievements/Rewards Tab - Skool Style */}
+            <TabsContent value="achievements">
+              <div className="space-y-6">
+                <Card className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                      <div>
+                        <h2 className="text-2xl font-bold mb-2">Your Reward Summary</h2>
+                        <p className="text-white/80">Keep learning to unlock more rewards and climb the leaderboard!</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="text-center bg-white/20 rounded-xl p-4">
+                          <div className="text-3xl font-bold">{activeCourses.length * 250 + 150}</div>
+                          <div className="text-sm opacity-80">Total XP</div>
+                        </div>
+                        <div className="text-center bg-white/20 rounded-xl p-4">
+                          <div className="text-3xl font-bold">{badges.filter(b => b.earned).length}</div>
+                          <div className="text-sm opacity-80">Badges</div>
+                        </div>
+                        <div className="text-center bg-white/20 rounded-xl p-4">
+                          <div className="text-3xl font-bold">#{Math.floor(Math.random() * 50) + 10}</div>
+                          <div className="text-sm opacity-80">Rank</div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* All Badges Grid */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FaAward className="text-amber-500" />
+                      All Badges
+                    </CardTitle>
+                    <CardDescription>Complete challenges to unlock these badges</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                      {badges.map((badge, index) => (
+                        <motion.div
+                          key={badge.id}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.05 }}
+                          className={`relative p-6 rounded-2xl text-center transition-all cursor-pointer hover:scale-105 ${
+                            badge.earned 
+                              ? 'bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-900/30 dark:to-yellow-900/30 border-2 border-amber-300' 
+                              : 'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
+                          }`}
+                        >
+                          <div className="text-4xl mb-3">{badge.icon}</div>
+                          <div className={`font-semibold text-sm ${badge.earned ? 'text-amber-800 dark:text-amber-200' : 'text-gray-500'}`}>{badge.name}</div>
+                          <div className={`text-xs mt-1 ${badge.earned ? 'text-amber-600 dark:text-amber-400' : 'text-gray-400'}`}>{badge.description}</div>
+                          <div className={`text-xs mt-2 font-bold ${badge.earned ? 'text-green-600' : 'text-gray-400'}`}>+{badge.points} XP</div>
+                          {badge.earned && (
+                            <div className="absolute -top-2 -right-2 bg-green-500 rounded-full p-1">
+                              <FaCheckCircle className="text-white text-sm" />
+                            </div>
+                          )}
+                          {!badge.earned && (
+                            <div className="absolute inset-0 rounded-2xl flex items-center justify-center bg-gray-200/30 dark:bg-gray-700/30">
+                              <span className="text-3xl opacity-50">🔒</span>
+                            </div>
+                          )}
+                        </motion.div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Leaderboard Preview */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FaTrophy className="text-yellow-500" />
+                      Top Learners This Month
+                    </CardTitle>
+                    <CardDescription>See where you stand in the community</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {[
+                        { rank: 1, name: "Abebe K.", points: 2450, badge: "🥇" },
+                        { rank: 2, name: "Sara T.", points: 2180, badge: "🥈" },
+                        { rank: 3, name: "Dawit M.", points: 1950, badge: "🥉" },
+                      ].map((learner) => (
+                        <div key={learner.rank} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{learner.badge}</span>
+                            <div>
+                              <div className="font-medium">{learner.name}</div>
+                              <div className="text-sm text-gray-500">{learner.points.toLocaleString()} XP</div>
+                            </div>
+                          </div>
+                          <Badge variant="outline">#{learner.rank}</Badge>
+                        </div>
+                      ))}
+                      {user && (
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback className="bg-blue-500 text-white text-sm">
+                                {userProfile.fullName.charAt(0).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium text-blue-700 dark:text-blue-300">You</div>
+                              <div className="text-sm text-blue-600 dark:text-blue-400">{activeCourses.length * 250 + 150} XP</div>
+                            </div>
+                          </div>
+                          <Badge className="bg-blue-500">#{Math.floor(Math.random() * 50) + 10}</Badge>
+                        </div>
+                      )}
+                    </div>
+                    <Button variant="outline" className="w-full mt-4" onClick={() => router.push("/training")}>
+                      <FaTrophy className="mr-2" /> View Full Leaderboard
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             </TabsContent>
 
