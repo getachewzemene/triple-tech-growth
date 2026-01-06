@@ -323,13 +323,16 @@ const courseContents: Record<string, Topic[]> = {
   ],
 };
 
-// Leaderboard data for Skool-like gamification
+// Exchange rate constant - can be updated from a configuration or API
+const ETB_EXCHANGE_RATE = 56;
+
+// Leaderboard data for Skool-like gamification (demo data - fictional names for privacy)
 const topLearners = [
-  { id: 1, name: "Abebe Kebede", points: 2450, coursesCompleted: 5, avatar: "", badge: "🏆" },
-  { id: 2, name: "Sara Tadesse", points: 2180, coursesCompleted: 4, avatar: "", badge: "🥈" },
-  { id: 3, name: "Dawit Mengistu", points: 1950, coursesCompleted: 4, avatar: "", badge: "🥉" },
-  { id: 4, name: "Hana Girma", points: 1820, coursesCompleted: 3, avatar: "", badge: "⭐" },
-  { id: 5, name: "Yonas Hailu", points: 1650, coursesCompleted: 3, avatar: "", badge: "⭐" },
+  { id: 1, name: "Abebe K.", points: 2450, coursesCompleted: 5, avatar: "", badge: "🏆" },
+  { id: 2, name: "Sara T.", points: 2180, coursesCompleted: 4, avatar: "", badge: "🥈" },
+  { id: 3, name: "Dawit M.", points: 1950, coursesCompleted: 4, avatar: "", badge: "🥉" },
+  { id: 4, name: "Hana G.", points: 1820, coursesCompleted: 3, avatar: "", badge: "⭐" },
+  { id: 5, name: "Yonas H.", points: 1650, coursesCompleted: 3, avatar: "", badge: "⭐" },
 ];
 
 // Community stats
@@ -338,6 +341,12 @@ const communityStats = {
   activeToday: 156,
   coursesAvailable: 7,
   certificatesIssued: 1256,
+};
+
+// Helper function to generate deterministic enrollment count based on course ID
+const getEnrollmentCount = (courseId: number | string, baseCount: number = 50): number => {
+  const idNum = typeof courseId === 'string' ? parseInt(courseId, 10) || 0 : courseId;
+  return baseCount + ((idNum * 37) % 150);
 };
 
 export default function TrainingPage() {
@@ -570,14 +579,14 @@ export default function TrainingPage() {
   const formatFolderPrice = (priceCents?: number) => {
     // Format for Ethiopian market - show ETB pricing
     const usdAmount = ((priceCents ?? 0) / 100);
-    const etbAmount = Math.round(usdAmount * 56); // Approximate ETB conversion
+    const etbAmount = Math.round(usdAmount * ETB_EXCHANGE_RATE);
     return { usd: `$${usdAmount.toFixed(0)}`, etb: `${etbAmount.toLocaleString()} ETB` };
   };
 
   const formatPrice = (priceString?: string) => {
     if (!priceString) return { usd: "$0", etb: "0 ETB" };
     const amount = parseInt(priceString.replace(/[^0-9]/g, "")) || 0;
-    const etbAmount = Math.round(amount * 56);
+    const etbAmount = Math.round(amount * ETB_EXCHANGE_RATE);
     return { usd: priceString, etb: `${etbAmount.toLocaleString()} ETB` };
   };
 
@@ -815,7 +824,7 @@ export default function TrainingPage() {
                                 </div>
                                 <div className="flex items-center gap-1 text-sm text-gray-500">
                                   <FaUsers className="text-emerald-500" />
-                                  <span>{Math.floor(Math.random() * 200) + 50} enrolled</span>
+                                  <span>{getEnrollmentCount(folder.id)} enrolled</span>
                                 </div>
                               </div>
                               

@@ -58,9 +58,21 @@ const badges = [
   { id: 6, name: "Master", icon: "👑", description: "Complete 5 courses", earned: false, points: 1000 },
 ];
 
-// Streak calculation (simulated)
-const calculateStreak = () => {
-  return Math.floor(Math.random() * 7) + 1;
+// Constants for gamification
+const DEFAULT_STREAK = 3; // Default streak for demo purposes
+const USER_BASE_RANK = 25; // Base rank for user (would be calculated from actual data)
+
+// Streak calculation - in production, this would be based on actual login/activity data
+const calculateStreak = (): number => {
+  // For demo purposes, return a consistent value
+  // In production: calculate from user's lastLoginDates array
+  return DEFAULT_STREAK;
+};
+
+// Calculate user rank deterministically based on their points
+const calculateUserRank = (points: number): number => {
+  // Simple formula: higher points = lower (better) rank
+  return Math.max(1, USER_BASE_RANK - Math.floor(points / 100));
 };
 
 export default function StudentDashboardPage() {
@@ -580,7 +592,7 @@ export default function StudentDashboardPage() {
                           <div className="text-sm opacity-80">Badges</div>
                         </div>
                         <div className="text-center bg-white/20 rounded-xl p-4">
-                          <div className="text-3xl font-bold">#{Math.floor(Math.random() * 50) + 10}</div>
+                          <div className="text-3xl font-bold">#{calculateUserRank(activeCourses.length * 250 + 150)}</div>
                           <div className="text-sm opacity-80">Rank</div>
                         </div>
                       </div>
@@ -671,7 +683,7 @@ export default function StudentDashboardPage() {
                               <div className="text-sm text-blue-600 dark:text-blue-400">{activeCourses.length * 250 + 150} XP</div>
                             </div>
                           </div>
-                          <Badge className="bg-blue-500">#{Math.floor(Math.random() * 50) + 10}</Badge>
+                          <Badge className="bg-blue-500">#{calculateUserRank(activeCourses.length * 250 + 150)}</Badge>
                         </div>
                       )}
                     </div>
