@@ -11,12 +11,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Video, FileText, CheckCircle, Book, ArrowLeft, ChevronRight, MessageSquare } from "lucide-react";
-import { FaUser, FaComments } from "react-icons/fa";
+import { Video, FileText, CheckCircle, Book, ArrowLeft, ChevronRight, MessageSquare, Star } from "lucide-react";
+import { FaUser, FaComments, FaStar } from "react-icons/fa";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ContentDisplay from "@/components/course/ContentDisplay";
 import DiscussionForum from "@/components/discussions/DiscussionForum";
+import CourseReviews from "@/components/course/CourseReviews";
 
 type CourseFolder = {
   id: string;
@@ -55,8 +56,9 @@ export default function CoursePage() {
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [contentLoading, setContentLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"content" | "discussions">("content");
+  const [activeTab, setActiveTab] = useState<"content" | "discussions" | "reviews">("content");
   const [discussionError, setDiscussionError] = useState<string | null>(null);
+  const [reviewError, setReviewError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadCourse = () => {
@@ -139,6 +141,33 @@ export default function CoursePage() {
       setDiscussionError("Failed to create discussion. Please try again.");
       // Clear error after 5 seconds
       setTimeout(() => setDiscussionError(null), 5000);
+    }
+  };
+
+  const handleSubmitReview = async (rating: number, review: string) => {
+    if (!user) return;
+    
+    setReviewError(null);
+    try {
+      const response = await fetch(`/api/courses/${courseId}/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          rating,
+          review,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to submit review");
+      }
+      
+      // In production, we would refresh the reviews list here
+    } catch (error) {
+      console.error("Failed to submit review:", error);
+      setReviewError("Failed to submit review. Please try again.");
+      setTimeout(() => setReviewError(null), 5000);
     }
   };
 
@@ -227,7 +256,7 @@ export default function CoursePage() {
 
       <div className="container mx-auto px-4 py-6">
         {/* Tab Navigation */}
-        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as "content" | "discussions")} className="space-y-4">
+        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as "content" | "discussions" | "reviews")} className="space-y-4">
           <TabsList className="bg-white dark:bg-slate-800 p-1 rounded-xl shadow-md">
             <TabsTrigger value="content" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg px-6">
               <Book className="h-4 w-4" />
@@ -236,6 +265,10 @@ export default function CoursePage() {
             <TabsTrigger value="discussions" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg px-6">
               <FaComments className="h-4 w-4" />
               Discussions
+            </TabsTrigger>
+            <TabsTrigger value="reviews" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg px-6">
+              <FaStar className="h-4 w-4" />
+              Reviews
             </TabsTrigger>
           </TabsList>
 
@@ -362,6 +395,22 @@ export default function CoursePage() {
               isEnrolled={true}
               isInstructor={user?.role === "INSTRUCTOR" || user?.role === "ADMIN"}
               onCreateDiscussion={handleCreateDiscussion}
+            />
+          </TabsContent>
+
+          {/* Reviews Tab */}
+          <TabsContent value="reviews">
+            {reviewError && (
+              <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm">
+                {reviewError}
+              </div>
+            )}
+            <CourseReviews
+              courseId={courseId}
+              courseName={courseFolder.title}
+              currentUserId={user?.id}
+              isEnrolled={true}
+              onSubmitReview={handleSubmitReview}
             />
           </TabsContent>
         </Tabs>
