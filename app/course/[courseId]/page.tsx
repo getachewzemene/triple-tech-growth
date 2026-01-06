@@ -56,6 +56,7 @@ export default function CoursePage() {
   const [loading, setLoading] = useState(true);
   const [contentLoading, setContentLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"content" | "discussions">("content");
+  const [discussionError, setDiscussionError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadCourse = () => {
@@ -115,8 +116,9 @@ export default function CoursePage() {
   const handleCreateDiscussion = async (title: string, content: string) => {
     if (!user) return;
     
+    setDiscussionError(null);
     try {
-      await fetch("/api/discussions", {
+      const response = await fetch("/api/discussions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -126,9 +128,17 @@ export default function CoursePage() {
           content,
         }),
       });
+      
+      if (!response.ok) {
+        throw new Error("Failed to create discussion");
+      }
+      
       // In production, we would refresh the discussions list here
     } catch (error) {
       console.error("Failed to create discussion:", error);
+      setDiscussionError("Failed to create discussion. Please try again.");
+      // Clear error after 5 seconds
+      setTimeout(() => setDiscussionError(null), 5000);
     }
   };
 
@@ -340,6 +350,11 @@ export default function CoursePage() {
 
           {/* Discussions Tab */}
           <TabsContent value="discussions">
+            {discussionError && (
+              <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm">
+                {discussionError}
+              </div>
+            )}
             <DiscussionForum
               courseId={courseId}
               courseName={courseFolder.title}

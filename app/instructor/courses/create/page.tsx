@@ -124,9 +124,14 @@ export default function CreateCoursePage() {
   };
 
   const handlePriceChange = (value: string) => {
-    // Convert ETB to cents (multiply by 100)
-    const price = parseFloat(value) || 0;
-    setFormData((prev) => ({ ...prev, priceCents: Math.round(price * 100) }));
+    // Convert ETB to cents (multiply by 100), using Math.round for integer conversion
+    // Parse with validation to avoid floating-point precision errors
+    const numericValue = value.replace(/[^0-9.]/g, '');
+    const parts = numericValue.split('.');
+    const wholePart = parseInt(parts[0] || '0', 10) * 100;
+    const decimalPart = parts[1] ? parseInt(parts[1].substring(0, 2).padEnd(2, '0'), 10) : 0;
+    const priceCents = wholePart + decimalPart;
+    setFormData((prev) => ({ ...prev, priceCents: Math.max(0, priceCents) }));
   };
 
   return (
