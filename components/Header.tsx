@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, User, Sun, Moon, Globe } from "lucide-react";
+import { Menu, X, User, Sun, Moon, Globe, MessageCircle } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useLanguage } from "@/app/providers/LanguageProvider";
@@ -21,6 +21,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import UserAuthModal from "@/components/UserAuthModal";
+import NotificationBell from "@/components/NotificationBell";
 import Image from "next/image";
 
 const Header = () => {
@@ -79,6 +80,12 @@ const Header = () => {
 
     if (id === "courses") {
       router.push("/courses");
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
+    if (id === "messages") {
+      router.push("/messages");
       setIsMobileMenuOpen(false);
       return;
     }
@@ -147,6 +154,7 @@ const Header = () => {
                 { name: "Why Choose Us", id: "why-choose-us" },
                 { name: "Training", id: "training" },
                 ...(user ? [{ name: "Courses", id: "courses" }] : []),
+                ...(user ? [{ name: "Messages", id: "messages" }] : []),
                 ...(user ? [{ name: "Dashboard", id: "student" }] : []),
                 { name: "Team", id: "team" },
                 { name: "Contact Us", id: "contact" },
@@ -167,6 +175,7 @@ const Header = () => {
                     (activeSection === item.id && pathname === "/") ||
                     (item.id === "training" && pathname === "/training") ||
                     (item.id === "courses" && pathname === "/courses") ||
+                    (item.id === "messages" && pathname === "/messages") ||
                     (item.id === "student" && pathname === "/student")
                       ? "after:w-8"
                       : "after:w-0"
@@ -243,22 +252,44 @@ const Header = () => {
 
             {/* Dashboard/Login Button */}
             {user ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => router.push("/student")}
-                    variant="outline"
-                    size="sm"
-                    className="bg-transparent border-white/30 text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue hover:border-yellow transition-all duration-500 transform hover:scale-105 backdrop-blur-sm"
-                  >
-                    <User className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>View Dashboard</p>
-                </TooltipContent>
-              </Tooltip>
+              <>
+                {/* Notification Bell for logged-in users */}
+                <NotificationBell userId={user.id || "user"} />
+                
+                {/* Messages shortcut */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => router.push("/messages")}
+                      variant="ghost"
+                      size="sm"
+                      className="bg-transparent text-white hover:bg-white/10 transition-all duration-500 transform hover:scale-105 h-8 w-8"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Messages</p>
+                  </TooltipContent>
+                </Tooltip>
+                
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => router.push("/student")}
+                      variant="outline"
+                      size="sm"
+                      className="bg-transparent border-white/30 text-white hover:bg-gradient-to-r hover:from-yellow hover:to-yellow/80 hover:text-light-blue hover:border-yellow transition-all duration-500 transform hover:scale-105 backdrop-blur-sm"
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Dashboard</p>
+                  </TooltipContent>
+                </Tooltip>
+              </>
             ) : (
               <Button
                 onClick={() => openAuthModal("login")}
@@ -295,6 +326,7 @@ const Header = () => {
                   { name: "Why Choose Us", id: "why-choose-us" },
                   { name: "Training", id: "training" },
                   ...(user ? [{ name: "Courses", id: "courses" }] : []),
+                  ...(user ? [{ name: "Messages", id: "messages" }] : []),
                   ...(user ? [{ name: "Dashboard", id: "student" }] : []),
                   { name: "Team", id: "team" },
                   { name: "Contact Us", id: "contact" },
@@ -306,6 +338,7 @@ const Header = () => {
                       (activeSection === item.id && pathname === "/") ||
                       (item.id === "training" && pathname === "/training") ||
                       (item.id === "courses" && pathname === "/courses") ||
+                      (item.id === "messages" && pathname === "/messages") ||
                       (item.id === "student" && pathname === "/student")
                         ? "text-yellow border-l-2 border-yellow pl-4"
                         : "text-white hover:text-yellow"
