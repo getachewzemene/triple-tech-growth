@@ -11,12 +11,20 @@ import {
   FaRobot,
   FaClock,
   FaUser,
-  FaDollarSign,
   FaStar,
   FaSearch,
   FaFilter,
   FaUsers,
   FaGraduationCap,
+  FaTrophy,
+  FaFire,
+  FaPlay,
+  FaBookOpen,
+  FaCheckCircle,
+  FaMedal,
+  FaCrown,
+  FaArrowRight,
+  FaLock,
 } from "react-icons/fa";
 import Header from "@/components/Header";
 
@@ -24,6 +32,9 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -36,6 +47,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useAuthModal } from "@/app/providers/AuthModalProvider";
 import { useRouter } from "next/navigation";
@@ -309,6 +323,32 @@ const courseContents: Record<string, Topic[]> = {
   ],
 };
 
+// Exchange rate constant - can be updated from a configuration or API
+const ETB_EXCHANGE_RATE = 56;
+
+// Leaderboard data for Skool-like gamification (demo data - fictional names for privacy)
+const topLearners = [
+  { id: 1, name: "Abebe K.", points: 2450, coursesCompleted: 5, avatar: "", badge: "🏆" },
+  { id: 2, name: "Sara T.", points: 2180, coursesCompleted: 4, avatar: "", badge: "🥈" },
+  { id: 3, name: "Dawit M.", points: 1950, coursesCompleted: 4, avatar: "", badge: "🥉" },
+  { id: 4, name: "Hana G.", points: 1820, coursesCompleted: 3, avatar: "", badge: "⭐" },
+  { id: 5, name: "Yonas H.", points: 1650, coursesCompleted: 3, avatar: "", badge: "⭐" },
+];
+
+// Community stats
+const communityStats = {
+  totalMembers: 2847,
+  activeToday: 156,
+  coursesAvailable: 7,
+  certificatesIssued: 1256,
+};
+
+// Helper function to generate deterministic enrollment count based on course ID
+const getEnrollmentCount = (courseId: number | string, baseCount: number = 50): number => {
+  const idNum = typeof courseId === 'string' ? parseInt(courseId, 10) || 0 : courseId;
+  return baseCount + ((idNum * 37) % 150);
+};
+
 export default function TrainingPage() {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
@@ -537,888 +577,684 @@ export default function TrainingPage() {
   };
 
   const formatFolderPrice = (priceCents?: number) => {
-    return `$${((priceCents ?? 0) / 100).toFixed(2)}`;
+    // Format for Ethiopian market - show ETB pricing
+    const usdAmount = ((priceCents ?? 0) / 100);
+    const etbAmount = Math.round(usdAmount * ETB_EXCHANGE_RATE);
+    return { usd: `$${usdAmount.toFixed(0)}`, etb: `${etbAmount.toLocaleString()} ETB` };
   };
 
+  const formatPrice = (priceString?: string) => {
+    if (!priceString) return { usd: "$0", etb: "0 ETB" };
+    const amount = parseInt(priceString.replace(/[^0-9]/g, "")) || 0;
+    const etbAmount = Math.round(amount * ETB_EXCHANGE_RATE);
+    return { usd: priceString, etb: `${etbAmount.toLocaleString()} ETB` };
+  };
+
+  // Active tab for the training page
+  const [activeTab, setActiveTab] = useState("courses");
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
       <Header />
-  <div className="px-4 pt-20 pb-12 xs:px-4 xs:pt-20 xs:pb-12 sm:px-6 md:px-8 lg:px-16 xl:px-24">
-        <motion.h2
-          className="section-title text-center"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          {selectedCourse
-            ? `${selectedCourse.title} Module`
-            : "Training Modules"}
-        </motion.h2>
-
-        {!selectedCourse ? (
-          <div className="space-y-12">
-            {/* Course Folders Section */}
-            {courseFolders.length > 0 && (
-              <div>
-                <motion.h3
-                  className="text-2xl font-bold text-center mb-8 text-gray-900"
-                  initial={{ opacity: 0, y: -10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4 }}
-                  viewport={{ once: true }}
-                >
-                  Featured Course{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
-                    Collections
-                  </span>
-                </motion.h3>
-                <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
-                  {courseFolders.map((folder, index) => {
-                    const enrollmentStatus = checkFolderEnrollmentStatus(
-                      folder.id,
-                    );
-                    return (
-                      <motion.div
-                        key={folder.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1, duration: 0.5 }}
-                        viewport={{ once: true }}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="relative"
-                      >
-                        <Card className="h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] shadow-green-500/25">
-                          {/* Background gradient overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0"></div>
-
-                          {/* Animated border gradient */}
-                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0">
-                            <div className="w-full h-full bg-card rounded-3xl"></div>
-                          </div>
-
-                          {/* Content container */}
-                          <div className="relative z-20 p-4 sm:p-6">
-                            {/* Stats badge */}
-                            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                              <div className="px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-semibold">
-                                {folder.topicsCount || 0} topics
-                              </div>
-                            </div>
-
-                            {/* Icon */}
-                            <div className="relative mb-6 flex justify-center">
-                              <div className="p-4 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                                <FaVideo className="w-8 h-8 text-white dark:group-hover:text-[#e2a70f]" />
-                              </div>
-                              {/* Floating particles */}
-                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-                              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
-                            </div>
-
-                            {/* Title and description */}
-                            <div className="text-center mb-4 sm:mb-6">
-                              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
-                                {folder.title}
-                              </h3>
-                              <p className="text-gray-600 text-sm sm:text-base leading-relaxed group-hover:text-gray-800 dark:group-hover:text-gray-50 transition-colors duration-300">
-                                {folder.description}
-                              </p>
-                            </div>
-
-                            {/* Course info */}
-                            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
-                              <div className="flex items-center gap-1">
-                                <FaClock className="w-4 h-4" />
-                                <span>{folder.topicsCount || 0} topics</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <FaDollarSign className="w-4 h-4" />
-                                <span>{formatFolderPrice(folder.priceCents)}</span>
-                              </div>
-                            </div>
-
-                            {/* Level badge */}
-                            <div className="text-center mb-4">
-                              <Badge
-                                variant="secondary"
-                                className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border-green-300 transition-all duration-300"
-                              >
-                                Course Collection
-                              </Badge>
-                            </div>
-
-                            {/* Features list - reveals on hover */}
-                            <div className="space-y-2 sm:space-y-3 mb-4">
-                              {["Expert-curated content", "Multiple topics", "Lifetime access"].map((feature, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
-                                  style={{ transitionDelay: `${idx * 100 + 200}ms` }}
-                                >
-                                  <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 animate-pulse"></div>
-                                  <span className="text-sm sm:text-base font-medium text-gray-700 dark:group-hover:text-gray-100">
-                                    {feature}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* Action buttons */}
-                            <div className={user && enrollmentStatus?.status === "approved" ? "" : "grid grid-cols-2 gap-3"}>
-                              {user && enrollmentStatus?.status === "approved" ? (
-                                <Button
-                                  size="sm"
-                                  onClick={() =>
-                                    router.push(`/course/${folder.id}`)
-                                  }
-                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                                >
-                                  Access Course
-                                </Button>
-                              ) : user ? (
-                                <>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() =>
-                                      setSelectedCourse({
-                                        id: folder.id,
-                                        title: folder.title,
-                                        description: folder.description,
-                                        detailedDescription: `Comprehensive course collection with multiple topics covering various aspects of ${folder.title.toLowerCase()}. This structured program provides in-depth knowledge and practical skills through expert-curated content.`,
-                                        price: `$${((folder.priceCents ?? 0) / 100).toFixed(2)}`,
-                                        instructor: folder.instructor,
-                                        instructorName: folder.instructorName,
-                                        instructorProfession:
-                                          folder.instructorProfession,
-                                        instructorExperience:
-                                          folder.instructorExperience,
-                                        instructorProfileImage:
-                                          folder.instructorProfileImage,
-                                        duration: "8-12 weeks",
-                                        level: "All Levels",
-                                        benefits: [
-                                          "Comprehensive curriculum designed by experts",
-                                          "Hands-on projects and practical applications",
-                                          "Progress tracking and milestone achievements",
-                                          "Interactive learning materials and resources",
-                                          "Certificate of completion upon finishing",
-                                          "Lifetime access to course materials",
-                                        ],
-                                        prerequisites:
-                                          "Basic computer skills recommended",
-                                        isFolder: true,
-                                      })
-                                    }
-                                    className="border-gray-300 hover:border-green-500 hover:bg-green-50 hover:text-green-700 transition-all duration-300"
-                                  >
-                                    View
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() =>
-                                      handleFolderEnrollment(folder)
-                                    }
-                                    className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                                    disabled={
-                                      enrollmentStatus?.status ===
-                                      "payment_submitted"
-                                    }
-                                  >
-                                    {enrollmentStatus?.status ===
-                                    "payment_submitted"
-                                      ? "Pending"
-                                      : "Enroll"}
-                                  </Button>
-                                </>
-                              ) : (
-                                <>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => openAuthModal("login")}
-                                    className="border-gray-300 hover:border-green-500 hover:bg-green-50 hover:text-green-700 transition-all duration-300"
-                                  >
-                                    View Details
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => openAuthModal("login")}
-                                    className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                                  >
-                                    Enroll
-                                  </Button>
-                                </>
-                              )}
-                            </div>
-
-                            {/* Enrollment status */}
-                            {user && enrollmentStatus && (
-                              <div className="text-xs text-center mt-3">
-                                <Badge
-                                  variant={
-                                    enrollmentStatus.status === "approved"
-                                      ? "default"
-                                      : enrollmentStatus.status ===
-                                          "payment_submitted"
-                                        ? "secondary"
-                                        : "destructive"
-                                  }
-                                >
-                                  {enrollmentStatus.status === "approved"
-                                    ? "Approved"
-                                    : enrollmentStatus.status ===
-                                        "payment_submitted"
-                                      ? "Payment Under Review"
-                                      : "Payment Required"}
-                                </Badge>
-                              </div>
-                            )}
-
-                            {/* Progress indicator */}
-                            <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                              <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                                <div className="h-full bg-gradient-to-r from-green-500 to-emerald-600 transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Hover glow effect */}
-                          <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
-                            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-green-500 to-emerald-600 opacity-20 blur-xl transform scale-110"></div>
-                          </div>
-                        </Card>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* All Courses Section */}
-            <div>
-              {/* Header with Title and Search/Filter on same row */}
+      
+      {/* Hero Section - Skool Style */}
+      <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <Badge className="mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 px-4 py-1.5 text-sm font-medium">
+              <FaFire className="inline mr-2" /> Ethiopia&apos;s #1 Online Learning Platform
+            </Badge>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+              Transform Your Career with{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                World-Class Skills
+              </span>
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+              Join thousands of Ethiopian learners mastering in-demand skills. Get certified, earn points, 
+              and unlock opportunities with our expert-led courses.
+            </p>
+            
+            {/* Community Stats - Skool Style */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
               <motion.div
-                className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8"
-                initial={{ opacity: 0, y: -10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                viewport={{ once: true }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-lg border border-gray-100 dark:border-slate-700"
               >
-                {/* Title on the left */}
-                <h3 className="text-2xl font-bold text-gray-900">
-                  All Available{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-light-blue to-yellow">
-                    Courses
-                  </span>
-                </h3>
-
-                {/* Search and Filter on the right */}
-                <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                  {/* Search Input */}
-                  <div className="relative">
-                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      type="text"
-                      placeholder="Search courses..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 w-full sm:w-64 md:w-80"
-                    />
-                  </div>
-                  
-                  {/* Category Filter */}
-                  <div className="flex items-center gap-2">
-                    <FaFilter className="text-gray-400 w-4 h-4 hidden sm:block" />
-                    <select
-                      value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm w-full sm:w-auto"
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat === "all" ? "All Categories" : cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Level Filter */}
-                  <div className="flex items-center gap-2">
-                    <FaGraduationCap className="text-gray-400 w-4 h-4 hidden sm:block" />
-                    <select
-                      value={selectedLevel}
-                      onChange={(e) => setSelectedLevel(e.target.value)}
-                      className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm w-full sm:w-auto"
-                    >
-                      {levels.map((lvl) => (
-                        <option key={lvl} value={lvl}>
-                          {lvl === "all" ? "All Levels" : lvl}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex items-center justify-center mb-2">
+                  <FaUsers className="text-blue-500 text-2xl" />
                 </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{communityStats.totalMembers.toLocaleString()}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Community Members</div>
               </motion.div>
               
-              {/* Results count - show when filters are applied */}
-              {(searchQuery || selectedCategory !== "all" || selectedLevel !== "all") && filteredCourses.length > 0 && (
-                <div className="text-sm text-muted-foreground mb-4">
-                  Showing {filteredCourses.length} of {courses.length} courses
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-lg border border-gray-100 dark:border-slate-700"
+              >
+                <div className="flex items-center justify-center mb-2">
+                  <FaFire className="text-orange-500 text-2xl" />
+                </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{communityStats.activeToday}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Active Today</div>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-lg border border-gray-100 dark:border-slate-700"
+              >
+                <div className="flex items-center justify-center mb-2">
+                  <FaBookOpen className="text-green-500 text-2xl" />
+                </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{communityStats.coursesAvailable}+</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Expert Courses</div>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 }}
+                className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-lg border border-gray-100 dark:border-slate-700"
+              >
+                <div className="flex items-center justify-center mb-2">
+                  <FaTrophy className="text-yellow-500 text-2xl" />
+                </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{communityStats.certificatesIssued.toLocaleString()}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Certificates Issued</div>
+              </motion.div>
+            </div>
+
+            {/* CTA Buttons */}
+            {!user && (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  size="lg"
+                  onClick={() => openAuthModal("register")}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
+                >
+                  <FaGraduationCap className="mr-2" />
+                  Start Learning Free
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => openAuthModal("login")}
+                  className="px-8 py-6 text-lg rounded-xl border-2"
+                >
+                  Sign In
+                </Button>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Main Content with Tabs - Skool Style */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-7xl mx-auto">
+          <Tabs defaultValue="courses" className="w-full" onValueChange={setActiveTab}>
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8 bg-white dark:bg-slate-800 p-1 rounded-xl shadow-md">
+              <TabsTrigger value="courses" className="rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                <FaBookOpen className="mr-2" />
+                Courses
+              </TabsTrigger>
+              <TabsTrigger value="leaderboard" className="rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                <FaTrophy className="mr-2" />
+                Leaderboard
+              </TabsTrigger>
+              <TabsTrigger value="about" className="rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                <FaGraduationCap className="mr-2" />
+                About
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Courses Tab */}
+            <TabsContent value="courses" className="mt-0">
+              {/* Search and Filters */}
+              <div className="flex flex-col lg:flex-row gap-4 mb-8">
+                <div className="relative flex-1">
+                  <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search courses..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-12 py-6 text-lg rounded-xl border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200"
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat === "all" ? "All Categories" : cat}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={selectedLevel}
+                    onChange={(e) => setSelectedLevel(e.target.value)}
+                    className="px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200"
+                  >
+                    {levels.map((lvl) => (
+                      <option key={lvl} value={lvl}>
+                        {lvl === "all" ? "All Levels" : lvl}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Featured Courses from Admin */}
+              {courseFolders.length > 0 && (
+                <div className="mb-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <FaStar className="text-yellow-500 text-xl" />
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Courses</h2>
+                    <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">New</Badge>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {courseFolders.map((folder, index) => {
+                      const enrollmentStatus = checkFolderEnrollmentStatus(folder.id);
+                      const price = formatFolderPrice(folder.priceCents);
+                      return (
+                        <motion.div
+                          key={folder.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          <Card className="group h-full bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                            {/* Course Image/Gradient Header */}
+                            <div className="h-40 bg-gradient-to-br from-emerald-500 to-teal-600 relative overflow-hidden">
+                              <div className="absolute inset-0 bg-black/10"></div>
+                              <div className="absolute top-4 left-4">
+                                <Badge className="bg-white/20 backdrop-blur-sm text-white border-0">
+                                  <FaVideo className="mr-1" /> {folder.topicsCount || 0} Lessons
+                                </Badge>
+                              </div>
+                              <div className="absolute bottom-4 left-4 right-4">
+                                <h3 className="text-xl font-bold text-white">{folder.title}</h3>
+                              </div>
+                              {/* Decorative elements */}
+                              <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
+                              <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full"></div>
+                            </div>
+                            
+                            <CardContent className="p-5">
+                              <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                                {folder.description || "Comprehensive course with expert-curated content"}
+                              </p>
+                              
+                              {/* Instructor Info */}
+                              {folder.instructorName && (
+                                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100 dark:border-slate-700">
+                                  <Avatar className="h-10 w-10 border-2 border-emerald-200">
+                                    <AvatarImage src={folder.instructorProfileImage} />
+                                    <AvatarFallback className="bg-emerald-100 text-emerald-700">
+                                      {folder.instructorName?.split(" ").map(n => n[0]).join("")}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div>
+                                    <p className="font-medium text-gray-900 dark:text-white text-sm">{folder.instructorName}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">{folder.instructorProfession || "Expert Instructor"}</p>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Price and Enrollment */}
+                              <div className="flex items-center justify-between mb-4">
+                                <div>
+                                  <div className="text-2xl font-bold text-gray-900 dark:text-white">{price.etb}</div>
+                                  <div className="text-sm text-gray-500 dark:text-gray-400">{price.usd}</div>
+                                </div>
+                                <div className="flex items-center gap-1 text-sm text-gray-500">
+                                  <FaUsers className="text-emerald-500" />
+                                  <span>{getEnrollmentCount(folder.id)} enrolled</span>
+                                </div>
+                              </div>
+                              
+                              {/* Action Button */}
+                              {user && enrollmentStatus?.status === "approved" ? (
+                                <Button
+                                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-5"
+                                  onClick={() => router.push(`/course/${folder.id}`)}
+                                >
+                                  <FaPlay className="mr-2" /> Continue Learning
+                                </Button>
+                              ) : (
+                                <Button
+                                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl py-5"
+                                  onClick={() => user ? handleFolderEnrollment(folder) : openAuthModal("login")}
+                                  disabled={enrollmentStatus?.status === "payment_submitted"}
+                                >
+                                  {enrollmentStatus?.status === "payment_submitted" ? (
+                                    <>
+                                      <FaClock className="mr-2" /> Payment Under Review
+                                    </>
+                                  ) : (
+                                    <>
+                                      <FaArrowRight className="mr-2" /> Enroll Now
+                                    </>
+                                  )}
+                                </Button>
+                              )}
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
-              
-              {filteredCourses.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-lg text-muted-foreground">No courses found matching your criteria.</p>
-                  <Button 
-                    variant="outline" 
-                    className="mt-4"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setSelectedCategory("all");
-                      setSelectedLevel("all");
-                    }}
-                  >
-                    Clear Filters
-                  </Button>
-                </div>
-              ) : (
-              <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 xs:gap-4 sm:gap-6 md:gap-8 lg:gap-8">
-                {filteredCourses.map((course, index) => {
-                  const enrollmentStatus = user
-                    ? checkEnrollmentStatus(course.id)
-                    : null;
-                  return (
-                    <motion.div
-                      key={course.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
-                      viewport={{ once: true }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="relative"
+
+              {/* All Courses */}
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {searchQuery || selectedCategory !== "all" || selectedLevel !== "all" 
+                      ? `${filteredCourses.length} Courses Found`
+                      : "All Courses"
+                    }
+                  </h2>
+                  {(searchQuery || selectedCategory !== "all" || selectedLevel !== "all") && (
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setSearchQuery("");
+                        setSelectedCategory("all");
+                        setSelectedLevel("all");
+                      }}
                     >
-                      {/* Coming Soon Badge */}
-                      {course.isComingSoon && (
-                        <div className="absolute -top-2 -right-2 z-30">
-                          <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 text-xs font-bold shadow-lg">
-                            Coming Soon
-                          </Badge>
-                        </div>
-                      )}
-                      <Card className={`h-full cursor-pointer transition-all duration-700 transform hover:-translate-y-3 sm:hover:-translate-y-6 hover:scale-102 sm:hover:scale-105 hover:shadow-2xl group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-card backdrop-blur-sm border border-border hover:border-[rgba(0,0,0,0.06)] shadow-blue-500/25 ${course.isComingSoon ? 'opacity-90' : ''}`}>
-                        {/* Background gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-60 transition-all duration-500 pointer-events-none z-0"></div>
+                      Clear Filters
+                    </Button>
+                  )}
+                </div>
 
-                        {/* Animated border gradient */}
-                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-0.5 pointer-events-none z-0">
-                          <div className="w-full h-full bg-card rounded-3xl"></div>
-                        </div>
-
-                        {/* Content container */}
-                        <div className="relative z-20 p-4 sm:p-6">
-                          {/* Stats badge */}
-                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                            <div className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs font-semibold">
-                              {course.duration}
-                            </div>
-                          </div>
-
-                          {/* Icon */}
-                          <div className="relative mb-6 flex justify-center">
-                            <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                              <div className="text-white dark:group-hover:text-[#e2a70f]">
+                {filteredCourses.length === 0 ? (
+                  <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-2xl">
+                    <FaSearch className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">No courses found</h3>
+                    <p className="text-gray-500 dark:text-gray-400">Try adjusting your search or filters</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredCourses.map((course, index) => {
+                      const enrollmentStatus = user ? checkEnrollmentStatus(course.id) : null;
+                      const price = formatPrice(course.price);
+                      return (
+                        <motion.div
+                          key={course.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                        >
+                          <Card className={`group h-full bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 ${course.isComingSoon ? 'opacity-80' : ''}`}>
+                            {/* Course Image/Gradient Header */}
+                            <div className={`h-40 relative overflow-hidden ${
+                              course.category === "Development" ? "bg-gradient-to-br from-blue-500 to-indigo-600" :
+                              course.category === "Marketing" ? "bg-gradient-to-br from-pink-500 to-rose-600" :
+                              course.category === "Design" ? "bg-gradient-to-br from-purple-500 to-violet-600" :
+                              course.category === "Technology" ? "bg-gradient-to-br from-cyan-500 to-blue-600" :
+                              "bg-gradient-to-br from-orange-500 to-amber-600"
+                            }`}>
+                              <div className="absolute inset-0 bg-black/10"></div>
+                              <div className="absolute top-4 left-4 flex gap-2">
+                                <Badge className="bg-white/20 backdrop-blur-sm text-white border-0">
+                                  {course.category}
+                                </Badge>
+                                {course.isComingSoon && (
+                                  <Badge className="bg-purple-500/80 backdrop-blur-sm text-white border-0">
+                                    Coming Soon
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1">
+                                <FaStar className="text-yellow-300 text-sm" />
+                                <span className="text-white text-sm font-medium">{course.rating}</span>
+                              </div>
+                              <div className="absolute bottom-4 left-4 right-4">
+                                <h3 className="text-xl font-bold text-white">{course.title}</h3>
+                              </div>
+                              {/* Course Icon */}
+                              <div className="absolute right-4 bottom-4 p-3 bg-white/20 backdrop-blur-sm rounded-xl text-white">
                                 {course.icon}
                               </div>
                             </div>
-                            {/* Floating particles */}
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
-                          </div>
-
-                          {/* Title and description */}
-                          <div className="text-center mb-4 sm:mb-6">
-                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 transition-all duration-300 group-hover:text-black dark:group-hover:text-white">
-                              {course.title}
-                            </h3>
-                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed group-hover:text-gray-800 dark:group-hover:text-gray-50 transition-colors duration-300">
-                              {course.description}
-                            </p>
-                          </div>
-
-                          {/* Rating and Students */}
-                          <div className="flex items-center justify-center gap-4 text-sm mb-3">
-                            {course.rating && (
-                              <div className="flex items-center gap-1 text-yellow-500">
-                                <FaStar className="w-4 h-4" />
-                                <span className="font-semibold">{course.rating}</span>
+                            
+                            <CardContent className="p-5">
+                              <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                                {course.description}
+                              </p>
+                              
+                              {/* Course Meta */}
+                              <div className="flex items-center gap-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
+                                <div className="flex items-center gap-1">
+                                  <FaClock />
+                                  <span>{course.duration}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <FaUsers />
+                                  <span>{(course.studentsEnrolled || 0).toLocaleString()}</span>
+                                </div>
                               </div>
-                            )}
-                            {course.studentsEnrolled !== undefined && course.studentsEnrolled > 0 && (
-                              <div className="flex items-center gap-1 text-muted-foreground">
-                                <FaUsers className="w-4 h-4" />
-                                <span>{course.studentsEnrolled.toLocaleString()} students</span>
+                              
+                              {/* Level Badge */}
+                              <div className="mb-4">
+                                <Badge variant="outline" className="text-xs">
+                                  {course.level}
+                                </Badge>
                               </div>
-                            )}
-                          </div>
-
-                          {/* Course info */}
-                          <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-4">
-                            <div className="flex items-center gap-1">
-                              <FaClock className="w-4 h-4" />
-                              <span>{course.duration}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <FaDollarSign className="w-4 h-4" />
-                              <span>{course.price}</span>
-                            </div>
-                          </div>
-
-                          {/* Level badge */}
-                          <div className="text-center mb-4">
-                            <Badge
-                              variant="secondary"
-                              className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border-blue-300 transition-all duration-300"
-                            >
-                              {course.level}
-                            </Badge>
-                          </div>
-
-                          {/* Features list - reveals on hover */}
-                          <div className="space-y-2 sm:space-y-3 mb-4">
-                            {course.benefits?.slice(0, 3).map((benefit, idx) => (
-                              <div
-                                key={idx}
-                                className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
-                                style={{ transitionDelay: `${idx * 100 + 200}ms` }}
-                              >
-                                <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 animate-pulse"></div>
-                                <span className="text-sm sm:text-base font-medium text-gray-700 dark:group-hover:text-gray-100">
-                                  {benefit.length > BENEFIT_TRUNCATE_LENGTH ? benefit.substring(0, BENEFIT_TRUNCATE_LENGTH) + '...' : benefit}
-                                </span>
+                              
+                              {/* Price and Enrollment */}
+                              <div className="flex items-center justify-between mb-4 pt-4 border-t border-gray-100 dark:border-slate-700">
+                                <div>
+                                  <div className="text-2xl font-bold text-gray-900 dark:text-white">{price.etb}</div>
+                                  <div className="text-sm text-gray-500 dark:text-gray-400">{price.usd}</div>
+                                </div>
                               </div>
-                            ))}
-                          </div>
-
-                          {/* Action buttons */}
-                          <div className={user && enrollmentStatus?.status === "approved" ? "" : "grid grid-cols-2 gap-3"}>
-                            {course.isComingSoon ? (
-                              <Button
-                                size="sm"
-                                disabled
-                                className="w-full col-span-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white cursor-not-allowed opacity-80"
-                              >
-                                Coming Soon
-                              </Button>
-                            ) : user ? (
-                              enrollmentStatus?.status === "approved" ? (
+                              
+                              {/* Action Button */}
+                              {course.isComingSoon ? (
                                 <Button
-                                  size="sm"
-                                  onClick={() =>
-                                    router.push(`/course/${course.id}`)
-                                  }
-                                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                                  className="w-full bg-gray-400 text-white rounded-xl py-5 cursor-not-allowed"
+                                  disabled
                                 >
-                                  Access Course
+                                  <FaLock className="mr-2" /> Coming Soon
+                                </Button>
+                              ) : user && enrollmentStatus?.status === "approved" ? (
+                                <Button
+                                  className="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl py-5"
+                                  onClick={() => router.push(`/course/${course.id}`)}
+                                >
+                                  <FaPlay className="mr-2" /> Continue Learning
                                 </Button>
                               ) : (
-                                <>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setSelectedCourse(course)}
-                                    className="border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
-                                  >
-                                    View
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => {
+                                <Button
+                                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl py-5"
+                                  onClick={() => {
+                                    if (!user) {
+                                      openAuthModal("login");
+                                    } else {
                                       setSelectedCourse(course);
                                       handleEnrollment(course);
-                                    }}
-                                    className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                                    disabled={
-                                      enrollmentStatus?.status ===
-                                      "payment_submitted"
                                     }
-                                  >
-                                    {enrollmentStatus?.status ===
-                                    "payment_submitted"
-                                      ? "Pending"
-                                      : "Enroll"}
-                                  </Button>
-                                </>
-                              )
-                            ) : (
-                              <>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => openAuthModal("login")}
-                                  className="border-gray-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
-                                >
-                                  View Details
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedCourse(course);
-                                    openAuthModal("login");
                                   }}
-                                  className="bg-[#e2a70f] hover:bg-[#d69e0b] text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                                  disabled={enrollmentStatus?.status === "payment_submitted"}
                                 >
-                                  Enroll
-                                </Button>
-                              </>
-                            )}
-                          </div>
-
-                          {/* Enrollment status */}
-                          {user && enrollmentStatus && (
-                            <div className="text-xs text-center mt-3">
-                              <Badge
-                                variant={
-                                  enrollmentStatus.status === "approved"
-                                    ? "default"
-                                    : enrollmentStatus.status ===
-                                        "payment_submitted"
-                                      ? "secondary"
-                                      : "destructive"
-                                }
-                              >
-                                {enrollmentStatus.status === "approved"
-                                  ? "Approved"
-                                  : enrollmentStatus.status ===
-                                      "payment_submitted"
-                                    ? "Payment Under Review"
-                                    : "Payment Required"}
-                              </Badge>
-                            </div>
-                          )}
-
-                          {/* Progress indicator */}
-                          <div className="absolute bottom-4 left-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                              <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transform translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Hover glow effect */}
-                        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0">
-                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 opacity-20 blur-xl transform scale-110"></div>
-                        </div>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <AnimatePresence>
-            <div className="flex flex-col xs:flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row h-[75vh] mt-8 gap-4 xs:gap-4 sm:gap-6">
-              {/* Course Content Section */}
-              <div className="w-full xs:w-full sm:w-full md:w-[35%] lg:w-[35%] xl:w-[35%] bg-card p-4 md:p-6 overflow-y-auto rounded-2xl shadow-elegant">
-                <h3 className="text-2xl font-bold text-foreground mb-6">
-                  Contents
-                </h3>
-                {courseContents[selectedCourse.title]?.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.3 }}
-                    className={`my-3 font-medium cursor-pointer p-4 rounded-xl transition-all duration-500 transform relative group overflow-hidden ${
-                      selectedTopic?.title === item.title
-                        ? "text-white border-l-4 border-yellow bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg scale-105"
-                        : "text-foreground hover:scale-105 hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-900 hover:border-l-4 hover:border-yellow"
-                    }`}
-                    onClick={() => setSelectedTopic(item)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {/* Background gradient overlay for non-selected items */}
-                    {selectedTopic?.title !== item.title && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-0 group-hover:opacity-90 transition-all duration-500 rounded-xl"></div>
-                    )}
-
-                    {/* Enhanced hover background for selected items */}
-                    {selectedTopic?.title === item.title && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-orange-50 opacity-30 rounded-xl"></div>
-                    )}
-
-                    {/* Content */}
-                    <div className="relative z-10 flex items-center justify-between">
-                      <span
-                        className={`font-semibold transition-colors duration-300 ${
-                          selectedTopic?.title === item.title
-                            ? "text-white"
-                            : "group-hover:text-black dark:group-hover:text-white"
-                        }`}
-                      >
-                        {item.title}
-                      </span>
-
-                      {/* Topic type indicator */}
-                      <div
-                        className={`ml-3 p-1 rounded-full transition-all duration-300 ${
-                          selectedTopic?.title === item.title
-                            ? "bg-yellow text-blue-900"
-                            : "bg-blue-100 text-blue-600 group-hover:bg-yellow group-hover:text-blue-900"
-                        }`}
-                      >
-                        {item.type === "video" ? (
-                          <svg
-                            className="w-4 h-4"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                          </svg>
-                        ) : (
-                          <svg
-                            className="w-4 h-4"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Shine effect */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 rounded-xl">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-full group-hover:-translate-x-full transition-transform duration-1000"></div>
-                    </div>
-                  </motion.div>
-                ))}
-                <Button
-                  className="mx-12 mt-6 bg-primary text-primary-foreground hover:bg-yellow hover:text-primary-foreground"
-                  onClick={() => {
-                    setSelectedCourse(null);
-                    setSelectedTopic(null);
-                  }}
-                >
-                  Back to Courses
-                </Button>
-              </div>
-
-              {/* Course Preview/Content Display */}
-              <div className="flex-1 bg-card rounded-2xl shadow-elegant overflow-hidden">
-                {selectedTopic ? (
-                  <div className="h-full p-6">
-                    {selectedTopic.type === "video" ? (
-                      <iframe
-                        src={selectedTopic.src}
-                        title={selectedTopic.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full border-none rounded-xl"
-                      />
-                    ) : (
-                      <iframe
-                        src={selectedTopic.src}
-                        title={selectedTopic.title}
-                        className="w-full h-full border-none rounded-xl"
-                      />
-                    )}
-                  </div>
-                ) : (
-                  /* Course Details Preview */
-                  <div className="h-full p-6 overflow-y-auto">
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-4">
-                        <div className="text-blue-600 text-3xl">
-                          {selectedCourse.icon}
-                        </div>
-                        <div>
-                          <h2 className="text-3xl font-bold">
-                            {selectedCourse.title}
-                          </h2>
-                          <p className="text-muted-foreground text-lg">
-                            {selectedCourse.description}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <Card>
-                          <CardContent className="p-4">
-                            <div className="flex items-center gap-2">
-                              <FaClock className="text-blue-600" />
-                              <div>
-                                <p className="text-sm text-muted-foreground">
-                                  Duration
-                                </p>
-                                <p className="font-semibold">
-                                  {selectedCourse.duration}
-                                </p>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-
-                        <Card>
-                          <CardContent className="p-4">
-                            <div className="flex items-center gap-2">
-                              <FaDollarSign className="text-green-600" />
-                              <div>
-                                <p className="text-sm text-muted-foreground">
-                                  Price
-                                </p>
-                                <p className="font-semibold">
-                                  {selectedCourse.price}
-                                </p>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      <div>
-                        <h3 className="text-xl font-semibold mb-3">
-                          Course Overview
-                        </h3>
-                        <p className="text-muted-foreground">
-                          {selectedCourse?.detailedDescription ?? ""}
-                        </p>
-                      </div>
-
-                      <div>
-                        <h3 className="text-xl font-semibold mb-3">
-                          What You'll Learn
-                        </h3>
-                        <ul className="space-y-2">
-                          {selectedCourse?.benefits?.map((benefit, index) => (
-                            <li key={index} className="flex items-start gap-2">
-                              <FaStar className="text-yellow-500 mt-1 flex-shrink-0" />
-                              <span className="text-muted-foreground">
-                                {benefit}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card>
-                          <CardContent className="p-4">
-                            <h4 className="font-semibold mb-3 text-gray-800">
-                              Meet Your Instructor
-                            </h4>
-                            {selectedCourse.isFolder &&
-                            selectedCourse.instructorName ? (
-                              <div className="space-y-3">
-                                <div className="flex items-start gap-3">
-                                  {selectedCourse.instructorProfileImage ? (
-                                    <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-100 border-2 border-blue-200">
-                                      <img
-                                        src={
-                                          selectedCourse.instructorProfileImage
-                                        }
-                                        alt={selectedCourse.instructorName}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
+                                  {enrollmentStatus?.status === "payment_submitted" ? (
+                                    <>
+                                      <FaClock className="mr-2" /> Payment Under Review
+                                    </>
                                   ) : (
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-lg">
-                                      {selectedCourse.instructorName
-                                        .split(" ")
-                                        .map((n) => n[0])
-                                        .join("")
-                                        .toUpperCase()}
-                                    </div>
+                                    <>
+                                      <FaArrowRight className="mr-2" /> Enroll Now
+                                    </>
                                   )}
-                                  <div className="flex-1">
-                                    <p className="font-semibold text-gray-900">
-                                      {selectedCourse.instructorName}
-                                    </p>
-                                    <p className="text-sm text-blue-600 font-medium">
-                                      {selectedCourse.instructorProfession}
-                                    </p>
-                                  </div>
-                                </div>
-                                {selectedCourse.instructorExperience && (
-                                  <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-blue-500">
-                                    <p className="text-xs font-semibold text-gray-700 mb-1">
-                                      Experience & Background
-                                    </p>
-                                    <p className="text-sm text-gray-600 leading-relaxed">
-                                      {selectedCourse.instructorExperience}
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                                  <FaUser className="text-white text-sm" />
-                                </div>
-                                <div>
-                                  <p className="font-medium text-gray-900">
-                                    {selectedCourse.instructor}
-                                  </p>
-                                  <p className="text-xs text-gray-500">
-                                    Expert Instructor
-                                  </p>
-                                </div>
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-
-                        <Card>
-                          <CardContent className="p-4">
-                            <h4 className="font-semibold mb-2">
-                              Prerequisites
-                            </h4>
-                            <p className="text-sm text-muted-foreground">
-                              {selectedCourse?.prerequisites ?? "No prerequisites"}
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      <div className="pt-4 border-t">
-                        <Button
-                          size="lg"
-                          onClick={() => handleEnrollment(selectedCourse)}
-                          className="w-full bg-[#e2a70f] hover:bg-[#d69e0b] text-white"
-                          disabled={
-                            checkEnrollmentStatus(selectedCourse.id)?.status ===
-                            "approved"
-                          }
-                        >
-                          {checkEnrollmentStatus(selectedCourse.id)?.status ===
-                          "approved"
-                            ? "Already Enrolled"
-                            : checkEnrollmentStatus(selectedCourse.id)
-                                  ?.status === "payment_submitted"
-                              ? "Payment Under Review"
-                              : `Enroll Now - ${selectedCourse.price}`}
-                        </Button>
-                      </div>
-                    </div>
+                                </Button>
+                              )}
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
-            </div>
-          </AnimatePresence>
-        )}
-      </div>
+            </TabsContent>
 
+            {/* Leaderboard Tab - Skool Style Gamification */}
+            <TabsContent value="leaderboard" className="mt-0">
+              <div className="max-w-4xl mx-auto">
+                <Card className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border-0 shadow-lg">
+                  <CardHeader className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-6">
+                    <div className="flex items-center gap-3">
+                      <FaTrophy className="text-3xl" />
+                      <div>
+                        <CardTitle className="text-2xl">Top Learners This Month</CardTitle>
+                        <CardDescription className="text-white/80">
+                          Earn points by completing courses and engaging with the community
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    {/* Top 3 Podium */}
+                    <div className="bg-gradient-to-b from-yellow-50 to-white dark:from-slate-700 dark:to-slate-800 p-8">
+                      <div className="flex justify-center items-end gap-4">
+                        {/* 2nd Place */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 }}
+                          className="text-center"
+                        >
+                          <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center text-3xl shadow-lg">
+                            🥈
+                          </div>
+                          <div className="font-bold text-gray-900 dark:text-white">{topLearners[1]?.name}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{topLearners[1]?.points.toLocaleString()} pts</div>
+                          <div className="bg-gray-200 dark:bg-slate-600 h-16 w-24 mt-3 rounded-t-lg flex items-center justify-center font-bold text-gray-600 dark:text-gray-300">
+                            2nd
+                          </div>
+                        </motion.div>
+                        
+                        {/* 1st Place */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 }}
+                          className="text-center"
+                        >
+                          <FaCrown className="text-yellow-500 text-2xl mx-auto mb-2" />
+                          <div className="w-24 h-24 mx-auto mb-3 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-4xl shadow-xl ring-4 ring-yellow-300">
+                            🏆
+                          </div>
+                          <div className="font-bold text-gray-900 dark:text-white text-lg">{topLearners[0]?.name}</div>
+                          <div className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">{topLearners[0]?.points.toLocaleString()} pts</div>
+                          <div className="bg-gradient-to-t from-yellow-400 to-yellow-300 h-24 w-28 mt-3 rounded-t-lg flex items-center justify-center font-bold text-yellow-800">
+                            1st
+                          </div>
+                        </motion.div>
+                        
+                        {/* 3rd Place */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 }}
+                          className="text-center"
+                        >
+                          <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-orange-300 to-orange-500 flex items-center justify-center text-3xl shadow-lg">
+                            🥉
+                          </div>
+                          <div className="font-bold text-gray-900 dark:text-white">{topLearners[2]?.name}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{topLearners[2]?.points.toLocaleString()} pts</div>
+                          <div className="bg-orange-200 dark:bg-orange-900/30 h-12 w-24 mt-3 rounded-t-lg flex items-center justify-center font-bold text-orange-700 dark:text-orange-400">
+                            3rd
+                          </div>
+                        </motion.div>
+                      </div>
+                    </div>
+                    
+                    {/* Leaderboard List */}
+                    <div className="divide-y divide-gray-100 dark:divide-slate-700">
+                      {topLearners.slice(3).map((learner, index) => (
+                        <motion.div
+                          key={learner.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.4 + index * 0.1 }}
+                          className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-600 flex items-center justify-center font-bold text-gray-600 dark:text-gray-300">
+                              {index + 4}
+                            </div>
+                            <Avatar className="h-12 w-12">
+                              <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white">
+                                {learner.name.split(" ").map(n => n[0]).join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium text-gray-900 dark:text-white">{learner.name}</div>
+                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {learner.coursesCompleted} courses completed
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold text-gray-900 dark:text-white">{learner.points.toLocaleString()}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">points</div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                    
+                    {/* User's Ranking (if logged in) */}
+                    {user && (
+                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border-t border-blue-100 dark:border-blue-800">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
+                              You
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900 dark:text-white">{user.username}</div>
+                              <div className="text-sm text-blue-600 dark:text-blue-400">Keep learning to climb the ranks!</div>
+                            </div>
+                          </div>
+                          <Button variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50">
+                            <FaFire className="mr-2" />
+                            Start Earning
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* How Points Work */}
+                <Card className="mt-6 bg-white dark:bg-slate-800 rounded-2xl border-0 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FaMedal className="text-yellow-500" />
+                      How to Earn Points
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl text-center">
+                        <FaCheckCircle className="text-green-500 text-2xl mx-auto mb-2" />
+                        <div className="font-bold text-gray-900 dark:text-white">+100 pts</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Complete a lesson</div>
+                      </div>
+                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-center">
+                        <FaTrophy className="text-blue-500 text-2xl mx-auto mb-2" />
+                        <div className="font-bold text-gray-900 dark:text-white">+500 pts</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Complete a course</div>
+                      </div>
+                      <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-center">
+                        <FaFire className="text-purple-500 text-2xl mx-auto mb-2" />
+                        <div className="font-bold text-gray-900 dark:text-white">+50 pts</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Daily login streak</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            {/* About Tab */}
+            <TabsContent value="about" className="mt-0">
+              <div className="max-w-4xl mx-auto">
+                <Card className="bg-white dark:bg-slate-800 rounded-2xl border-0 shadow-lg overflow-hidden">
+                  <div className="h-48 bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <h2 className="text-3xl font-bold mb-2">Triple Technologies Academy</h2>
+                      <p className="text-white/80">Ethiopia&apos;s Premier Online Learning Platform</p>
+                    </div>
+                  </div>
+                  <CardContent className="p-8">
+                    <div className="prose dark:prose-invert max-w-none">
+                      <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                        We are dedicated to empowering Ethiopian learners with world-class digital skills. 
+                        Our platform combines expert instruction, hands-on projects, and a supportive community 
+                        to help you achieve your career goals.
+                      </p>
+                      
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Why Choose Us?</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div className="flex gap-3">
+                          <FaCheckCircle className="text-green-500 text-xl mt-1 flex-shrink-0" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">Expert Instructors</h4>
+                            <p className="text-gray-600 dark:text-gray-400">Learn from industry professionals with years of experience</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <FaCheckCircle className="text-green-500 text-xl mt-1 flex-shrink-0" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">Practical Projects</h4>
+                            <p className="text-gray-600 dark:text-gray-400">Build real-world projects for your portfolio</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <FaCheckCircle className="text-green-500 text-xl mt-1 flex-shrink-0" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">Ethiopian Context</h4>
+                            <p className="text-gray-600 dark:text-gray-400">Content designed for Ethiopian learners and market</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <FaCheckCircle className="text-green-500 text-xl mt-1 flex-shrink-0" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">Career Support</h4>
+                            <p className="text-gray-600 dark:text-gray-400">Job placement assistance and networking opportunities</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Payment Info for Ethiopia */}
+                      <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Payment Methods</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                          We accept payments through Ethiopian banks and mobile money:
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="bg-white dark:bg-slate-700 rounded-xl p-4">
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Bank Transfer</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Commercial Bank of Ethiopia</p>
+                            <p className="font-mono text-sm text-gray-900 dark:text-white">Account: 1000123456789</p>
+                          </div>
+                          <div className="bg-white dark:bg-slate-700 rounded-xl p-4">
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Telebirr / CBE Birr</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Mobile Money</p>
+                            <p className="font-mono text-sm text-gray-900 dark:text-white">+251 91 234 5678</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
       {/* Signup Modal */}
       <Dialog open={showSignupModal} onOpenChange={setShowSignupModal}>
         <DialogContent className="sm:max-w-md">
