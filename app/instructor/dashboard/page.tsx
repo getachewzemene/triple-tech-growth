@@ -16,6 +16,10 @@ import {
   FaCog,
   FaHome,
   FaSignOutAlt,
+  FaSave,
+  FaLinkedin,
+  FaTwitter,
+  FaGlobe,
 } from "react-icons/fa";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useRouter } from "next/navigation";
@@ -31,6 +35,9 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import InstructorApplicationForm from "@/components/instructor/InstructorApplicationForm";
 
 // Sample instructor data
@@ -90,6 +97,18 @@ export default function InstructorDashboardPage() {
   const router = useRouter();
   const [isInstructor, setIsInstructor] = useState(false);
   const [applicationStatus, setApplicationStatus] = useState<"NONE" | "PENDING" | "APPROVED" | "REJECTED">("NONE");
+  
+  // Profile editing state
+  const [profileData, setProfileData] = useState({
+    bio: instructorData.profile.bio,
+    expertise: instructorData.profile.expertise.join(", "),
+    qualifications: "MSc in Computer Science, AWS Certified",
+    linkedIn: "",
+    twitter: "",
+    website: "",
+  });
+  const [isProfileSaving, setIsProfileSaving] = useState(false);
+  const [profileSaveSuccess, setProfileSaveSuccess] = useState(false);
 
   useEffect(() => {
     // In production, check if user is an approved instructor
@@ -99,6 +118,36 @@ export default function InstructorDashboardPage() {
       setApplicationStatus("APPROVED");
     }
   }, [user]);
+
+  const handleProfileSave = async () => {
+    setIsProfileSaving(true);
+    try {
+      const response = await fetch("/api/instructor/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user?.id,
+          bio: profileData.bio,
+          expertise: profileData.expertise.split(",").map((e) => e.trim()),
+          qualifications: profileData.qualifications,
+          socialLinks: {
+            linkedin: profileData.linkedIn,
+            twitter: profileData.twitter,
+            website: profileData.website,
+          },
+        }),
+      });
+
+      if (response.ok) {
+        setProfileSaveSuccess(true);
+        setTimeout(() => setProfileSaveSuccess(false), 3000);
+      }
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+    } finally {
+      setIsProfileSaving(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -265,7 +314,10 @@ export default function InstructorDashboardPage() {
                 <h2 className="text-2xl font-bold">My Courses</h2>
                 <p className="text-muted-foreground">Create and manage your courses</p>
               </div>
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button 
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={() => router.push("/instructor/courses/create")}
+              >
                 <FaPlus className="mr-2" /> Create New Course
               </Button>
             </div>
@@ -339,7 +391,10 @@ export default function InstructorDashboardPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <Card className="h-full flex items-center justify-center border-dashed border-2 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-pointer">
+                <Card 
+                  className="h-full flex items-center justify-center border-dashed border-2 hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-pointer"
+                  onClick={() => router.push("/instructor/courses/create")}
+                >
                   <CardContent className="text-center py-12">
                     <FaPlus className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="font-semibold mb-2">Create New Course</h3>
@@ -388,19 +443,147 @@ export default function InstructorDashboardPage() {
 
           {/* Settings Tab */}
           <TabsContent value="settings">
-            <Card>
-              <CardHeader>
-                <CardTitle>Instructor Settings</CardTitle>
-                <CardDescription>Manage your instructor profile and preferences</CardDescription>
-              </CardHeader>
-              <CardContent className="py-12 text-center">
-                <FaCog className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Settings Coming Soon</h3>
-                <p className="text-muted-foreground">
-                  Update your profile, payout settings, and notification preferences.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Profile Settings */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FaChalkboardTeacher className="text-blue-600" />
+                    Profile Information
+                  </CardTitle>
+                  <CardDescription>Update your instructor profile</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="bio">Bio</Label>
+                    <Textarea
+                      id="bio"
+                      placeholder="Tell students about yourself..."
+                      rows={4}
+                      value={profileData.bio}
+                      onChange={(e) =>
+                        setProfileData((prev) => ({ ...prev, bio: e.target.value }))
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      This will be shown on your instructor profile
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="expertise">Areas of Expertise</Label>
+                    <Input
+                      id="expertise"
+                      placeholder="e.g., Web Development, Machine Learning"
+                      value={profileData.expertise}
+                      onChange={(e) =>
+                        setProfileData((prev) => ({ ...prev, expertise: e.target.value }))
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Separate multiple areas with commas
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="qualifications">Qualifications & Certifications</Label>
+                    <Textarea
+                      id="qualifications"
+                      placeholder="Your degrees, certifications, etc."
+                      rows={3}
+                      value={profileData.qualifications}
+                      onChange={(e) =>
+                        setProfileData((prev) => ({ ...prev, qualifications: e.target.value }))
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Social Links & Save */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FaGlobe className="text-purple-600" />
+                    Social Links
+                  </CardTitle>
+                  <CardDescription>Connect your social profiles</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="linkedin">LinkedIn</Label>
+                    <div className="relative">
+                      <FaLinkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600" />
+                      <Input
+                        id="linkedin"
+                        placeholder="https://linkedin.com/in/your-profile"
+                        className="pl-10"
+                        value={profileData.linkedIn}
+                        onChange={(e) =>
+                          setProfileData((prev) => ({ ...prev, linkedIn: e.target.value }))
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="twitter">Twitter/X</Label>
+                    <div className="relative">
+                      <FaTwitter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sky-500" />
+                      <Input
+                        id="twitter"
+                        placeholder="https://twitter.com/your-handle"
+                        className="pl-10"
+                        value={profileData.twitter}
+                        onChange={(e) =>
+                          setProfileData((prev) => ({ ...prev, twitter: e.target.value }))
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="website">Personal Website</Label>
+                    <div className="relative">
+                      <FaGlobe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                      <Input
+                        id="website"
+                        placeholder="https://your-website.com"
+                        className="pl-10"
+                        value={profileData.website}
+                        onChange={(e) =>
+                          setProfileData((prev) => ({ ...prev, website: e.target.value }))
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {profileSaveSuccess && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-green-700 text-sm">
+                      Profile updated successfully!
+                    </div>
+                  )}
+
+                  <Button
+                    onClick={handleProfileSave}
+                    disabled={isProfileSaving}
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                  >
+                    {isProfileSaving ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <FaSave className="mr-2" />
+                        Save Profile
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
 
