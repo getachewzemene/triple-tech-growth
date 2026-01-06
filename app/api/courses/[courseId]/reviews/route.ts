@@ -155,7 +155,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // 4. Update the course's average rating
     // 5. Return the created review
 
-    const reviewId = `review_${Date.now()}`;
+    const reviewId = crypto.randomUUID();
 
     return NextResponse.json({
       success: true,

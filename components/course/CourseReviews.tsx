@@ -81,8 +81,8 @@ function StarRating({
     lg: "h-6 w-6",
   };
 
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
+  const stars = Array.from({ length: 5 }, (_, index) => {
+    const i = index + 1;
     const displayRating = interactive && hoverRating > 0 ? hoverRating : rating;
     let StarIcon = FaRegStar;
     
@@ -92,7 +92,7 @@ function StarRating({
       StarIcon = FaStarHalfAlt;
     }
 
-    stars.push(
+    return (
       <button
         key={i}
         type="button"
@@ -105,7 +105,7 @@ function StarRating({
         <StarIcon className={`${sizeClasses[size]} text-yellow-500`} />
       </button>
     );
-  }
+  });
 
   return <div className="flex items-center gap-1">{stars}</div>;
 }

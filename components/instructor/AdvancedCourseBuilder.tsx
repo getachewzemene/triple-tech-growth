@@ -60,16 +60,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-type ContentType = "VIDEO" | "PDF" | "QUIZ" | "ASSIGNMENT";
+export type ContentType = "VIDEO" | "PDF" | "QUIZ" | "ASSIGNMENT";
 
-interface QuizQuestion {
+export interface QuizQuestion {
   id: string;
   question: string;
   options: string[];
   correctAnswer: number;
 }
 
-interface Lesson {
+export interface Lesson {
   id: string;
   title: string;
   description: string;
@@ -83,7 +83,7 @@ interface Lesson {
   quizQuestions?: QuizQuestion[];
 }
 
-interface Section {
+export interface Section {
   id: string;
   title: string;
   description: string;
@@ -123,7 +123,7 @@ function QuizBuilder({
 }) {
   const addQuestion = () => {
     const newQuestion: QuizQuestion = {
-      id: `q_${Date.now()}`,
+      id: crypto.randomUUID(),
       question: "",
       options: ["", "", "", ""],
       correctAnswer: 0,
@@ -249,7 +249,7 @@ function LessonEditor({
 }) {
   const [formData, setFormData] = useState<Lesson>(
     lesson || {
-      id: `lesson_${Date.now()}`,
+      id: crypto.randomUUID(),
       title: "",
       description: "",
       contentType: "VIDEO",
@@ -478,7 +478,7 @@ export function AdvancedCourseBuilder({
     if (!newSectionTitle.trim()) return;
 
     const newSection: Section = {
-      id: `section_${Date.now()}`,
+      id: crypto.randomUUID(),
       title: newSectionTitle,
       description: newSectionDescription,
       lessons: [],

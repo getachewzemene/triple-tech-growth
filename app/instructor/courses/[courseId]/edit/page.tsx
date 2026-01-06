@@ -20,7 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AdvancedCourseBuilder from "@/components/instructor/AdvancedCourseBuilder";
+import AdvancedCourseBuilder, { Section } from "@/components/instructor/AdvancedCourseBuilder";
 
 export default function EditCoursePage() {
   const params = useParams();
@@ -57,7 +57,7 @@ export default function EditCoursePage() {
     );
   }
 
-  const handleSaveCourse = async (sections: unknown) => {
+  const handleSaveCourse = async (sections: Section[]) => {
     try {
       // In production, save sections to API
       console.log("Saving course sections:", sections);
